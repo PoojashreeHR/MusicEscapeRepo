@@ -4,10 +4,9 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Log;
 
-import com.agiliztech.musicescape.Models.SongsModel;
+import com.agiliztech.musicescape.models.SongsModel;
 
 import java.util.ArrayList;
 
@@ -18,6 +17,10 @@ public class SongsManager {
     Context context;
     private ArrayList<SongsModel> songList = new ArrayList<SongsModel>();
     SongsManager songsManager;
+
+    public SongsManager(Context context){
+        this.context = context;
+    }
 
     public ArrayList<SongsModel> getSongList()
     {

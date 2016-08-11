@@ -40,12 +40,9 @@
         android:onClick="PAUSE"
         android:clickable="true"/>
 
-    <!--<Button
-        android:layout_width="220dp"
-        android:layout_height=""
-        android:background="@drawable/roundshape"
-        android:text="PLAY"
-        android:id="@+id/btn_scan_qr"
-        android:textSize="15dp"
-        />-->
+    <include layout="@layout/layout_for_playing_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MusiceScape</string>
+    <string name="fontName">MontserratBold.ttf</string>
 </resources>
