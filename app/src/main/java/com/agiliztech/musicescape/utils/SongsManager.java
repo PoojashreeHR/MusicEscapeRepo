@@ -1,0 +1,57 @@
+package com.agiliztech.musicescape.utils;
+
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
+
+import com.agiliztech.musicescape.Models.SongsModel;
+
+import java.util.ArrayList;
+
+/**
+ * Created by Pooja on 11-08-2016.
+ */
+public class SongsManager {
+    Context context;
+    private ArrayList<SongsModel> songList = new ArrayList<SongsModel>();
+    SongsManager songsManager;
+
+    public ArrayList<SongsModel> getSongList()
+    {
+        //query external audio
+
+        ContentResolver musicResolver = context.getContentResolver();
+        Uri musicUri = android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+        String orderBy = android.provider.MediaStore.Audio.Media.TITLE;
+        Cursor musicCursor = musicResolver.query(musicUri, null, null, null, orderBy);
+
+        //iterate over results if valid
+        if(musicCursor!=null && musicCursor.moveToFirst()) {
+            //get columns
+            int titleColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.TITLE);
+            int idColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media._ID);
+            int artistColumn = musicCursor.getColumnIndex
+                    (android.provider.MediaStore.Audio.Media.ARTIST);
+          /*  int albumColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.ALBUM);*/
+
+            //add songs to list
+            do {
+                long thisId = musicCursor.getLong(idColumn);
+                String thisTitle = musicCursor.getString(titleColumn);
+                String thisArtist = musicCursor.getString(artistColumn);
+                songList.add(new SongsModel(thisId, thisTitle, thisArtist));
+                Log.e("Song Details",":"+thisTitle+":"+thisArtist);
+            }
+            while (musicCursor.moveToNext());
+
+        }
+        musicCursor.close();
+        return songList;
+    }
+}
