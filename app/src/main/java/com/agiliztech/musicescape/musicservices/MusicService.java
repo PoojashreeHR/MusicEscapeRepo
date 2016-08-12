@@ -13,11 +13,13 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +30,7 @@ public class MusicService extends Service implements
 MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
 MediaPlayer.OnCompletionListener {
 
+	public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_event";
 	//media player
 	private MediaPlayer player;
 	//song list
@@ -43,11 +46,16 @@ MediaPlayer.OnCompletionListener {
 	//shuffle flag and random
 	private boolean shuffle=false;
 	private Random rand;
+	private SongsModel playSong;
 
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		return super.onStartCommand(intent, flags, startId);
+	}
+
+	public SongsModel getCurrentSong(){
+		return playSong;
 	}
 
 	public void onCreate(){
@@ -105,7 +113,7 @@ MediaPlayer.OnCompletionListener {
 		//play
 		player.reset();
 		//get song
-		SongsModel playSong = songs.get(songPosn);
+		 playSong = songs.get(songPosn);
 		//get title
 		songTitle=playSong.getTitle();
 		//get id
@@ -119,12 +127,15 @@ MediaPlayer.OnCompletionListener {
 		try{
 			player.setDataSource(getApplicationContext(), trackUri);
 			player.prepareAsync();
+			Intent intent = new Intent(SERVICE_EVENT);
+			// You can also include some extra data.
+			intent.putExtra("currentSong", new Gson().toJson(playSong));
+			LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
 		}
 		catch(Exception e){
 			Log.e("MUSIC SERVICE", "Error setting data source", e);
 			tryInternalStorage(currSong);
 		}
-		player.prepareAsync();
 	}
 
 	private void tryInternalStorage(long songid) {

@@ -1,10 +1,13 @@
 package com.agiliztech.musicescape.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -32,6 +35,7 @@ import com.agiliztech.musicescape.musiccontroller.MusicController;
 import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,6 +72,16 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     // Button musicButton;
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String curSongJson = intent.getStringExtra("currentSong");
+            SongsModel songsModel = new Gson().fromJson(curSongJson,SongsModel.class);
+            tv_songname.setText(songsModel.getTitle());
+            tv_song_detail.setText(songsModel.getArtist());
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -178,6 +192,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     public void songPicked() {
         musicSrv.setSong(0);
         musicSrv.playSong();
+
         tv_songname.setText(songList.get(0).getTitle());
         tv_song_detail.setText(songList.get(0).getArtist());
 
@@ -198,11 +213,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
         }
     }
 
-    @Override
-    public void pause() {
-        /*playbackPaused = true;
-        musicSrv.pausePlayer();*/
-    }
+
 
     @Override
     public int getDuration() {
@@ -226,6 +237,11 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     @Override
     public void start() {
         //musicSrv.go();
+    }
+
+    @Override
+    public void pause() {
+
     }
 
     @Override
@@ -285,12 +301,16 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
 
     @Override
     protected void onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                mMessageReceiver);
         super.onPause();
         paused = true;
     }
 
     @Override
     protected void onResume() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMessageReceiver, new IntentFilter(MusicService.SERVICE_EVENT));
         super.onResume();
 
         if (isSongPlaying) {
