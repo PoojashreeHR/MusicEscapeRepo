@@ -12,11 +12,14 @@ import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -101,17 +104,31 @@ MediaPlayer.OnCompletionListener {
 		//get id
 		long currSong = playSong.getId();
 		//set uri
-		Uri trackUri = ContentUris.withAppendedId(
-				android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-				currSong);
+		Uri trackUri = Uri.fromFile(new File(playSong.getFilepath()));
+//		Uri trackUri = ContentUris.withAppendedId(
+//				android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+//				currSong);
 		//set the data source
 		try{ 
 			player.setDataSource(getApplicationContext(), trackUri);
+			player.prepareAsync();
 		}
 		catch(Exception e){
 			Log.e("MUSIC SERVICE", "Error setting data source", e);
+			tryInternalStorage(currSong);
 		}
-		player.prepareAsync(); 
+	}
+
+	private void tryInternalStorage(long songid) {
+		Uri trackUri = ContentUris.withAppendedId(
+				MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+				songid);
+		try {
+			player.setDataSource(getApplicationContext(), trackUri);
+			player.prepareAsync();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	//set the song
