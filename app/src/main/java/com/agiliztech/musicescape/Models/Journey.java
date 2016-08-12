@@ -1,4 +1,4 @@
-package com.agiliztech.musicescape.Models;
+package com.agiliztech.musicescape.models;
 
 /**
  * Created by amrithamayangorky on 8/12/16.

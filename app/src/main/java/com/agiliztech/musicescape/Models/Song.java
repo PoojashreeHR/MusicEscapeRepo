@@ -1,4 +1,4 @@
-package com.agiliztech.musicescape.Models;
+package com.agiliztech.musicescape.models;
 
 import java.util.List;
 
