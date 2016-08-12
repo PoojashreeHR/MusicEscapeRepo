@@ -14,13 +14,14 @@ import android.os.IBinder;
 import android.os.PowerManager;
 import android.util.Log;
 
+import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class MusicService extends Service implements 
+public class MusicService extends Service implements
 MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
 MediaPlayer.OnCompletionListener {
 
@@ -40,6 +41,12 @@ MediaPlayer.OnCompletionListener {
 	private boolean shuffle=false;
 	private Random rand;
 
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		return super.onStartCommand(intent, flags, startId);
+	}
+
 	public void onCreate(){
 		//create the service
 		super.onCreate();
@@ -55,7 +62,7 @@ MediaPlayer.OnCompletionListener {
 
 	public void initMusicPlayer(){
 		//set player properties
-		player.setWakeMode(getApplicationContext(), 
+		player.setWakeMode(getApplicationContext(),
 				PowerManager.PARTIAL_WAKE_LOCK);
 		player.setAudioStreamType(AudioManager.STREAM_MUSIC);
 		//set listeners
@@ -85,8 +92,8 @@ MediaPlayer.OnCompletionListener {
 	//release resources when unbind
 	@Override
 	public boolean onUnbind(Intent intent){
-		player.stop();
-		player.release();
+		/*player.stop();
+		player.release();*/
 		return false;
 	}
 
@@ -105,18 +112,18 @@ MediaPlayer.OnCompletionListener {
 				android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
 				currSong);
 		//set the data source
-		try{ 
+		try{
 			player.setDataSource(getApplicationContext(), trackUri);
 		}
 		catch(Exception e){
 			Log.e("MUSIC SERVICE", "Error setting data source", e);
 		}
-		player.prepareAsync(); 
+		player.prepareAsync();
 	}
 
 	//set the song
 	public void setSong(int songIndex){
-		songPosn=songIndex;	
+		songPosn=songIndex;
 	}
 
 	@Override
@@ -139,6 +146,7 @@ MediaPlayer.OnCompletionListener {
 	public void onPrepared(MediaPlayer mp) {
 		//start playback
 		mp.start();
+
 		//notification
 		Intent notIntent = new Intent(this, MoodMappingActivity.class);
 		notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -153,12 +161,12 @@ MediaPlayer.OnCompletionListener {
 		.setOngoing(true)
 		.setContentTitle("Playing")
 		.setContentText(songTitle);
-		Notification not;
-		if (Build.VERSION.SDK_INT < 16) {
+		Notification not = builder.build();
+	/*	if (Build.VERSION.SDK_INT < 16) {
 			not = builder.getNotification();
 		} else {
 			not = builder.build();
-		}
+		}*/
 		startForeground(NOTIFY_ID, not);
 	}
 
