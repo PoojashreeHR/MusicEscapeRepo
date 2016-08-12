@@ -4,13 +4,19 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.R;
@@ -41,6 +47,8 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
 
     SongsManager manager = new SongsManager(MoodMappingActivity.this);
 
+    View view;
+
    // Button musicButton;
     private boolean isPlaying = false;
     @Override
@@ -65,9 +73,26 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                 }
             }
         });
-        ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
-        ibPlayPause.setOnClickListener(this);
 
+      /*  class SampleView extends View
+        {
+            public SampleView(Context context)
+            {
+                super(context);
+                // TODO Auto-generated constructor stub
+            }
+            @Override
+            protected void onDraw(Canvas canvas)
+            {
+                Paint mPaint = new Paint();
+                mPaint.setColor(Color.RED);
+                mPaint.setStyle(Paint.Style.FILL);
+                canvas.drawCircle(30, 30, 10, mPaint);
+
+            }
+        }*/
+            ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
+        ibPlayPause.setOnClickListener(this);
         songList = new ArrayList<>();
         songList = manager.getSongList();
         //getSongList();
