@@ -2,8 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.agiliztech.musicescape">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -14,11 +15,14 @@
         <activity android:name=".activity.MoodMappingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <service android:name=".musicservices.MusicService" />
+
+        <activity android:name=".activity.BaseMusicActivity" />
     </application>
 
 </manifest>
