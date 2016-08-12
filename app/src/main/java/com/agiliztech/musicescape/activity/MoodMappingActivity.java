@@ -5,9 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.MediaController;
 
@@ -40,11 +41,30 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
 
     SongsManager manager = new SongsManager(MoodMappingActivity.this);
 
+   // Button musicButton;
+    private boolean isPlaying = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood_mapping);
 
+        final Button testButton = (Button) findViewById(R.id.button);
+        testButton.setText("Start");
+        testButton.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (!isPlaying) {
+                    //  mPlayer.start();
+                    testButton.setText("Pause");
+                    isPlaying = true;
+                } else {
+                    // mPlayer.stop();
+                    testButton.setText("Start");
+                    isPlaying = false;
+                }
+            }
+        });
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
         ibPlayPause.setOnClickListener(this);
 

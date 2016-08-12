@@ -3,10 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.agiliztech.musicescape.activity.MoodMappingActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="#000000">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MOOD MAPPING"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:fontFamily=""
+            android:id="@+id/toolbar_title"
+            />
+
+
+
+    </android.support.v7.widget.Toolbar>
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:text="Start"
+        android:background="@drawable/roundshape"
+        android:id="@+id/button"
+        android:textColor="@color/colorWhite"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:onClick="PAUSE"
+        android:clickable="true"/>
 
     <include layout="@layout/layout_for_playing_controls"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"/>
+
 </RelativeLayout>
