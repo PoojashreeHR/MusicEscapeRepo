@@ -35,6 +35,7 @@ MediaPlayer.OnCompletionListener {
 	private final IBinder musicBind = new MusicBinder();
 	//title of current song
 	private String songTitle="";
+	private String songDetail = "";
 	//notification id
 	private static final int NOTIFY_ID=1;
 	//shuffle flag and random
@@ -105,6 +106,7 @@ MediaPlayer.OnCompletionListener {
 		SongsModel playSong = songs.get(songPosn);
 		//get title
 		songTitle=playSong.getTitle();
+		songDetail = playSong.getArtist();
 		//get id
 		long currSong = playSong.getId();
 		//set uri
@@ -170,6 +172,12 @@ MediaPlayer.OnCompletionListener {
 		startForeground(NOTIFY_ID, not);
 	}
 
+	public String getSongName(){
+		return songTitle;
+	}
+	public String getSongDetail(){
+		return songDetail;
+	}
 	//playback methods
 	public int getPosn(){
 		return player.getCurrentPosition();

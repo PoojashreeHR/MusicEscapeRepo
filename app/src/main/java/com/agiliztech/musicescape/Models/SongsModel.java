@@ -1,13 +1,34 @@
 package com.agiliztech.musicescape.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by Pooja on 11-08-2016.
  */
-public class SongsModel
+public class SongsModel implements Parcelable
 {
     long id;
     String title;
     String artist;
+
+    protected SongsModel(Parcel in) {
+        id = in.readLong();
+        title = in.readString();
+        artist = in.readString();
+    }
+
+    public static final Creator<SongsModel> CREATOR = new Creator<SongsModel>() {
+        @Override
+        public SongsModel createFromParcel(Parcel in) {
+            return new SongsModel(in);
+        }
+
+        @Override
+        public SongsModel[] newArray(int size) {
+            return new SongsModel[size];
+        }
+    };
 
     public String getArtist() {
         return artist;
@@ -40,4 +61,15 @@ public class SongsModel
 
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(title);
+        dest.writeString(artist);
+    }
 }
