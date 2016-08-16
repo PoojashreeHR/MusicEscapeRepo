@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rv_ll"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:background="@android:color/black"
-    android:weightSum="10"
-    android:id="@+id/rv_ll"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
     >
-<ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:id="@+id/image"
-    android:layout_weight="3"
-    android:src="@android:drawable/alert_light_frame"
-    />
-    <TextView
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/rv_notfound_bottom_journey_active" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="7"
-        android:layout_gravity="center"
-        android:textSize="20sp"
-        android:id="@+id/rv_song_name"
-        android:textColor="@android:color/white"
-        />
+        android:orientation="vertical"
+        android:layout_marginLeft="15dp">
+
+        <TextView
+            android:id="@+id/rv_song_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/rv_song_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </LinearLayout>
 </LinearLayout>

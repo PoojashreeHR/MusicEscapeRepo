@@ -2,14 +2,12 @@ package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.agiliztech.musicescape.R;
-import com.agiliztech.musicescape.activity.MoodMappingActivity;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.models.SongsModel;
 
@@ -30,7 +28,7 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
         Intent intent = getIntent();
         listOfSongs = intent.getExtras().getParcelableArrayList("songList");
 
-        mAdapter = new RecyclerViewAdapter(listOfSongs,this);
+        mAdapter = new RecyclerViewAdapter(listOfSongs, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -57,16 +55,16 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     }
 
     @Override
-    public void playSelectedSong(int position,View v) {
-        musicSrv.setSong(Integer.parseInt(v.getTag().toString()));
+    public void playSelectedSong(int position, View v) {
+       /* musicSrv.setSong(Integer.parseInt(v.getTag().toString()));
         musicSrv.playSong();
         isSongPlaying = true;
-        tv_songname.setText(listOfSongs.get(position).getTitle());
-        tv_song_detail.setText(listOfSongs.get(position).getArtist());
+        *//*tv_songname.setText(listOfSongs.get(position).getTitle());
+        tv_song_detail.setText(listOfSongs.get(position).getArtist());*//*
 
         if (playbackPaused) {
             //setController();
             playbackPaused = false;
-        }
+        }*/
     }
 }

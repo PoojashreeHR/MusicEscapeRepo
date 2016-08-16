@@ -47,28 +47,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         final int pos = position;
         SongsModel model = listOfSongs.get(position);
         holder.rv_song_name.setText(model.getTitle());
+        holder.rv_song_detail.setText(model.getArtist());
         holder.rv_ll.setTag(pos);
         holder.rv_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // iClickListener.playSelectedSong(pos,holder.rv_ll);
+                iClickListener.playSelectedSong(pos,holder.rv_ll);
             }
         });
         holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iClickListener.playSelectedSong(pos,holder.rv_ll);
+               // iClickListener.playSelectedSong(pos,holder.rv_ll);
             }
         });
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView rv_song_name;
+        public TextView rv_song_detail;
         public LinearLayout rv_ll;
         public MyViewHolder(View itemView) {
             super(itemView);
             rv_song_name = (TextView) itemView.findViewById(R.id.rv_song_name);
             rv_ll = (LinearLayout) itemView.findViewById(R.id.rv_ll);
+            rv_song_detail = (TextView) itemView.findViewById(R.id.rv_song_detail);
         }
     }
 }

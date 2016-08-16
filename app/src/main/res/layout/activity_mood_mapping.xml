@@ -32,134 +32,134 @@
 
 
     </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/child_one"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="2.0"
-            android:background="@drawable/songscan_text_new">
+    <RelativeLayout
+        android:id="@+id/child_one"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2.0"
+        android:background="@drawable/songscan_text_new">
 
-            <Button
-              android:layout_width="90dp"
-              android:layout_height="89dp"
-              android:text="Start"
-              android:background="@drawable/roundshape"
-              android:id="@+id/button"
-              android:textColor="@color/colorWhite"
-                android:clickable="true"
-                android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true" />
+        <Button
+            android:layout_width="90dp"
+            android:layout_height="89dp"
+            android:text="Start"
+            android:background="@drawable/roundshape"
+            android:id="@+id/button"
+            android:textColor="@color/colorWhite"
+            android:clickable="true"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/exitedcolor"
-                android:id="@+id/textView"
-                android:layout_above="@+id/button"
-                android:layout_toLeftOf="@+id/textView4"
-                android:layout_toStartOf="@+id/textView4" />
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/exitedcolor"
+            android:id="@+id/textView"
+            android:layout_above="@+id/button"
+            android:layout_toLeftOf="@+id/textView4"
+            android:layout_toStartOf="@+id/textView4" />
 
-            <TextView
-                android:layout_width="42dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="4"
-                android:textColor="@color/colorAccent"
-                android:background="@drawable/aggressivecolor"
-                android:id="@+id/textView2"
-                android:gravity="center"
-                android:layout_above="@+id/button"
-                android:layout_alignLeft="@+id/button"
-                android:layout_alignStart="@+id/button" />
+        <TextView
+            android:layout_width="42dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="4"
+            android:textColor="@color/colorAccent"
+            android:background="@drawable/aggressivecolor"
+            android:id="@+id/textView2"
+            android:gravity="center"
+            android:layout_above="@+id/button"
+            android:layout_alignLeft="@+id/button"
+            android:layout_alignStart="@+id/button" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/depressedcolor"
-                android:id="@+id/textView3"
-                android:layout_alignTop="@+id/textView6"
-                android:layout_toLeftOf="@+id/button"
-                android:layout_toStartOf="@+id/button" />
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/depressedcolor"
+            android:id="@+id/textView3"
+            android:layout_alignTop="@+id/textView6"
+            android:layout_toLeftOf="@+id/button"
+            android:layout_toStartOf="@+id/button" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/happycolor"
-                android:id="@+id/textView4"
-                android:layout_below="@+id/textView"
-                android:layout_toRightOf="@+id/button"
-                android:layout_toEndOf="@+id/button" />
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/happycolor"
+            android:id="@+id/textView4"
+            android:layout_below="@+id/textView"
+            android:layout_toRightOf="@+id/button"
+            android:layout_toEndOf="@+id/button" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/peacefullmoodcolor"
-                android:id="@+id/textView5"
-                android:layout_below="@+id/textView6"
-                android:layout_toLeftOf="@+id/textView6"
-                android:layout_toStartOf="@+id/textView6"/>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/peacefullmoodcolor"
+            android:id="@+id/textView5"
+            android:layout_below="@+id/textView6"
+            android:layout_toLeftOf="@+id/textView6"
+            android:layout_toStartOf="@+id/textView6"/>
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/chilledmoodcolor"
-                android:id="@+id/textView6"
-                android:layout_alignBottom="@+id/button"
-                android:layout_toRightOf="@+id/button"
-                android:layout_toEndOf="@+id/button" />
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/chilledmoodcolor"
+            android:id="@+id/textView6"
+            android:layout_alignBottom="@+id/button"
+            android:layout_toRightOf="@+id/button"
+            android:layout_toEndOf="@+id/button" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="4"
-                android:textColor="@color/colorAccent"
-                android:background="@drawable/boredmoodcolor"
-                android:id="@+id/textView7"
-                android:gravity="center"
-                android:layout_below="@+id/button"
-                android:layout_alignLeft="@+id/button"
-                android:layout_alignStart="@+id/button" />
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="4"
+            android:textColor="@color/colorAccent"
+            android:background="@drawable/boredmoodcolor"
+            android:id="@+id/textView7"
+            android:gravity="center"
+            android:layout_below="@+id/button"
+            android:layout_alignLeft="@+id/button"
+            android:layout_alignStart="@+id/button" />
 
-            <TextView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text=""
-                android:background="@drawable/stressedcolor"
-                android:id="@+id/textView8"
-                android:layout_below="@+id/textView2"
-                android:layout_toLeftOf="@+id/button"
-                android:layout_toStartOf="@+id/button" />
-        </RelativeLayout>
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text=""
+            android:background="@drawable/stressedcolor"
+            android:id="@+id/textView8"
+            android:layout_below="@+id/textView2"
+            android:layout_toLeftOf="@+id/button"
+            android:layout_toStartOf="@+id/button" />
+    </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/child_two"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="4.0"
-            android:background="@color/colorAccent"
-            android:orientation="horizontal" >
-            <!--android:background="@color/colorAccent"-->
+    <LinearLayout
+        android:id="@+id/child_two"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="4.0"
+        android:background="@color/colorAccent"
+        android:orientation="horizontal" >
+        <!--android:background="@color/colorAccent"-->
 
-            <include layout="@layout/layout_for_playing_controls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_gravity="center_horizontal|bottom" />
-        </LinearLayout>
-
+       <!-- <include layout="@layout/layout_for_playing_controls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal|bottom" />-->
     </LinearLayout>
+
+</LinearLayout>
 
 
 

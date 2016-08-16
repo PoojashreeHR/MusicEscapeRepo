@@ -1,67 +1,32 @@
 package com.agiliztech.musicescape.activity;
 
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.MediaController;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
-import com.agiliztech.musicescape.models.SongsModel;
-import com.agiliztech.musicescape.musiccontroller.MusicController;
-import com.agiliztech.musicescape.musicservices.MusicService;
-import com.agiliztech.musicescape.utils.SongsManager;
+import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.utils.UtilityClass;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+public class MoodMappingActivity extends BaseMusicActivity implements MediaController.MediaPlayerControl,
+        View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
 
-public class MoodMappingActivity extends AppCompatActivity implements MediaController.MediaPlayerControl,
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener, MediaPlayer.OnCompletionListener {
 
-    ArrayList<SongsModel> songList;
-    public MusicService musicSrv;
-    private Intent playIntent;
-    //binding
-    private boolean musicBound = false;
-
-    //controller
-    private MusicController controller;
-
-    //activity and playback pause flags
-    public boolean paused = false, playbackPaused = false;
-
-    ImageButton ibPlayPause;
-    ImageButton btn_pause;
-    ImageButton loop_not_selected, loop_selected;
-    public TextView tv_songname;
-    public TextView tv_song_detail;
-    SeekBar play_music_seek_bar;
-
-    SongsManager manager = new SongsManager(MoodMappingActivity.this);
-
-    View view;
-
-    // Button musicButton;
+    RecyclerView mRecyclerView;
+    RecyclerViewAdapter mAdapter;
+    SlidingUpPanelLayout slidingUpPanelLayout;
     private Handler handler = new Handler();
-    // Button musicButton;
-    private boolean isPlaying = false;
-    public static boolean isSongPlaying = false;
-    RelativeLayout play_pause_layout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,53 +49,18 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                 }
             }
         });
-        btn_pause = (ImageButton) findViewById(R.id.btn_pause);
-        btn_pause.setOnClickListener(this);
-        ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
-        ibPlayPause.setOnClickListener(this);
-        play_music_seek_bar = (SeekBar) findViewById(R.id.play_music_seek_bar);
-        tv_songname = (TextView) findViewById(R.id.tv_songname);
-        tv_songname.setSelected(true);
-        tv_song_detail = (TextView) findViewById(R.id.tv_song_detail);
-        play_pause_layout = (RelativeLayout) findViewById(R.id.play_pause_layout);
-        play_pause_layout.setOnClickListener(this);
-        loop_not_selected = (ImageButton) findViewById(R.id.loop_not_selected);
-        loop_selected = (ImageButton) findViewById(R.id.loop_selected);
-        loop_selected.setOnClickListener(this);
-        loop_not_selected.setOnClickListener(this);
+        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
 
-      /*  class SampleView extends View
-        {
-            public SampleView(Context context)
-            {
-                super(context);
-                // TODO Auto-generated constructor stub
-            }
-            @Override
-            protected void onDraw(Canvas canvas)
-            {
-                Paint mPaint = new Paint();
-                mPaint.setColor(Color.RED);
-                mPaint.setStyle(Paint.Style.FILL);
-                canvas.drawCircle(30, 30, 10, mPaint);
-
-            }
-        }*/
-        ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
-        ibPlayPause.setOnClickListener(this);
-        songList = new ArrayList<>();
-        songList = manager.getSongList();
-        //getSongList();
-
-        //sort alphabetically by title
-        Collections.sort(songList, new Comparator<SongsModel>() {
-            public int compare(SongsModel a, SongsModel b) {
-                return a.getTitle().compareTo(b.getTitle());
-            }
-        });
+        mAdapter = new RecyclerViewAdapter(songList, this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
         play_music_seek_bar.setOnSeekBarChangeListener(this);
-
+        slidingUpPanelLayout.setScrollableView(mRecyclerView);
         //setup controller
         setController();
     }
@@ -151,53 +81,14 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
             handler.postDelayed(this, 100);
         }
     };
-    private ServiceConnection musicConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
-            //get service
-            musicSrv = binder.getService();
-            //musicSrv = MainApplication.getInstance();
-            //pass list
-            musicSrv.setList(songList);
-            musicBound = true;
-        }
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            //musicBound = false;
-        }
-    };
-
-    public void songPicked() {
-        musicSrv.setSong(0);
-        musicSrv.playSong();
-        Log.e("Song Name ", "" + songList.get(0).getTitle());
-        tv_songname.setText(songList.get(0).getTitle());
-        tv_song_detail.setText(songList.get(0).getArtist());
-
-        if (playbackPaused) {
-            setController();
-            playbackPaused = false;
-        }
-        //controller.show(0);
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (playIntent == null) {
-            playIntent = new Intent(getApplicationContext(), MusicService.class);
-            getApplicationContext().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            startService(playIntent);
-        }
     }
 
     @Override
     public void pause() {
-        /*playbackPaused = true;
-        musicSrv.pausePlayer();*/
     }
 
     @Override
@@ -288,7 +179,6 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     @Override
     protected void onResume() {
         super.onResume();
-
         if (isSongPlaying) {
             updateProgressBar();
             if (musicSrv == null) {
@@ -298,8 +188,6 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                 tv_song_detail.setText(musicSrv.getSongDetail());
                 Log.e("Music service ", " is  Not null");
             }
-            // tv_songname.setText(musicSrv.getSongName());
-            //tv_song_detail.setText(songList.get(0).getArtist());
             ibPlayPause.setVisibility(View.GONE);
             btn_pause.setVisibility(View.VISIBLE);
         } else {
@@ -307,12 +195,14 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
             btn_pause.setVisibility(View.GONE);
         }
         if (paused) {
-            //tv_songname.setText(musicSrv.getSongName());
-            //tv_song_detail.setText(songList.get(0).getArtist());
             updateProgressBar();
-            //setController();
             paused = false;
         }
+        /*if(musicSrv.isPng()) {
+            tv_songname.setText(musicSrv.getSongName());
+            tv_song_detail.setText(musicSrv.getSongDetail());
+        }*/
+
     }
 
     @Override
@@ -327,7 +217,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
         //musicSrv = null;
         super.onDestroy();
         if (musicConnection != null) {
-            getApplicationContext().unbindService(musicConnection);
+            //getApplicationContext().unbindService(musicConnection);
         }
     }
 
@@ -345,8 +235,8 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                         btn_pause.setVisibility(View.VISIBLE);
                         ibPlayPause.setVisibility(View.GONE);
                     } else {
-                        songPicked();
-                        musicSrv.go();
+                       // songPicked();
+                        //musicSrv.go();
                         updateProgressBar();
                         isSongPlaying = true;
                         btn_pause.setVisibility(View.VISIBLE);
@@ -406,4 +296,24 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     }
 
 
+    @Override
+    public void playSelectedSong(int position, View view) {
+        musicSrv.setSong(Integer.parseInt(view.getTag().toString()));
+        musicSrv.playSong();
+        String songName = songList.get(position).getTitle();
+        String songDetail = songList.get(position).getArtist();
+        tv_songname.setText(songList.get(position).getTitle());
+        tv_song_detail.setText(songList.get(position).getArtist());
+        isSongPlaying = true;
+        updateProgressBar();
+        ibPlayPause.setVisibility(View.GONE);
+        btn_pause.setVisibility(View.VISIBLE);
+        if (playbackPaused) {
+            //setController();
+            playbackPaused = false;
+        }
+        if (musicSrv.isPng()) {
+
+        }
+    }
 }
