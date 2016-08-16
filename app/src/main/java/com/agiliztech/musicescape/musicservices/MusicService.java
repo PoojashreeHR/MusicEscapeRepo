@@ -1,5 +1,6 @@
 package com.agiliztech.musicescape.musicservices;
 
+import android.annotation.TargetApi;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -142,6 +143,7 @@ MediaPlayer.OnCompletionListener {
 		return false;
 	}
 
+	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	@Override
 	public void onPrepared(MediaPlayer mp) {
 		//start playback

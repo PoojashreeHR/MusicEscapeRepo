@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,6 +75,11 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood_mapping);
 
+
+        Typeface tf = Typeface.createFromAsset(getAssets(),
+                "fonts/MontserratBold.ttf");
+        TextView tv = (TextView) findViewById(R.id.moodMapping);
+        tv.setTypeface(tf);
         final Button testButton = (Button) findViewById(R.id.button);
         testButton.setText("Start");
         testButton.setOnClickListener(new View.OnClickListener() {
