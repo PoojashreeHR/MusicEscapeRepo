@@ -8,6 +8,7 @@ public class SongsModel
     long id;
     String title;
     String artist;
+    private String filepath;
 
     public String getArtist() {
         return artist;
@@ -32,12 +33,19 @@ public class SongsModel
     public void setId(int id) {
         this.id = id;
     }
-    public SongsModel(long songID, String songTitle, String songArtist)
+    public SongsModel(long songID, String songTitle, String songArtist,String fPath)
     {
         id=songID;
         title=songTitle;
         artist=songArtist;
-
+        filepath = fPath;
     }
 
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
+    }
 }
