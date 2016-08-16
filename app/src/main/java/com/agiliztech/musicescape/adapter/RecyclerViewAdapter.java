@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -17,7 +18,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     public interface IClickListener{
-        public void playSelectedSong(int position);
+        void playSelectedSong(int position,View view);
     }
 
 
@@ -42,25 +43,32 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(final MyViewHolder holder, int position) {
         final int pos = position;
         SongsModel model = listOfSongs.get(position);
         holder.rv_song_name.setText(model.getTitle());
-
+        holder.rv_ll.setTag(pos);
+        holder.rv_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               // iClickListener.playSelectedSong(pos,holder.rv_ll);
+            }
+        });
         holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iClickListener.playSelectedSong(pos);
+                iClickListener.playSelectedSong(pos,holder.rv_ll);
             }
         });
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder{
         public TextView rv_song_name;
+        public LinearLayout rv_ll;
         public MyViewHolder(View itemView) {
             super(itemView);
             rv_song_name = (TextView) itemView.findViewById(R.id.rv_song_name);
-
+            rv_ll = (LinearLayout) itemView.findViewById(R.id.rv_ll);
         }
     }
 }

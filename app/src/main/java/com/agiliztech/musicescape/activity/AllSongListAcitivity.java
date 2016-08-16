@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
@@ -19,6 +20,7 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
     List<SongsModel> listOfSongs;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,12 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     @Override
     protected void onResume() {
         super.onResume();
-        mAdapter = new RecyclerViewAdapter(listOfSongs,this);
+
+        /*mAdapter = new RecyclerViewAdapter(listOfSongs,this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);*/
         mAdapter.notifyDataSetChanged();
     }
 
@@ -54,8 +57,8 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     }
 
     @Override
-    public void playSelectedSong(int position) {
-        musicSrv.setSong(position);
+    public void playSelectedSong(int position,View v) {
+        musicSrv.setSong(Integer.parseInt(v.getTag().toString()));
         musicSrv.playSong();
         isSongPlaying = true;
         tv_songname.setText(listOfSongs.get(position).getTitle());

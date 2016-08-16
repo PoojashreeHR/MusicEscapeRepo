@@ -5,6 +5,7 @@
     android:orientation="horizontal"
     android:background="@android:color/black"
     android:weightSum="10"
+    android:id="@+id/rv_ll"
     >
 <ImageView
     android:layout_width="wrap_content"

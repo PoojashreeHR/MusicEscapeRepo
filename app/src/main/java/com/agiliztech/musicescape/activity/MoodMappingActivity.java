@@ -4,23 +4,18 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.IBinder;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import android.media.MediaPlayer;
-import android.os.Handler;
-
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageButton;
 import android.widget.MediaController;
-
 import android.widget.RelativeLayout;
-
 import android.widget.SeekBar;
-
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -66,6 +61,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     private boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     RelativeLayout play_pause_layout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,6 +158,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
             MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
             //get service
             musicSrv = binder.getService();
+            //musicSrv = MainApplication.getInstance();
             //pass list
             musicSrv.setList(songList);
             musicBound = true;
@@ -173,9 +170,10 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
         }
     };
 
-   /* public void songPicked() {
+    public void songPicked() {
         musicSrv.setSong(0);
         musicSrv.playSong();
+        Log.e("Song Name ", "" + songList.get(0).getTitle());
         tv_songname.setText(songList.get(0).getTitle());
         tv_song_detail.setText(songList.get(0).getArtist());
 
@@ -184,7 +182,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
             playbackPaused = false;
         }
         //controller.show(0);
-    }*/
+    }
 
     @Override
     protected void onStart() {
@@ -293,12 +291,14 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
 
         if (isSongPlaying) {
             updateProgressBar();
-            if(musicSrv==null){
-                Log.e("Music service ","is null");
-            }else{
-                Log.e("Music service "," is  Not null");
+            if (musicSrv == null) {
+                Log.e("Music service ", "is null");
+            } else {
+                tv_songname.setText(musicSrv.getSongName());
+                tv_song_detail.setText(musicSrv.getSongDetail());
+                Log.e("Music service ", " is  Not null");
             }
-           // tv_songname.setText(musicSrv.getSongName());
+            // tv_songname.setText(musicSrv.getSongName());
             //tv_song_detail.setText(songList.get(0).getArtist());
             ibPlayPause.setVisibility(View.GONE);
             btn_pause.setVisibility(View.VISIBLE);
@@ -345,7 +345,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                         btn_pause.setVisibility(View.VISIBLE);
                         ibPlayPause.setVisibility(View.GONE);
                     } else {
-                        //songPicked();
+                        songPicked();
                         musicSrv.go();
                         updateProgressBar();
                         isSongPlaying = true;
@@ -359,6 +359,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
             case R.id.btn_pause:
                 isSongPlaying = false;
                 playbackPaused = true;
+                stopService(playIntent);
                 musicSrv.pausePlayer();
                 btn_pause.setVisibility(View.GONE);
                 ibPlayPause.setVisibility(View.VISIBLE);
@@ -373,9 +374,9 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                 break;
             case R.id.play_pause_layout:
                 Intent intent = new Intent(MoodMappingActivity.this, AllSongListAcitivity.class);
-                intent.putExtra("songList",songList);
+                intent.putExtra("songList", songList);
                 startActivity(intent);
-                overridePendingTransition( R.anim.slide_in_up, R.anim.slide_out_up );
+                overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
                 break;
         }
     }
