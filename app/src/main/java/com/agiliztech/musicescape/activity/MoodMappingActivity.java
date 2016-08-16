@@ -63,6 +63,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     TextView tv_songname;
     TextView tv_song_detail;
     SeekBar play_music_seek_bar;
+    ImageButton library;
 
     SongsManager manager = new SongsManager(MoodMappingActivity.this);
 
@@ -91,9 +92,10 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
 
 
         Typeface tf = Typeface.createFromAsset(getAssets(),
-                "fonts/MontserratBold.ttf");
+                "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
         tv.setTypeface(tf);
+
         final Button testButton = (Button) findViewById(R.id.button);
         testButton.setText("Start");
         testButton.setOnClickListener(new View.OnClickListener() {
@@ -111,6 +113,18 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
                 }
             }
         });
+
+        library = (ImageButton) findViewById(R.id.libraryButton);
+        library.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                library.setFocusableInTouchMode(false);
+                library.setFocusable(false);
+                Intent intent = new Intent(getApplicationContext(),LibraryActivity.class);
+                startActivity(intent);
+            }
+        });
+
         btn_pause = (ImageButton) findViewById(R.id.btn_pause);
         btn_pause.setOnClickListener(this);
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
