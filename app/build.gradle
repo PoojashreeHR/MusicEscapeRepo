@@ -26,4 +26,6 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.sothree.slidinguppanel:library:3.3.0'
+    compile 'com.google.code.gson:gson:2.3'
+
 }

@@ -59,11 +59,11 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_base_music);
-       // initViews();
+        // initViews();
     }
 
     public void initViews() {
-       // View v = getLayoutInflater().inflate(R.layout.layout_for_playing_controls, null);
+        // View v = getLayoutInflater().inflate(R.layout.layout_for_playing_controls, null);
         btn_pause = (ImageButton) findViewById(R.id.btn_pause);
         btn_pause.setOnClickListener(this);
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
@@ -107,7 +107,52 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
 
     private void initMPElements() {
         initViews();
-
+        /*ibPlayPause = (ImageButton) baseLayout.findViewById(R.id.btn_play_pause);
+        ibPlayPause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (v.getId()) {
+                    case R.id.btn_play_pause:
+               *//* if (!musicSrv.isPng()) {
+                    if (playbackPaused) {
+                        musicSrv.go();
+                        isSongPlaying = true;
+                        play_music_seek_bar.setProgress(0);
+                        play_music_seek_bar.setMax(100);
+                        updateProgressBar();
+                        btn_pause.setVisibility(View.VISIBLE);
+                        ibPlayPause.setVisibility(View.GONE);
+                    } else {
+                        songPicked();
+                        musicSrv.go();
+                        updateProgressBar();
+                        isSongPlaying = true;
+                        btn_pause.setVisibility(View.VISIBLE);
+                        ibPlayPause.setVisibility(View.GONE);
+                    }
+                } else {
+                    isSongPlaying = false;
+                }*//*
+                        break;
+                    case R.id.btn_pause:
+                        isSongPlaying = false;
+                        playbackPaused = true;
+                        stopService(playIntent);
+                        musicSrv.pausePlayer();
+                        btn_pause.setVisibility(View.GONE);
+                        ibPlayPause.setVisibility(View.VISIBLE);
+                        break;
+                    case R.id.loop_selected:
+                        loop_not_selected.setVisibility(View.VISIBLE);
+                        loop_selected.setVisibility(View.GONE);
+                        break;
+                    case R.id.loop_not_selected:
+                        loop_not_selected.setVisibility(View.GONE);
+                        loop_selected.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+        });*/
     }
 
     @Override

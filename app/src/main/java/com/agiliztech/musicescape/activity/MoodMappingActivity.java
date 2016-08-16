@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -26,11 +28,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements MediaContr
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
     SlidingUpPanelLayout slidingUpPanelLayout;
+    ImageButton library;
     private Handler handler = new Handler();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mood_mapping);
+
+
+        Typeface tf = Typeface.createFromAsset(getAssets(),
+                "fonts/MontserratRegular.ttf");
+        TextView tv = (TextView) findViewById(R.id.moodMapping);
+        tv.setTypeface(tf);
 
         final Button testButton = (Button) findViewById(R.id.button);
         testButton.setText("Start");
@@ -51,6 +60,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements MediaContr
         });
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
+
+        library = (ImageButton) findViewById(R.id.libraryButton);
+        library.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                library.setFocusableInTouchMode(false);
+                library.setFocusable(false);
+                Intent intent = new Intent(getApplicationContext(),LibraryActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         mAdapter = new RecyclerViewAdapter(songList, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
