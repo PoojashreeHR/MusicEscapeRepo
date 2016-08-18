@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.agiliztech.musicescape.models.SongsModel;
@@ -21,6 +22,7 @@ public class SongsManager {
     public SongsManager(Context context){
         this.context = context;
     }
+
 
     public ArrayList<SongsModel> getSongList()
     {
@@ -40,6 +42,8 @@ public class SongsManager {
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
+            int isMusicColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
+            int dataCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
           /*  int albumColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);*/
 
@@ -48,8 +52,13 @@ public class SongsManager {
                 long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                songList.add(new SongsModel(thisId, thisTitle, thisArtist));
-                Log.e("Song Details",":"+thisTitle+":"+thisArtist);
+                int isMusic = musicCursor.getInt(isMusicColumn);
+                String filePath = musicCursor.getString(dataCol);
+
+                if(isMusic > 0 ) {
+                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath));
+                    Log.e("Song Details", ":" + thisTitle + ":" + thisArtist);
+                }
             }
             while (musicCursor.moveToNext());
 

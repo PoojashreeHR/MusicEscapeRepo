@@ -9,13 +9,18 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.provider.MediaStore;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
 import com.agiliztech.musicescape.models.SongsModel;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,6 +28,7 @@ public class MusicService extends Service implements
         MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
         MediaPlayer.OnCompletionListener {
 
+    public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_event";
     //media player
     private MediaPlayer player;
     //song list
@@ -92,16 +98,17 @@ public class MusicService extends Service implements
     @Override
     public boolean onUnbind(Intent intent) {
         /*player.stop();
-		player.release();*/
+        player.release();*/
         return false;
     }
 
+    SongsModel playSong;
     //play a song
     public void playSong() {
         //play
         player.reset();
         //get song
-        SongsModel playSong = songs.get(songPosn);
+        playSong = songs.get(songPosn);
         //get title
         songTitle = playSong.getTitle();
         songDetail = playSong.getArtist();
@@ -114,10 +121,26 @@ public class MusicService extends Service implements
         //set the data source
         try {
             player.setDataSource(getApplicationContext(), trackUri);
+            Intent intent = new Intent(SERVICE_EVENT);
+            intent.putExtra("currentSong", new Gson().toJson(playSong));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         } catch (Exception e) {
             Log.e("MUSIC SERVICE", "Error setting data source", e);
+            tryInternalStorage(currSong);
         }
         player.prepareAsync();
+    }
+
+    private void tryInternalStorage(long songid) {
+        Uri trackUri = ContentUris.withAppendedId(
+                MediaStore.Audio.Media.INTERNAL_CONTENT_URI,
+                songid);
+        try {
+            player.setDataSource(getApplicationContext(), trackUri);
+            player.prepareAsync();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     //set the song
@@ -128,9 +151,13 @@ public class MusicService extends Service implements
     @Override
     public void onCompletion(MediaPlayer mp) {
         //check if playback has reached the end of a track
+
         if (player.getCurrentPosition() > 0) {
             mp.reset();
             playNext();
+            Intent intent = new Intent(SERVICE_EVENT);
+            intent.putExtra("currentSong", new Gson().toJson(playSong));
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
         }
     }
 
@@ -160,12 +187,12 @@ public class MusicService extends Service implements
                 .setOngoing(true)
                 .setContentTitle("Playing")
                 .setContentText(songTitle);
-        Notification not = builder.build();
-	/*	if (Build.VERSION.SDK_INT < 16) {
-			not = builder.getNotification();
-		} else {
-			not = builder.build();
-		}*/
+        Notification not;/* = builder.build();*/
+        if (Build.VERSION.SDK_INT < 16) {
+            not = builder.getNotification();
+        } else {
+            not = builder.build();
+        }
         startForeground(NOTIFY_ID, not);
     }
 

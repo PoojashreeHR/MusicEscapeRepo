@@ -4,12 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -21,17 +18,16 @@ import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.utils.SongsManager;
-import com.agiliztech.musicescape.utils.UtilityClass;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class BaseMusicActivity extends AppCompatActivity implements MediaController.MediaPlayerControl,
-        View.OnClickListener, MediaPlayer.OnCompletionListener {
+        View.OnClickListener {
 
-    private FrameLayout baseLayout, contentFrame;
-    protected MusicService musicSrv;
+    protected static MusicService musicSrv;
     protected boolean musicBound = false;
     protected ImageButton ibPlayPause;
     SongsManager songsManager = new SongsManager(this);
@@ -45,7 +41,6 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
 
-
     protected boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
@@ -58,12 +53,9 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_base_music);
-        // initViews();
     }
 
     public void initViews() {
-        // View v = getLayoutInflater().inflate(R.layout.layout_for_playing_controls, null);
         btn_pause = (ImageButton) findViewById(R.id.btn_pause);
         btn_pause.setOnClickListener(this);
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
@@ -97,62 +89,25 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     @Override
     public void setContentView(int layoutResID) {
         // TODO Auto-generated method stub
+        FrameLayout baseLayout, contentFrame;
+        SlidingUpPanelLayout anotherBaseLayout;
+        FrameLayout anotherContentFrame;
+
         baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null); // Your base layout here
         contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
         getLayoutInflater().inflate(layoutResID, contentFrame, true);
+
+        anotherBaseLayout = (SlidingUpPanelLayout) getLayoutInflater().inflate(R.layout.slider_layout_to_play_song, null); // Your base layout here
+        anotherContentFrame = (FrameLayout) anotherBaseLayout.findViewById(R.id.content_slider);
+        getLayoutInflater().inflate(layoutResID, anotherContentFrame, true);
         super.setContentView(baseLayout);
+        super.setContentView(anotherBaseLayout);
 
         initMPElements();
     }
 
     private void initMPElements() {
         initViews();
-        /*ibPlayPause = (ImageButton) baseLayout.findViewById(R.id.btn_play_pause);
-        ibPlayPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                switch (v.getId()) {
-                    case R.id.btn_play_pause:
-               *//* if (!musicSrv.isPng()) {
-                    if (playbackPaused) {
-                        musicSrv.go();
-                        isSongPlaying = true;
-                        play_music_seek_bar.setProgress(0);
-                        play_music_seek_bar.setMax(100);
-                        updateProgressBar();
-                        btn_pause.setVisibility(View.VISIBLE);
-                        ibPlayPause.setVisibility(View.GONE);
-                    } else {
-                        songPicked();
-                        musicSrv.go();
-                        updateProgressBar();
-                        isSongPlaying = true;
-                        btn_pause.setVisibility(View.VISIBLE);
-                        ibPlayPause.setVisibility(View.GONE);
-                    }
-                } else {
-                    isSongPlaying = false;
-                }*//*
-                        break;
-                    case R.id.btn_pause:
-                        isSongPlaying = false;
-                        playbackPaused = true;
-                        stopService(playIntent);
-                        musicSrv.pausePlayer();
-                        btn_pause.setVisibility(View.GONE);
-                        ibPlayPause.setVisibility(View.VISIBLE);
-                        break;
-                    case R.id.loop_selected:
-                        loop_not_selected.setVisibility(View.VISIBLE);
-                        loop_selected.setVisibility(View.GONE);
-                        break;
-                    case R.id.loop_not_selected:
-                        loop_not_selected.setVisibility(View.GONE);
-                        loop_selected.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
-        });*/
     }
 
     @Override
@@ -252,19 +207,11 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
 
     }
 
-
-    @Override
-    public void onCompletion(MediaPlayer mp) {
-
-    }
-
-
     @Override
     protected void onPause() {
         super.onPause();
         paused = true;
     }
-
 
 
     private void onMusicServiceConnected() {

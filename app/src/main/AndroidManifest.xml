@@ -23,9 +23,10 @@
         </activity>
 
         <service android:name=".musicservices.MusicService" />
+
         <activity android:name=".activity.BaseMusicActivity" />
-        <activity android:name=".activity.AllSongListAcitivity"/>
-        <activity android:name=".activity.LibraryActivity"/>
+        <activity android:name=".activity.AllSongListAcitivity" />
+        <activity android:name=".activity.LibraryActivity" />
     </application>
 
 </manifest>

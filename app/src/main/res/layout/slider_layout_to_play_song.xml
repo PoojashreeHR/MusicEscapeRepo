@@ -6,9 +6,12 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     app:umanoPanelHeight="90dp"
-    app:umanoShadowHeight="80dp">
+    app:umanoShadowHeight="80dp"
+
+    >
 
     <FrameLayout
+        android:id="@+id/content_slider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"/>
