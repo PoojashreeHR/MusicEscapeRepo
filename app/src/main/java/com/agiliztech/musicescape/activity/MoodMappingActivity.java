@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -57,6 +58,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     };
     Button testButton;
+    private ImageView dashboardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +86,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 library.setFocusableInTouchMode(false);
                 library.setFocusable(false);
                 Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
                 startActivity(intent);
             }
         });

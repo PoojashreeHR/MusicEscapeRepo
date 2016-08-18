@@ -45,7 +45,7 @@
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/dashboardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/libraryButton"
