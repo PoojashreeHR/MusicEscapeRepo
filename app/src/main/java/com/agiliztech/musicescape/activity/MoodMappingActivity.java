@@ -74,6 +74,7 @@ public class MoodMappingActivity extends AppCompatActivity implements MediaContr
     // Button musicButton;
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
+
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {

@@ -2,89 +2,313 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:weightSum="10"
-    android:layout_width="match_parent"
+    android:background="@color/colorPrimary"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent">
+
 
     <RelativeLayout
         android:background="@color/colorPrimary"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="0"
         android:orientation="horizontal">
-
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:id="@+id/view">
 
         </android.support.v7.widget.Toolbar>
 
         <TextView
-            android:layout_width="131dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="LIBRARY"
-            android:textSize="20sp"
+            android:textColor="@color/colorWhite"
             android:id="@+id/library"
             android:gravity="center"
-            android:textColor="@color/colorWhite"
+            android:layout_alignBottom="@+id/view"
             android:layout_centerHorizontal="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignParentTop="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageButton"
-            android:focusableInTouchMode="true"
-            android:background="@drawable/songscanmanageicons"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentTop="true" />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/imageView2"
+            android:id="@+id/imageButton2"
             android:background="@drawable/menuiconmanager"
+            android:layout_alignBottom="@+id/view"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/library1"
+            android:background="@drawable/libraryiconmanager"
             android:layout_alignParentTop="true"
-            android:layout_alignParentBottom="true" />
+            android:layout_alignBottom="@+id/view"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
 
     </RelativeLayout>
-
-
-    <LinearLayout
-        android:background="@color/colorWhite"
+    <FrameLayout
+        android:background="@color/colorPrimary"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:weightSum="5"
+        android:layout_weight="10"
         android:orientation="horizontal">
 
-        <Spinner
-            android:layout_width="219dp"
+        <RelativeLayout
+            android:background="@color/colorPrimary"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner"
-            android:layout_weight="1"
-           android:layout_gravity="center" />
+            android:layout_width="match_parent"
+            android:layout_weight="0">
 
-        <Spinner
+            <TextView
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="ALL MOODS"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/textView9"
+                android:layout_gravity="center"
+               android:gravity="center"
+                android:layout_centerVertical="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/arrow"
+                android:layout_gravity="center"
+                android:background="@drawable/library_arrow_inactive"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/textView9"
+                android:layout_toEndOf="@+id/textView9">
+            </ImageButton>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="SONGS"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/songs"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_centerInParent="true"
+                android:layout_alignTop="@+id/textView9"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="56dp"
+                android:layout_marginEnd="56dp" />
+
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/arrow1"
+                android:layout_gravity="center"
+                android:background="@drawable/library_arrow_inactive"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/viewContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="left|center_vertical">
+
+            <TextView
+                android:id="@+id/exited"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="EXITED"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/exited"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/happy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="HAPPY"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/happy"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+            <TextView
+                android:id="@+id/chilled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="CHILLED"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/chilled"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/peacefull"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="PEACEFULL"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/peacefull"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/bored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="BORED"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/Bored"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/depressed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="DEPRESSED"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/depressed"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/stressed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="STRESSED"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/stressed"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/aggressive"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="AGGRESSIVE"
+                android:paddingLeft="10dp"
+                android:onClick="onClick"
+                android:paddingTop="5dp"
+                android:textColor="@color/Aggressive"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/noMood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="NO MOODS"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/Gray"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/allMood"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="ALL MOODS"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/songSort"
+            android:layout_width="124dp"
+            android:layout_height="340dp"
+            android:visibility="invisible"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="right|center_vertical">
+
+
+            <TextView
+                android:id="@android:id/text1"
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="SONG"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+
+
+            <TextView
+                android:id="@android:id/text1"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="ARTIST"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
+            </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/spinner2"
-            android:layout_weight="4"
-            android:layout_gravity="center"/>
-    </LinearLayout>
+            android:layout_gravity="center">
 
-
-    <LinearLayout
-        android:background="#F2DD52"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_weight="8" >
-
-    </LinearLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scrollbars="vertical"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true" />
+        </RelativeLayout>
+    </FrameLayout>
 </LinearLayout>
