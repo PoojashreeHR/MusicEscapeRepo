@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+     tools:context="com.agiliztech.musicescape.activity.DashboardActivity">
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="right"
+        >
+
+
+        <FrameLayout
+            android:layout_width="154dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="vertical"
+            >
+
+<ImageView
+        android:layout_width="110dp"
+        android:layout_height="155dp"
+    android:layout_marginLeft="44dp"
+
+        android:id="@+id/menu_draw"
+       android:src="@drawable/m_draw_inactive"
+        />
+            <ImageView
+                android:layout_width="153dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="73dp"
+                android:id="@+id/menu_history"
+                android:src="@drawable/m_history_inactive"
+                />
+            <ImageView
+                android:layout_width="154dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="201dp"
+                android:id="@+id/menu_library"
+                android:src="@drawable/m_library_inactive"
+                />
+            <ImageView
+                android:layout_width="110dp"
+                android:layout_height="155dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="248dp"
+                android:id="@+id/menu_settings"
+                android:src="@drawable/m_settings_inactive"
+                />
+
+    </FrameLayout>
+
+    <!--<com.agiliztech.musicescape.view.CircularMenu-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent" />-->
+
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:id="@+id/menu_draw"-->
+            <!--android:src="@drawable/m_draw_inactive"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:id="@+id/menu_history"-->
+            <!--android:layout_below="@+id/menu_draw"-->
+            <!--android:src="@drawable/m_history_inactive"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:id="@+id/menu_library"-->
+            <!--android:layout_below="@+id/menu_history"-->
+            <!--android:src="@drawable/m_library_inactive"-->
+            <!--/>-->
+        <!--<ImageView-->
+            <!--android:layout_width="100dp"-->
+            <!--android:layout_height="100dp"-->
+            <!--android:id="@+id/menu_settings"-->
+            <!--android:src="@drawable/m_settings_inactive"-->
+            <!--android:layout_below="@+id/menu_library"-->
+            <!--android:layout_alignParentLeft="true"-->
+            <!--android:layout_alignParentStart="true" />-->
+
+
+    </RelativeLayout>
+
+
+</FrameLayout>
