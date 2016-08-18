@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--&lt;!&ndash;Used for spinner&ndash;&gt;-->
+    <!--<style name="countries_list">-->
+        <!--<item name="india" color="#8A46CF">Depressed</item>-->
+        <!--<item name="africa" color="#2271AF">Bored</item>-->
+        <!--<item name="happy" color="#F2DD52">Happy</item>-->
+       <!-- <item name="android:dividerHeight">0dp</item>
+        <item name="android:popupBackground">@</item>
+        <item name="android:dropDownHeight">70dp</item>
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:dropDownSelector">@android:color/white</item>-->
 </resources>

@@ -15,9 +15,9 @@ public class MainApplication extends Application {
     }
 
     private void setupFonts() {
-        FontUtils.setDefaultFont(this, "DEFAULT", "fonts/montserratBold.ttf");
-        FontUtils.setDefaultFont(this, "SERIF", "fonts/montserratRegular.ttf");
-        FontUtils.setDefaultFont(this, "SANS_SERIF", "fonts/proximaNovaBlack.ttf");
-        FontUtils.setDefaultFont(this, "MONOSPACE", "fonts/proximaNovaCond.ttf");
+        FontUtils.setDefaultFont(this, "DEFAULT", "fonts/MontserratBold.ttf");
+        FontUtils.setDefaultFont(this, "SERIF", "fonts/MontserratRegular.ttf");
+        FontUtils.setDefaultFont(this, "SANS_SERIF", "fonts/ProximaNovaBlack.ttf");
+        FontUtils.setDefaultFont(this, "MONOSPACE", "fonts/ProximaNovaCond.ttf");
     }
 }

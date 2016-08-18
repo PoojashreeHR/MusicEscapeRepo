@@ -4,18 +4,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context="com.agiliztech.musicescape.activity.BaseMusicActivity">
+    android:id="@+id/fl_base_1"
+    >
 
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/container"
-        ></FrameLayout>
 
-    <include layout="@layout/layout_for_playing_controls"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        />
+
+    <include layout="@layout/slider_layout_to_play_song"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="bottom"/>
 
 </FrameLayout>

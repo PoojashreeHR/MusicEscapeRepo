@@ -12,7 +12,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.MoodMappingActivity"
+        <activity
+            android:name=".activity.MoodMappingActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,6 +25,8 @@
         <service android:name=".musicservices.MusicService" />
 
         <activity android:name=".activity.BaseMusicActivity" />
+        <activity android:name=".activity.AllSongListAcitivity" />
+        <activity android:name=".activity.LibraryActivity" />
     </application>
 
 </manifest>

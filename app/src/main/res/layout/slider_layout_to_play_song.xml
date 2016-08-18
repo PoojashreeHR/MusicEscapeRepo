@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/slider_sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    app:umanoPanelHeight="90dp"
+    app:umanoShadowHeight="80dp"
+
+    >
+
+    <FrameLayout
+        android:id="@+id/content_slider"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"/>
+
+    <LinearLayout
+        android:id="@+id/dragView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <include
+
+                layout="@layout/layout_for_playing_controls"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true" />
+
+        </RelativeLayout>
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_display_song_lists"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/black" />
+
+    </LinearLayout>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

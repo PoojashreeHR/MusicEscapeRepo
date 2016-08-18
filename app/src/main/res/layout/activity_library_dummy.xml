@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="@color/colorPrimary"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimary"
+            android:id="@+id/view">
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="131dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="LIBRARY"
+            android:textSize="20sp"
+            android:id="@+id/textView23"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/songscanmanageicons"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentTop="true" />
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView2"
+            android:background="@drawable/menuiconmanager"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true" />
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp" android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="    ALL MOODS"
+            android:textColor="@color/colorWhite"
+            android:id="@+id/textView9"
+            android:layout_gravity="center"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/arrow"
+            android:layout_gravity="center"
+            android:background="@drawable/library_arrow_inactive">
+        </ImageButton>
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/spinner2"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:background="#F2DD52">
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent" >
+    </LinearLayout>
+
+        <include layout="@layout/song_list_row"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center_horizontal|bottom" />
+    </FrameLayout>
+
+</LinearLayout>

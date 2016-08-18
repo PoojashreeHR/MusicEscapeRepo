@@ -6,4 +6,15 @@
 
     <color name="colorWhite">#ffff</color>
     <color name="Gray">#4d4d4d</color>
+
+   <!-- Mood Colors-->
+    <color name="Aggressive">#E1422D</color>
+    <color name="Bored">#2271AF</color>
+    <color name="depressed">#8A46CF</color>
+    <color name="happy">#F2DD52</color>
+    <color name="exited">#F29800</color>
+    <color name="chilled">#84E546</color>
+    <color name="peacefull">#82D9E9</color>
+    <color name="stressed">#D339D7</color>
+
 </resources>
