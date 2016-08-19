@@ -25,8 +25,9 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_song_list_acitivity);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        Intent intent = getIntent();
-        listOfSongs = intent.getExtras().getParcelableArrayList("songList");
+
+        /*Intent intent = getIntent();
+        listOfSongs = intent.getExtras().getParcelableArrayList("songList");*/
 
         mAdapter = new RecyclerViewAdapter(listOfSongs, this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());

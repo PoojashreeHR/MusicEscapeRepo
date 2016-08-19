@@ -7,7 +7,6 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-
     <!--&lt;!&ndash;Used for spinner&ndash;&gt;-->
     <!--<style name="countries_list">-->
         <!--<item name="india" color="#8A46CF">Depressed</item>-->

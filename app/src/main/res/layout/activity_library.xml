@@ -47,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/library1"
-            android:background="@drawable/libraryiconmanager"
+            android:background="@drawable/songscanmanageicons"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/view"
             android:layout_alignParentRight="true"
@@ -55,18 +55,63 @@
 
 
     </RelativeLayout>
-    <FrameLayout
-        android:background="@color/colorPrimary"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_weight="10"
-        android:orientation="horizontal">
 
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+      <!--  <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/library_recycler_view"
+            android:layout_gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/relativeLayout">
+        </android.support.v7.widget.RecyclerView>
+-->
+
+        <com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/library_recycler_view"
+            android:layout_gravity="center"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentBottom="true" />
+
+
+       <!-- <LinearLayout
+            android:id="@+id/side_index"
+            android:layout_width="50dp"
+            android:layout_height="fill_parent"
+            android:background="#c3c3c3"
+            android:layout_gravity="right|top"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/relativeLayout">
+        </LinearLayout>-->
+      <!--  <LinearLayout
+            android:orientation="vertical"
+            android:id="@+id/songSort"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
+            android:visibility="invisible"
+            android:background="@color/colorPrimary"
+            android:layout_gravity="right|top"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+-->
         <RelativeLayout
             android:background="@color/colorPrimary"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="0">
+            android:layout_weight="0"
+            android:id="@+id/relativeLayout">
 
             <TextView
                 android:layout_width="130dp"
@@ -122,11 +167,14 @@
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/viewContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:visibility="invisible"
             android:background="@color/colorPrimary"
-            android:layout_gravity="left|center_vertical">
+            android:layout_gravity="left|center_vertical"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
             <TextView
                 android:id="@+id/exited"
@@ -261,15 +309,18 @@
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/songSort"
-            android:layout_width="124dp"
-            android:layout_height="340dp"
+            android:layout_width="wrap_content"
+            android:layout_height="120dp"
             android:visibility="invisible"
             android:background="@color/colorPrimary"
-            android:layout_gravity="right|center_vertical">
+            android:layout_gravity="right|top"
+            android:layout_below="@+id/relativeLayout"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
 
 
             <TextView
-                android:id="@android:id/text1"
+                android:id="@+id/sortSong"
                 android:layout_width="110dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
@@ -283,7 +334,7 @@
 
 
             <TextView
-                android:id="@android:id/text1"
+                android:id="@+id/sortArtist"
                 android:layout_width="108dp"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
@@ -295,20 +346,9 @@
                 android:textSize="20sp"
                 android:gravity="center_horizontal" />
             </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recycler_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true" />
-        </RelativeLayout>
-    </FrameLayout>
+    </RelativeLayout>
+ <!--   <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:layout_gravity="center">-->
 </LinearLayout>
