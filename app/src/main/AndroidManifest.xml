@@ -27,6 +27,8 @@
         <activity android:name=".activity.BaseMusicActivity" />
         <activity android:name=".activity.AllSongListAcitivity" />
         <activity android:name=".activity.LibraryActivity" />
+        <activity android:name=".activity.DashboardActivity">
+        </activity>
     </application>
 
 </manifest>
