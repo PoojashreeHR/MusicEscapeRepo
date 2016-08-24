@@ -52,7 +52,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         baseMusicActivity = new BaseMusicActivity();
 
         linearLayout = (LinearLayout) findViewById(R.id.viewContainer);
-        tf = Typeface.createFromAsset(getAssets(), "fonts/MontserratRegular.ttf");
+        tf = Typeface.createFromAsset(getAssets(), "fonts/montserratRegular.ttf");
         TextView library = (TextView) findViewById(R.id.library);
         moodList = (TextView) findViewById(R.id.textView9);
         songs = (TextView) findViewById(R.id.songs);

@@ -29,7 +29,7 @@ public class FaqActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextView textView = (TextView) findViewById(R.id.listInfo);
         tf = Typeface.createFromAsset(getAssets(),
-                "fonts/MontserratRegular.ttf");
+                "fonts/montserratRegular.ttf");
         String name =  getIntent().getStringExtra("name");
         textView.setText(name);
         textView.setTypeface(tf);
