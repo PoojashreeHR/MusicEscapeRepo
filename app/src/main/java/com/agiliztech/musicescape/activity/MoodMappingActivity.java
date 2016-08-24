@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -34,7 +35,6 @@ import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.models.apimodels.Song;
-import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
@@ -60,6 +60,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
     Button testButton;
+    private ImageView dashboardButton, infoButton;
     private boolean newSongAdded = false;
     private boolean oldSongRemoved = false;
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -86,7 +87,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             Log.e("JSON BROADCAST ", " PRINTING " + songJson);
             final DBHandler handler = new DBHandler(MoodMappingActivity.this);
             stopService(new Intent(ApiService.SERVICE_EVENT));
-            new Thread(){
+            new Thread() {
                 @Override
                 public void run() {
                     for (int i = 0; i < model.getSongs().size(); i++) {
@@ -105,9 +106,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     startService(callSpotifyService);
                 }
             }.start();
-
-
-
 
 
         }
@@ -147,6 +145,23 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 library.setFocusableInTouchMode(false);
                 library.setFocusable(false);
                 Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
+                startActivity(intent);
+            }
+        });
+        dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        infoButton = (ImageView) findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
                 startActivity(intent);
             }
         });
