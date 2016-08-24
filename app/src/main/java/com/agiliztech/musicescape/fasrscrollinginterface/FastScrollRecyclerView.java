@@ -6,11 +6,19 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
+import java.util.StringTokenizer;
+import java.util.TreeSet;
+
+import static java.lang.String.valueOf;
 
 /**
  * Created by Pooja on 19-08-2016.
@@ -21,10 +29,10 @@ public class FastScrollRecyclerView extends RecyclerView {
 
         private boolean setupThings = false;
         public static int indWidth = 25;
-        public static int indHeight= 18;
+        public static int indHeight= 12;
         public float scaledWidth;
         public float scaledHeight;
-        public String[] sections;
+        public String[] sections  ;
         public float sx;
         public float sy;
         public String section;
@@ -60,10 +68,29 @@ public class FastScrollRecyclerView extends RecyclerView {
             Collections.sort(listSection);
             sections = new String[listSection.size()];
             int i=0;
-            for(String s:listSection) {
-                sections[i++] = s;
+            for(String s:listSection)
+            {
+                if(s.matches("[a-zA-Z]")) {
+                    sections[i++] = s;
+                }
+                else
+                {
+                    sections[i++] = s.replaceAll("(-)?\\d+(\\.\\d*)?","#");
+                }
             }
+           ArrayList<String> al = new ArrayList<>(Arrays.asList(sections));
+            Set<String> s = new HashSet<>(al);
+            TreeSet<String> treeSet = new TreeSet<>(s);
 
+            int k=0;
+            Iterator it = treeSet.iterator();
+            while(it.hasNext()){
+                sections[k]= (String) it.next();
+                k++;
+            }
+            Log.e(" ARRAY "," DISPLAY "+ sections);
+
+            Log.e(" SET "," DISPLAY "+ s);
             scaledWidth = indWidth * ctx.getResources().getDisplayMetrics().density;
             scaledHeight= indHeight* ctx.getResources().getDisplayMetrics().density;
             sx = this.getWidth() - this.getPaddingRight() - (float)(1.2*scaledWidth);

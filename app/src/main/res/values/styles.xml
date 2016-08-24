@@ -7,14 +7,18 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
-    <!--&lt;!&ndash;Used for spinner&ndash;&gt;-->
-    <!--<style name="countries_list">-->
-        <!--<item name="india" color="#8A46CF">Depressed</item>-->
-        <!--<item name="africa" color="#2271AF">Bored</item>-->
-        <!--<item name="happy" color="#F2DD52">Happy</item>-->
-       <!-- <item name="android:dividerHeight">0dp</item>
-        <item name="android:popupBackground">@</item>
-        <item name="android:dropDownHeight">70dp</item>
-        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
-        <item name="android:dropDownSelector">@android:color/white</item>-->
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/colorWhite</item>
+    </style>
+
+    <!-- ToolBar -->
+    <style name="ToolBarStyle" parent="Theme.AppCompat">
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
+    </style>
+
 </resources>

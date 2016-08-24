@@ -63,8 +63,8 @@
         android:background="@color/colorPrimary"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_margin="5dp" android:orientation="horizontal">
+        android:layout_weight="0.1"
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -92,7 +92,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="8"
+        android:layout_weight="9"
         android:background="#F2DD52">
 
     <LinearLayout
@@ -100,11 +100,12 @@
         android:layout_width="match_parent" >
     </LinearLayout>
 
-        <include layout="@layout/song_list_row"
+        <com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="center_horizontal|bottom" />
+            android:id="@+id/view2"
+            android:layout_gravity="left|top" />
+
     </FrameLayout>
 
 </LinearLayout>

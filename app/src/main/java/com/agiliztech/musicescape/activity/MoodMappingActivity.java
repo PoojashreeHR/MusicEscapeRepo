@@ -58,7 +58,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     };
     Button testButton;
-    private ImageView dashboardButton;
+    private ImageView dashboardButton, infoButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +95,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(),DashboardActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        infoButton = (ImageView) findViewById(R.id.infoButton);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),AppInfoActivity.class);
                 startActivity(intent);
             }
         });

@@ -11,10 +11,13 @@ public class SongsModel implements Parcelable
     long id;
     String title;
     String artist;
+    String album;
     private String filepath;
 
     protected SongsModel(Parcel in) {
         id = in.readLong();
+        album=in.readString();
+        album = in.readString();
         title = in.readString();
         artist = in.readString();
         filepath = in.readString();
@@ -55,14 +58,14 @@ public class SongsModel implements Parcelable
     public void setId(int id) {
         this.id = id;
     }
-    public SongsModel(long songID, String songTitle, String songArtist,String fPath)
-    {
-        id=songID;
-        title=songTitle;
-        artist=songArtist;
-        filepath = fPath;
+
+    public String getAlbum() {
+        return album;
     }
 
+    public void setAlbum(String album) {
+        this.album = album;
+    }
     public String getFilepath() {
         return filepath;
     }
@@ -71,6 +74,14 @@ public class SongsModel implements Parcelable
         this.filepath = filepath;
     }
 
+    public SongsModel(long songID, String songTitle, String songArtist,String fPath,String songAlbum)
+    {
+        id=songID;
+        title=songTitle;
+        album=songAlbum;
+        artist=songArtist;
+        filepath = fPath;
+    }
     @Override
     public int describeContents() {
         return 0;
@@ -82,5 +93,6 @@ public class SongsModel implements Parcelable
         dest.writeString(title);
         dest.writeString(artist);
         dest.writeString(filepath);
+        dest.writeString(album);
     }
 }

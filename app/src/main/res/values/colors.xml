@@ -6,6 +6,7 @@
 
     <color name="colorWhite">#ffff</color>
     <color name="Gray">#4d4d4d</color>
+    <color name="DarkGray">#1E1E1E</color>
 
    <!-- Mood Colors-->
     <color name="Aggressive">#E1422D</color>
