@@ -12,12 +12,14 @@ public class SongsModel implements Parcelable
     String title;
     String artist;
     private String filepath;
+    String albumName;
 
     protected SongsModel(Parcel in) {
         id = in.readLong();
         title = in.readString();
         artist = in.readString();
         filepath = in.readString();
+        albumName = in.readString();
     }
 
     public static final Creator<SongsModel> CREATOR = new Creator<SongsModel>() {
@@ -55,12 +57,23 @@ public class SongsModel implements Parcelable
     public void setId(int id) {
         this.id = id;
     }
-    public SongsModel(long songID, String songTitle, String songArtist,String fPath)
+
+    public String getAlbumName() {
+        return albumName;
+    }
+
+    public void setAlbumName(String albumName) {
+        this.albumName = albumName;
+    }
+
+    public SongsModel(){}
+    public SongsModel(long songID, String songTitle, String songArtist, String fPath,String albumName)
     {
         id=songID;
         title=songTitle;
         artist=songArtist;
         filepath = fPath;
+        this.albumName = albumName;
     }
 
     public String getFilepath() {
@@ -82,5 +95,14 @@ public class SongsModel implements Parcelable
         dest.writeString(title);
         dest.writeString(artist);
         dest.writeString(filepath);
+        dest.writeString(albumName);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof SongsModel) && this.id == ((SongsModel)obj).getId()
+                && this.title.equals(((SongsModel)obj).getTitle())
+                && this.artist.equals(((SongsModel)obj).getArtist())
+                && this.albumName.equals(((SongsModel)obj).getAlbumName());
     }
 }

@@ -44,23 +44,27 @@ public class SongsManager {
                     (android.provider.MediaStore.Audio.Media.ARTIST);
             int isMusicColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
             int dataCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
-          /*  int albumColumn = musicCursor.getColumnIndex
-                    (MediaStore.Audio.Media.ALBUM);*/
+            int albumColumn = musicCursor.getColumnIndex
+                    (MediaStore.Audio.Media.ALBUM);
 
             //add songs to list
+            int i=0;
             do {
                 long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
                 int isMusic = musicCursor.getInt(isMusicColumn);
                 String filePath = musicCursor.getString(dataCol);
-
+                String albumName = musicCursor.getString(albumColumn);
                 if(isMusic > 0 ) {
-                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath));
-                    Log.e("Song Details", ":" + thisTitle + ":" + thisArtist);
+                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath,albumName));
+                    Log.e("Song Name", ": " + thisTitle + "\n Artist: " + thisArtist
+                    +"\n Album Name :" + albumName + "\n ID = " + thisId);
                 }
+                i++;
             }
             while (musicCursor.moveToNext());
+            Log.e("PRINTING I " , "" + i );
 
         }
         musicCursor.close();

@@ -1,9 +1,11 @@
 package com.agiliztech.musicescape.musicservices;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -218,6 +220,7 @@ public class MusicService extends Service implements
     }
 
     public void pausePlayer() {
+
         player.pause();
     }
 
@@ -249,6 +252,7 @@ public class MusicService extends Service implements
             if (songPosn >= songs.size()) songPosn = 0;
         }
         playSong();
+
     }
 
     @Override
