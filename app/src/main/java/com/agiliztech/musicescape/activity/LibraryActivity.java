@@ -127,7 +127,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         recyclerView.setAdapter(libAdapter);
 
     }
-    public void newAdapter()
+    public void artistWise()
     {
         sortSongsArtistwise();
         SongAdapter();
@@ -137,6 +137,12 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     public void songWiseDisplay()
     {
         sortSongsAlphabetically();
+        SongAdapter();
+    }
+
+    public void albumwise()
+    {
+        sortSongsAlbumwise();
         SongAdapter();
     }
     private HashMap<String, Integer> calculateIndexesForName(ArrayList<SongsModel> songList){
@@ -275,7 +281,20 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                      songs.setTextColor(sortArtist.getTextColors());
                      songs.setTypeface(tf);
                      //sortSongsArtistwise();
-                     newAdapter();
+                     artistWise();
+                     songButton.animate().rotation(360).start();
+                     songViewGroup.setVisibility(View.GONE);
+                     //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
+                     break;
+
+                 case R.id.sortAlbum:
+                     //your code here
+                     TextView sortAlbun = (TextView) findViewById(R.id.sortAlbum);
+                     songs.setText(sortAlbun.getText().toString());
+                     songs.setTextColor(sortAlbun.getTextColors());
+                     songs.setTypeface(tf);
+                     //sortSongsArtistwise();
+                     albumwise();
                      songButton.animate().rotation(360).start();
                      songViewGroup.setVisibility(View.GONE);
                      //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();

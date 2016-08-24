@@ -26,7 +26,7 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
         float scaledHeight= ((FastScrollRecyclerView)parent).scaledHeight;
         float sy = ((FastScrollRecyclerView)parent).sy;
         String[] sections = ((FastScrollRecyclerView)parent).sections;
-        String section = ((FastScrollRecyclerView)parent).section;
+        String section = ((FastScrollRecyclerView)parent).section ;
         boolean showLetter = ((FastScrollRecyclerView)parent).showLetter;
 
         // We draw the letter in the middle
@@ -46,11 +46,9 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
             int xPos = (canvas.getWidth() -  (int)middleTextSize)/ 2;
             int yPos = (int) ((canvas.getHeight() / 2) - ((middleLetter.descent() + middleLetter.ascent()) / 2));
 
-
             canvas.drawText(section.toUpperCase(), xPos, yPos, middleLetter);
         }
         // draw indez A-Z
-
         Paint textPaint = new Paint();
         textPaint.setAntiAlias(true);
         textPaint.setStyle(Paint.Style.FILL);
@@ -71,7 +69,7 @@ public class FastScrollRecyclerViewItemDecoration extends RecyclerView.ItemDecor
                                 + scaledHeight * (i + 1) + scaledHeight/3, textPaint);
 
             } else {
-                textPaint.setColor(Color.YELLOW);
+                textPaint.setColor(Color.GRAY);
                 textPaint.setAlpha(200);
                 textPaint.setFakeBoldText(false);
                 textPaint.setTextSize(scaledWidth / 2);
