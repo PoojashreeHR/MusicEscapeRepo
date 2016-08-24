@@ -14,6 +14,15 @@ public class SongsModel implements Parcelable
     private String filepath;
     String albumName;
 
+    public SongsModel(){}
+    public SongsModel(long id, String title, String artist, String filepath, String albumName) {
+        this.id = id;
+        this.title = title;
+        this.artist = artist;
+        this.filepath = filepath;
+        this.albumName = albumName;
+    }
+
     protected SongsModel(Parcel in) {
         id = in.readLong();
         title = in.readString();
@@ -34,12 +43,12 @@ public class SongsModel implements Parcelable
         }
     };
 
-    public String getArtist() {
-        return artist;
+    public long getId() {
+        return id;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -50,12 +59,20 @@ public class SongsModel implements Parcelable
         this.title = title;
     }
 
-    public long getId() {
-        return id;
+    public String getArtist() {
+        return artist;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setArtist(String artist) {
+        this.artist = artist;
+    }
+
+    public String getFilepath() {
+        return filepath;
+    }
+
+    public void setFilepath(String filepath) {
+        this.filepath = filepath;
     }
 
     public String getAlbumName() {
@@ -66,22 +83,12 @@ public class SongsModel implements Parcelable
         this.albumName = albumName;
     }
 
-    public SongsModel(){}
-    public SongsModel(long songID, String songTitle, String songArtist, String fPath,String albumName)
-    {
-        id=songID;
-        title=songTitle;
-        artist=songArtist;
-        filepath = fPath;
-        this.albumName = albumName;
-    }
-
-    public String getFilepath() {
-        return filepath;
-    }
-
-    public void setFilepath(String filepath) {
-        this.filepath = filepath;
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof SongsModel) && this.id == ((SongsModel) obj).getId()
+                && this.title.equals(((SongsModel) obj).getTitle())
+                && this.artist.equals(((SongsModel) obj).getArtist())
+                && this.albumName.equals(((SongsModel) obj).getAlbumName());
     }
 
     @Override
@@ -96,13 +103,5 @@ public class SongsModel implements Parcelable
         dest.writeString(artist);
         dest.writeString(filepath);
         dest.writeString(albumName);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        return (obj instanceof SongsModel) && this.id == ((SongsModel)obj).getId()
-                && this.title.equals(((SongsModel)obj).getTitle())
-                && this.artist.equals(((SongsModel)obj).getArtist())
-                && this.albumName.equals(((SongsModel)obj).getAlbumName());
     }
 }
