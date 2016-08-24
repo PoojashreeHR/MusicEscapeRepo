@@ -32,6 +32,27 @@
         <activity android:name=".activity.BaseMusicActivity" />
         <activity android:name=".activity.AllSongListAcitivity" />
         <activity android:name=".activity.LibraryActivity" />
+        <activity android:name=".activity.DashboardActivity" />
+        <activity
+            android:name=".activity.AppInfoActivity"
+            android:label="@string/title_activity_app_info"
+            android:parentActivityName=".activity.MoodMappingActivity"
+            android:theme="@style/AppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.agiliztech.musicescape.activity.MoodMappingActivity" />
+        </activity>
+        <activity android:name=".activity.SettingsActivity">
+        </activity>
+        <activity
+            android:name=".activity.FaqActivity"
+            android:label="@string/title_activity_faq"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.SlidingImage" />
+        <activity
+            android:name=".PrivacyActivity"
+            android:label="@string/title_activity_privacy"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

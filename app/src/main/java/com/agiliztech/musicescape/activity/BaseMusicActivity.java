@@ -45,7 +45,8 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
 
-    private ArrayList<SongsModel> getSongsFromCurPlaylist() {
+    public ArrayList<SongsModel> getSongsFromCurPlaylist()
+    {
         return songsManager.getSongList();
     }
 
@@ -68,11 +69,8 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
         loop_selected = (ImageButton) findViewById(R.id.loop_selected);
         loop_selected.setOnClickListener(this);
         loop_not_selected.setOnClickListener(this);
-
         songList = new ArrayList<>();
-
         songList = getSongsFromCurPlaylist();
-
         //sort alphabetically by title
         sortSongsAlphabetically();
 
@@ -81,7 +79,23 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public void sortSongsAlphabetically() {
         Collections.sort(songList, new Comparator<SongsModel>() {
             public int compare(SongsModel a, SongsModel b) {
-                return a.getTitle().compareTo(b.getTitle());
+                return a.getTitle().compareToIgnoreCase(b.getTitle());
+            }
+        });
+    }
+
+    public void sortSongsArtistwise() {
+        Collections.sort(songList, new Comparator<SongsModel>() {
+            public int compare(SongsModel a, SongsModel b) {
+                return a.getArtist().compareToIgnoreCase(b.getArtist());
+            }
+        });
+    }
+
+    public void sortSongsAlbumwise() {
+        Collections.sort(songList, new Comparator<SongsModel>() {
+            public int compare(SongsModel a, SongsModel b) {
+                return a.getAlbumName().compareToIgnoreCase(b.getAlbumName());
             }
         });
     }

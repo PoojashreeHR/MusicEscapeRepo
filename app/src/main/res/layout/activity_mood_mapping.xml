@@ -21,15 +21,6 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"></android.support.v7.widget.Toolbar>
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignEnd="@+id/imageView2"
-            android:layout_alignParentBottom="true"
-            android:layout_alignRight="@+id/imageView2"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/icon_info" />
 
         <TextView
             android:id="@+id/moodMapping"
@@ -41,14 +32,13 @@
             android:gravity="center"
             android:text="MOOD MAPPING"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/Gray"
             android:textSize="20sp" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/dashboardButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/libraryButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
@@ -64,7 +54,24 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/libraryiconmanager"
             android:clickable="true" />
-
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/view"
+    android:layout_alignParentBottom="true">
+    <ImageView
+        android:id="@+id/infoButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/menu_info_icon_manager"
+        android:foregroundGravity="center"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>
 
     </RelativeLayout>
 
