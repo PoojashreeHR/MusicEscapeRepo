@@ -49,7 +49,18 @@
                 android:layout_height="155dp"
                 android:layout_marginLeft="44dp"
                 android:layout_marginTop="248dp"
+                android:visibility="visible"
                 android:src="@drawable/m_settings_inactive" />
+
+            <ImageView
+                android:id="@+id/menu_activeSettings"
+                android:layout_width="110dp"
+                android:layout_height="155dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="248dp"
+                android:visibility="gone"
+                android:src="@drawable/m_settings_active" />
+
 
         </FrameLayout>
 
