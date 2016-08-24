@@ -6,8 +6,9 @@
 
     <color name="colorWhite">#ffff</color>
     <color name="Gray">#4d4d4d</color>
+    <color name="DarkGray">#1E1E1E</color>
 
-   <!-- Mood Colors-->
+    <!-- Mood Colors-->
     <color name="Aggressive">#E1422D</color>
     <color name="Bored">#2271AF</color>
     <color name="depressed">#8A46CF</color>
@@ -25,5 +26,10 @@
     <color name="turquoise">#ff86b9b5</color>
     <color name="slate">#ff76a9b5</color>
     <color name="black">#ccc</color>
+
+    <!-- Switch Colors-->
+    <color name="disable_foreground_grey">#42221f1f</color>
+    <color name="disable_thumb_grey">#1c000000</color>
+    <color name="enable_thumb_yellow">#FDBE46</color>
 
 </resources>

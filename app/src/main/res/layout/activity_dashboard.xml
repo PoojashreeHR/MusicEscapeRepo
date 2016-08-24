@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="#262626"
     tools:context="com.agiliztech.musicescape.activity.DashboardActivity">
 
 
@@ -61,7 +62,17 @@
                 android:layout_height="130dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="201dp"
+                android:visibility="visible"
                 android:src="@drawable/m_library_inactive" />
+
+            <ImageView
+                android:id="@+id/menu_activelibrary"
+                android:layout_width="154dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="201dp"
+                android:visibility="gone"
+                android:src="@drawable/m_library_active" />
 
             <ImageView
                 android:id="@+id/menu_settings"
@@ -69,7 +80,18 @@
                 android:layout_height="155dp"
                 android:layout_marginLeft="44dp"
                 android:layout_marginTop="248dp"
+                android:visibility="visible"
                 android:src="@drawable/m_settings_inactive" />
+
+            <ImageView
+                android:id="@+id/menu_activeSettings"
+                android:layout_width="110dp"
+                android:layout_height="155dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="248dp"
+                android:visibility="gone"
+                android:src="@drawable/m_settings_active" />
+
 
         </FrameLayout>
 

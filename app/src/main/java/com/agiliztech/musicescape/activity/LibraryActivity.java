@@ -6,33 +6,53 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.adapter.LibraryRecyclerView;
+import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewItemDecoration;
+import com.agiliztech.musicescape.models.SongsModel;
+import com.agiliztech.musicescape.utils.SongsManager;
 
-public class LibraryActivity extends AppCompatActivity implements View.OnClickListener {
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener {
     Spinner sp;
+    BaseMusicActivity baseMusicActivity;
     private View mViewGroup;
     private View songViewGroup;
     private ImageButton mButton,songButton;
     TextView moodList,songs;
     Typeface tf;
     LinearLayout linearLayout;
+    RecyclerView recyclerView;
+    LibraryRecyclerView libAdapter;
+    private ImageView dashboardButton;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_library);
+        recyclerView = (RecyclerView) findViewById(R.id.library_recycler_view);
+        baseMusicActivity = new BaseMusicActivity();
 
-
-        linearLayout = (LinearLayout)findViewById(R.id.viewContainer);
-        tf = Typeface.createFromAsset(getAssets(), "fonts/MontserratRegular.ttf");
+        linearLayout = (LinearLayout) findViewById(R.id.viewContainer);
+        tf = Typeface.createFromAsset(getAssets(), "fonts/montserratRegular.ttf");
         TextView library = (TextView) findViewById(R.id.library);
         moodList = (TextView) findViewById(R.id.textView9);
         songs = (TextView) findViewById(R.id.songs);
@@ -40,11 +60,24 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
         moodList.setTypeface(tf);
         songs.setTypeface(tf);
 
+        dashboardButton = (ImageView) findViewById(R.id.imageButton2);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LibraryActivity.this,DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         songViewGroup = findViewById(R.id.songSort);
+        songViewGroup.setOnClickListener(this);
         mViewGroup = findViewById(R.id.viewContainer);
         mButton = (ImageButton) findViewById(R.id.arrow);
         songButton = (ImageButton) findViewById(R.id.arrow1);
         mViewGroup.setOnClickListener(this);
+
+        SongAdapter();
 
         final ImageButton songScan = (ImageButton) findViewById(R.id.library1);
         songScan.setOnClickListener(new View.OnClickListener() {
@@ -57,11 +90,11 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
                 songScan.setFocusable(false);
                 Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-      // final ImageButton mbutton = (ImageButton) findViewById(R.id.arrow);
-       // assert mbutton != null;
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +109,6 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
             }
         });
 
-      //  final ImageButton sortButton = (ImageButton) findViewById(R.id.arrow1);
         songButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,15 +118,63 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
 
                 } else {
                     songViewGroup.setVisibility(View.VISIBLE);
-                    songButton.animate().rotation(540).start();
+                    songButton.animate().rotation(180).start();
                 }
             }
         });
     }
-      @Override
+
+    public  void SongAdapter()
+    {
+
+      /*  for(int i=0; i<21; i++) {
+            songList.add(Character.toString((char)(66 + i).
+        }*/
+        HashMap<String, Integer> mapIndex = calculateIndexesForName(songList);
+        libAdapter = new LibraryRecyclerView(songList,mapIndex);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        FastScrollRecyclerViewItemDecoration decoration = new FastScrollRecyclerViewItemDecoration(this);
+        recyclerView.addItemDecoration(decoration);
+        recyclerView.setLayoutManager(mLayoutManager);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(libAdapter);
+
+    }
+    public void artistWise()
+    {
+        sortSongsArtistwise();
+        SongAdapter();
+
+    }
+
+    public void songWiseDisplay()
+    {
+        sortSongsAlphabetically();
+        SongAdapter();
+    }
+
+    public void albumwise()
+    {
+        sortSongsAlbumwise();
+        SongAdapter();
+    }
+    private HashMap<String, Integer> calculateIndexesForName(ArrayList<SongsModel> songList){
+        HashMap<String, Integer> mapIndex = new LinkedHashMap<String, Integer>();
+        for (int i = 0; i<songList.size(); i++){
+            String name = String.valueOf(songList.get(i).getTitle());
+            String index = name.substring(0,1);
+            index = index.toUpperCase();
+
+            if (!mapIndex.containsKey(index)) {
+                mapIndex.put(index, i);
+            }
+        }
+        return mapIndex;
+    }
+    @Override
             public void onClick(View v) {
-          int id = v.getId();
-          switch (id) {
+            int id = v.getId();
+             switch (id) {
               case R.id.aggressive:
                   //your code here
                   TextView aggressive = (TextView) findViewById(R.id.aggressive);
@@ -191,10 +271,50 @@ public class LibraryActivity extends AppCompatActivity implements View.OnClickLi
                   moodList.setText(allMood.getText().toString());
                   moodList.setTextColor(allMood.getTextColors());
                   moodList.setTypeface(tf);
+
                   mButton.animate().rotation(360).start();
                   mViewGroup.setVisibility(View.GONE);
                   //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                   break;
+              case R.id.sortSong:
+                  //your code here
+                  TextView songSort = (TextView) findViewById(R.id.sortSong);
+                  songs.setText(songSort.getText().toString());
+                  songs.setTextColor(songSort.getTextColors());
+                  songs.setTypeface(tf);
+                  songWiseDisplay();
+                  songButton.animate().rotation(360).start();
+                  songViewGroup.setVisibility(View.GONE);
+                  //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
+                  break;
+                 case R.id.sortArtist:
+                     //your code here
+                     TextView sortArtist = (TextView) findViewById(R.id.sortArtist);
+                     songs.setText(sortArtist.getText().toString());
+                     songs.setTextColor(sortArtist.getTextColors());
+                     songs.setTypeface(tf);
+                     //sortSongsArtistwise();
+                     artistWise();
+                     songButton.animate().rotation(360).start();
+                     songViewGroup.setVisibility(View.GONE);
+                     //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
+                     break;
+
+                 case R.id.sortAlbum:
+                     //your code here
+                     TextView sortAlbun = (TextView) findViewById(R.id.sortAlbum);
+                     songs.setText(sortAlbun.getText().toString());
+                     songs.setTextColor(sortAlbun.getTextColors());
+                     songs.setTypeface(tf);
+                     //sortSongsArtistwise();
+                     albumwise();
+                     songButton.animate().rotation(360).start();
+                     songViewGroup.setVisibility(View.GONE);
+                     //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
+                     break;
           }
-      }
+
+        }
+
+
 }
