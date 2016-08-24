@@ -9,6 +9,7 @@
 
 
     <com.agiliztech.musicescape.view.PieChart
+
     android:id="@+id/Pie"
     android:layout_width="wrap_content"
     android:layout_height="match_parent"
@@ -19,7 +20,7 @@
     custom:labelY="85dp"
     custom:labelPosition="left"
     custom:highlightStrength="1.12"
-    android:background="@android:color/white"
+    android:background="#262626"
     custom:pieRotation="0"
     custom:labelColor="@android:color/black"
     custom:autoCenterPointerInSlice="true"
