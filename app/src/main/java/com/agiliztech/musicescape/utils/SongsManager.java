@@ -32,16 +32,16 @@ public class SongsManager {
 
 
     public static void initializeColors(){
-        kExcitedColor = Color.argb(1,255,160,0);
-        kHappyColor = Color.argb(1,255,233,86);
-        kChillColor = Color.argb(1,139,241,74);
-        kPeacefulColor = Color.argb(1,137,229,246);
-        kBoredColor = Color.argb(1,36,119,184);
-        kDepressedColor = Color.argb(1,145,74,218);
-        kStressedColor = Color.argb(1,222,60,227);
-        kAggressiveColor = Color.argb(1,237,70,47);
-        kUntaggedMoods = Color.argb(1,80,80,80);
-        kAllMoods = Color.argb(1,255,255,255);
+        kExcitedColor = Color.rgb(255,160,0);
+        kHappyColor = Color.rgb(255,233,86);
+        kChillColor = Color.rgb(139,241,74);
+        kPeacefulColor = Color.rgb(137,229,246);
+        kBoredColor = Color.rgb(36,119,184);
+        kDepressedColor = Color.rgb(145,74,218);
+        kStressedColor = Color.rgb(222,60,227);
+        kAggressiveColor = Color.rgb(237,70,47);
+        kUntaggedMoods = Color.rgb(80,80,80);
+        kAllMoods = Color.rgb(255,255,255);
 
     }
 

@@ -12,6 +12,8 @@ import com.agiliztech.musicescape.R;
 public class DashboardActivity extends AppCompatActivity {
 
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings;
+    private ImageView menu_draw;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,17 @@ public class DashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        menu_draw = (ImageView) findViewById(R.id.menu_draw);
+        menu_draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DashboardActivity.this,DrawingViewActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
     }
 
 

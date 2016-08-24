@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.utils.SongsManager;
 
 import java.util.ArrayList;
@@ -77,8 +78,8 @@ public class JourneyView extends View {
 
     private void init() {
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        xm = dm.widthPixels;
-        ym = dm.heightPixels;
+        xm = getMeasuredWidth();
+        ym = getMeasuredHeight();
 
         circlePaint = new Paint();
         circlePaint.setStyle(Paint.Style.FILL);
@@ -212,7 +213,7 @@ public class JourneyView extends View {
 
         for(Dot dot : points){
             Integer dotIndex = this.journeyPoints.indexOf(idx);
-            boolean journeyDot = moreThanOneDot && (dotIndex != null && lastJourneyDotIndex != -1);
+            boolean journeyDot = moreThanOneDot && (dotIndex != null && lastJourneyDotIndex !=  -1);
             boolean currentDot = (dotIndex == currentSongIndex);
             boolean firstJourneyDot = journeyDot && (dotIndex == 0);
             boolean lastJourneyDot = journeyDot && (dotIndex == lastJourneyDotIndex);
@@ -260,7 +261,7 @@ public class JourneyView extends View {
 
 
     private int colorForDot(Dot dot, boolean journeyDot, boolean currentSong) {
-        int color = 0;
+        int color = -1;
         if(mode == DrawingMode.DMDRAWING && isActualTouch(dot)){
             color = Color.argb(1,255,255,255);
         }
@@ -279,11 +280,16 @@ public class JourneyView extends View {
         } else if(dot.getMood() == SongMoodCategory.scMoodNotFound) {
             color = Color.argb(1,38,38,38);
         }
-        return color < 0 ? SongsManager.colorForMood(dot.getMood()) : color;
+        return color == -1 ? SongsManager.colorForMood(dot.getMood()) : color;
     }
 
     private boolean isActualTouch(Dot dot) {
         boolean isTouch = false;
+
+        if(actualTouches == null){
+            return false;
+        }
+
         for(PointF point : actualTouches){
             if(dot.getBounds().contains(point.x, point.y)){
                 isTouch = true;
@@ -492,17 +498,17 @@ public class JourneyView extends View {
     }
 
     private float getRelativeDiameterHWise(int diaFor560) {
-        float diafor560 = diaFor560 * ym/0.7f;
-        return diafor560/800.f;
+        float diafor560 = diaFor560 * xm;
+        return diafor560/560.f;
     }
 
     void setupDots(){
-        if(cachedPoints != null){
+        if(cachedPoints != null && cachedPoints.size() > 0 && cachedPoints.containsKey(getCacheStr())){
             points = cachedPoints.get(getCacheStr());
             return;
         }
 
-        points = new ArrayList<Dot>(900);
+        points = new ArrayList<Dot>(924);
         float centerX = ((float)xm)/2;
         float centerY = ((float)ym)/2;
 
@@ -576,6 +582,20 @@ public class JourneyView extends View {
         this.dotGap = gaps.getHeight();
         setupDots();
         invalidate();
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        int parentWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int parentHeight = MeasureSpec.getSize(heightMeasureSpec);
+        this.setMeasuredDimension(parentWidth, parentHeight);
+        if(parentWidth != xm || parentHeight != ym) {
+            xm = parentWidth ;
+            ym = parentHeight ;
+            setupDots();
+            invalidate();
+        }
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public int getCurrentSongIndex() {
