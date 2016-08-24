@@ -31,16 +31,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="45dp"
                 android:id="@+id/listInfo"
+                android:text="PRIVACY STATEMENT"
                 android:textColor="@color/Gray"
                 android:gravity="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:layout_gravity="center_horizontal|top" />
         </FrameLayout>
-        </android.support.v7.widget.Toolbar>
-    <WebView
-        android:layout_width="wrap_content"
+    </android.support.v7.widget.Toolbar>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/webView"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true" />
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/privacy_statements"
+        android:autoLink="web|email"
+        android:textColorLink="#2c3e69"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/privacyText" />
+</ScrollView>
+
 </LinearLayout>

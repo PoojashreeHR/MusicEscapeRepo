@@ -5,5 +5,5 @@
         android:state_pressed="true"
         android:state_selected="true" />
     <!-- Standard background color -->
-    <item android:drawable="@color/DarkGray" android:state_selected="false" />
+    <item android:drawable="@color/DarkGray" />
 </selector>

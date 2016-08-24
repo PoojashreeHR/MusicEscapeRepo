@@ -40,6 +40,11 @@
         <activity
             android:name=".activity.FaqActivity"
             android:label="@string/title_activity_faq"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.SlidingImage" />
+        <activity
+            android:name=".PrivacyActivity"
+            android:label="@string/title_activity_privacy"
             android:theme="@style/AppTheme"></activity>
     </application>
 

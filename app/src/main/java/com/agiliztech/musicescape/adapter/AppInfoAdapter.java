@@ -23,9 +23,6 @@ import java.util.List;
 public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHolder> {
     private List<AppInfo> appInfo;
     public Context context;
-    private WebView mWebView;
-    private SharedPreferences mPref;
-    private SharedPreferences.Editor mEditor;
 
     public AppInfoAdapter(List<AppInfo> itemsData) {
         this.appInfo = itemsData;

@@ -1,6 +1,8 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -16,52 +19,32 @@ import com.agiliztech.musicescape.R;
 public class FaqActivity extends AppCompatActivity {
 
     WebView mWebView;
-
+    ImageView backButton;
+    Typeface tf;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        TextView textView = (TextView) findViewById(R.id.listInfo);
+        tf = Typeface.createFromAsset(getAssets(),
+                "fonts/MontserratRegular.ttf");
+        String name =  getIntent().getStringExtra("name");
+        textView.setText(name);
+        textView.setTypeface(tf);
         mWebView = (WebView) findViewById(R.id.webView);
-        TextView textView = (TextView) findViewById(R.id.appInfo);
-        textView.setText("FAQ");
-        String url = "file:///android_asset/faq.html";
+        String url = getIntent().getStringExtra("URL");
         mWebView.loadUrl(url);
-       /* mWebView.setWebViewClient(new WebViewClient() {
-            ProgressDialog progressDialog;
 
-            //If you will not use this method url links are opeen in new brower not in webview
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+        backButton = (ImageView) findViewById(R.id.backbutton1);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
+                startActivity(intent);
+
             }
-
-            public void onPageFinished(WebView view, String url) {
-                try {
-                    if (progressDialog.isShowing()) {
-                        progressDialog.dismiss();
-                        progressDialog = null;
-                    }
-                } catch (Exception exception) {
-                    exception.printStackTrace();
-                }
-            }
-
         });
-
-        // Javascript inabled on webview
-        mWebView.getSettings().setJavaScriptEnabled(true);
-
-    }
-
-    private void startWebView(String url) {
-
-        //Create new webview Client to show progress dialog
-        //When opening a url or click on link
-
-
-    }*/
     }
 }
