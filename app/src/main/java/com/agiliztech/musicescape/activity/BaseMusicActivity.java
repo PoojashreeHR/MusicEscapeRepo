@@ -95,7 +95,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public void sortSongsAlbumwise() {
         Collections.sort(songList, new Comparator<SongsModel>() {
             public int compare(SongsModel a, SongsModel b) {
-                return a.getAlbum().compareToIgnoreCase(b.getAlbum());
+                return a.getAlbumName().compareToIgnoreCase(b.getAlbumName());
             }
         });
     }

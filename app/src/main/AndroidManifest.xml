@@ -2,8 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.agiliztech.musicescape">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <application
         android:name=".MainApplication"
@@ -23,7 +27,8 @@
         </activity>
 
         <service android:name=".musicservices.MusicService" />
-
+        <service android:name=".apiservices.ApiService"/>
+        <service android:name=".apiservices.SpotifyApiService"/>
         <activity android:name=".activity.BaseMusicActivity" />
         <activity android:name=".activity.AllSongListAcitivity" />
         <activity android:name=".activity.LibraryActivity" />

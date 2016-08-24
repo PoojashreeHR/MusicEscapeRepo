@@ -8,7 +8,7 @@
     <color name="Gray">#4d4d4d</color>
     <color name="DarkGray">#1E1E1E</color>
 
-   <!-- Mood Colors-->
+    <!-- Mood Colors-->
     <color name="Aggressive">#E1422D</color>
     <color name="Bored">#2271AF</color>
     <color name="depressed">#8A46CF</color>

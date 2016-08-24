@@ -48,24 +48,26 @@ public class SongsManager {
                     (MediaStore.Audio.Media.ALBUM);
 
             //add songs to list
+            int i=0;
             do {
                 long thisId = musicCursor.getLong(idColumn);
                 String thisTitle = musicCursor.getString(titleColumn);
                 String thisArtist = musicCursor.getString(artistColumn);
-                String thisAlbum = musicCursor.getString(albumColumn);
                 int isMusic = musicCursor.getInt(isMusicColumn);
                 String filePath = musicCursor.getString(dataCol);
-
+                String albumName = musicCursor.getString(albumColumn);
                 if(isMusic > 0 ) {
-                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath,thisAlbum));
-                    Log.e("Song Details", ":" + thisTitle + ":" + thisArtist);
+                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath,albumName));
+                    Log.e("Song Name", ": " + thisTitle + "\n Artist: " + thisArtist
+                    +"\n Album Name :" + albumName + "\n ID = " + thisId);
                 }
+                i++;
             }
             while (musicCursor.moveToNext());
+            Log.e("PRINTING I " , "" + i );
 
         }
         musicCursor.close();
         return songList;
     }
-
 }
