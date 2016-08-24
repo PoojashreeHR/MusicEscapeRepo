@@ -37,6 +37,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agiliztech.musicescape.activity.MoodMappingActivity" />
         </activity>
+        <activity android:name=".activity.SettingsActivity">
+        </activity>
         <activity
             android:name=".activity.FaqActivity"
             android:label="@string/title_activity_faq"
