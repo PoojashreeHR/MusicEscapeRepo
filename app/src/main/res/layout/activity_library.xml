@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:weightSum="10"
     android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="12dp"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
@@ -26,7 +29,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="LIBRARY"
-            android:textColor="@color/colorWhite"
+            android:textColor="#6E6E6E"
             android:id="@+id/library"
             android:gravity="center"
             android:layout_alignBottom="@+id/view"
@@ -38,10 +41,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/imageButton2"
             android:background="@drawable/menuiconmanager"
-            android:layout_alignBottom="@+id/view"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentStart="true" />
 
         <ImageButton
             android:layout_width="wrap_content"
@@ -55,22 +57,21 @@
 
 
     </RelativeLayout>
+    <View
+        android:id="@+id/feedback_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
 
+        android:alpha="0.9"
+        android:background="#262626"
+        />
     <RelativeLayout
         android:background="@color/colorPrimary"
+        android:layout_marginTop="10dp"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="horizontal">
-      <!--  <android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/library_recycler_view"
-            android:layout_gravity="center"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/relativeLayout">
-        </android.support.v7.widget.RecyclerView>
--->
 
         <com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerView
             android:layout_width="match_parent"
@@ -83,34 +84,10 @@
             android:layout_alignParentBottom="true" />
 
 
-       <!-- <LinearLayout
-            android:id="@+id/side_index"
-            android:layout_width="50dp"
-            android:layout_height="fill_parent"
-            android:background="#c3c3c3"
-            android:layout_gravity="right|top"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
-            android:layout_below="@+id/relativeLayout">
-        </LinearLayout>-->
-      <!--  <LinearLayout
-            android:orientation="vertical"
-            android:id="@+id/songSort"
-            android:layout_width="wrap_content"
-            android:layout_height="120dp"
-            android:visibility="invisible"
-            android:background="@color/colorPrimary"
-            android:layout_gravity="right|top"
-            android:layout_below="@+id/relativeLayout"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true">
--->
         <RelativeLayout
             android:background="@color/colorPrimary"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_weight="0"
             android:id="@+id/relativeLayout">
 
             <TextView
@@ -345,10 +322,19 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/sortAlbum"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="5dp"
+                android:text="ALBUM"
+                android:onClick="onClick"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/colorWhite"
+                android:textSize="20sp"
+                android:gravity="center_horizontal" />
             </LinearLayout>
     </RelativeLayout>
- <!--   <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="200dp"
-        android:layout_gravity="center">-->
 </LinearLayout>

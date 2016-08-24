@@ -79,7 +79,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public void sortSongsAlphabetically() {
         Collections.sort(songList, new Comparator<SongsModel>() {
             public int compare(SongsModel a, SongsModel b) {
-                return a.getTitle().compareTo(b.getTitle());
+                return a.getTitle().compareToIgnoreCase(b.getTitle());
             }
         });
     }
@@ -87,7 +87,15 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public void sortSongsArtistwise() {
         Collections.sort(songList, new Comparator<SongsModel>() {
             public int compare(SongsModel a, SongsModel b) {
-                return a.getArtist().compareTo(b.getArtist());
+                return a.getArtist().compareToIgnoreCase(b.getArtist());
+            }
+        });
+    }
+
+    public void sortSongsAlbumwise() {
+        Collections.sort(songList, new Comparator<SongsModel>() {
+            public int compare(SongsModel a, SongsModel b) {
+                return a.getAlbumName().compareToIgnoreCase(b.getAlbumName());
             }
         });
     }
