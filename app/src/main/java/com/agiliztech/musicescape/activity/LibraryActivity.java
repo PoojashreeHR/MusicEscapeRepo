@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     LinearLayout linearLayout;
     RecyclerView recyclerView;
     LibraryRecyclerView libAdapter;
+    private ImageView dashboardButton;
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -57,6 +59,16 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         library.setTypeface(tf);
         moodList.setTypeface(tf);
         songs.setTypeface(tf);
+
+        dashboardButton = (ImageView) findViewById(R.id.imageButton2);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LibraryActivity.this,DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         songViewGroup = findViewById(R.id.songSort);
         songViewGroup.setOnClickListener(this);
@@ -78,6 +90,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 songScan.setFocusable(false);
                 Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
