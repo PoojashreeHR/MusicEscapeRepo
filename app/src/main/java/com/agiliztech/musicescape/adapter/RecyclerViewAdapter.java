@@ -70,7 +70,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         public MyViewHolder(View itemView) {
             super(itemView);
             rv_song_name = (TextView) itemView.findViewById(R.id.rv_song_name);
-            rv_ll = (LinearLayout) itemView.findViewById(R.id.rv_ll);
+            rv_ll = (LinearLayout) itemView;
             rv_song_detail = (TextView) itemView.findViewById(R.id.rv_song_detail);
         }
     }

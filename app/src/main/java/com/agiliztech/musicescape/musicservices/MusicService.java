@@ -54,6 +54,7 @@ public class MusicService extends Service implements
         return super.onStartCommand(intent, flags, startId);
     }
 
+
     public void onCreate() {
         //create the service
         super.onCreate();
@@ -65,6 +66,10 @@ public class MusicService extends Service implements
         player = new MediaPlayer();
         //initialize
         initMusicPlayer();
+    }
+
+    public void initMediaPlayer(){
+        player = new MediaPlayer();
     }
 
     public void initMusicPlayer() {
