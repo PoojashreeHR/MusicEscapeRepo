@@ -223,7 +223,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // get the songs id which is sent by the server
-    public ArrayList<SpotifyInfo> getSongsIdSentFromServer() {
+    public ArrayList<SpotifyInfo> getSongsWithServerIdAndSpotifyId() {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ArrayList<SpotifyInfo> spotifyInfos = new ArrayList<>();
@@ -240,4 +240,5 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         return spotifyInfos;
     }
+
 }

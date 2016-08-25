@@ -67,7 +67,7 @@ public class DrawingViewActivity extends AppCompatActivity {
         params.gravity = Gravity.CENTER;
 
         journey.setLayoutParams(params);
-
+        journey.setMode(JourneyView.DrawingMode.DMDRAWING);
         journey.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
         journey.setMode(JourneyView.DrawingMode.DMDRAWING);
     }

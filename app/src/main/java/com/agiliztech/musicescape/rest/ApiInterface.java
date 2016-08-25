@@ -44,9 +44,9 @@ public interface ApiInterface {
 
 
     //Analyse Batch Poll
-    @GET("api/v3/analyse/{batchId}?since={sinceDateTime}")
-    Call<ResponseSongPollModel> analysePollSongs(@Path("batchId") String batchId,
-                                                 @Path("sinceDateTime") String sinceDateTime);
+    @GET("api/v3/analyse/{batchId}")
+    Call<ResponseSongPollModel> analysePollSongs(@Path("batchId") String batchId);
+                                                 //@Path("sinceDateTime") String sinceDateTime);
 
     //SongRetag
     //Response String (HTTP 201)

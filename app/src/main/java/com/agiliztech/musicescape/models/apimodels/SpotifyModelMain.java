@@ -18,6 +18,11 @@ public class SpotifyModelMain {
     @Expose
     private List<SpotifyInfo> songs = new ArrayList<SpotifyInfo>();
 
+    public SpotifyModelMain(String user, List<SpotifyInfo> songs) {
+        this.user = user;
+        this.songs = songs;
+    }
+
     public String getUser() {
         return user;
     }

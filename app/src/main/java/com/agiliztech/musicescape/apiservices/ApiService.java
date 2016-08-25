@@ -44,66 +44,130 @@ public class ApiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String batchIds = intent.getStringExtra("batchId");
+        final String variable = intent.getStringExtra("variable");
         Log.e("batchId", batchIds);
         String batchId = batchIds;
 
-        new Thread() {
-            @Override
-            public void run() {
+        if (variable.contains("1")) {
+            new Thread() {
+                @Override
+                public void run() {
 
-                while (true) {
-                    ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-                    Call<ResponseSongPollModel> call1 = apiInterface.pollSongFromServer(batchIds);
-                    latch = new CountDownLatch(1);
-                    call1.enqueue(new Callback<ResponseSongPollModel>() {
-                        @Override
-                        public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
+                    while (true) {
+                        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+                        Call<ResponseSongPollModel> call1 = apiInterface.pollSongFromServer(batchIds);
+                        latch = new CountDownLatch(1);
+                        call1.enqueue(new Callback<ResponseSongPollModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
 
-                            if (response.isSuccessful()) {
-                                Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
-                                responseSongPollModel = response.body();
+                                if (response.isSuccessful()) {
+                                    Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
+                                    responseSongPollModel = response.body();
+                                    latch.countDown();
+                                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
+                                Log.e("RESPONSE ERROR ", "" + t.getMessage());
                                 latch.countDown();
-                                // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
-
                             }
+                        });
+
+                        try {
+                            latch.await(10, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
 
-                        @Override
-                        public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
-                            Log.e("RESPONSE ERROR ", "" + t.getMessage());
-                            latch.countDown();
-                        }
-                    });
-
-                    try {
-                        latch.await(10, TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (responseSongPollModel != null) {
-                        if (responseSongPollModel.getStatus().equalsIgnoreCase("Completed")) {
-                            Intent intent = new Intent(SERVICE_EVENT);
-                            Log.e("songresponse", new Gson().toJson(responseSongPollModel));
-                            intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
-                            LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
-                            stopSelf();
-                            break;
-                        } else {
-                            try {
-                                Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        if (responseSongPollModel != null) {
+                            if (responseSongPollModel.getStatus().equalsIgnoreCase("Completed")) {
+                                Intent intent = new Intent(SERVICE_EVENT);
+                                Log.e("songresponse", new Gson().toJson(responseSongPollModel));
+                                intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
+                                LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
+                                stopSelf();
+                                break;
+                            } else {
+                                try {
+                                    Thread.sleep(4000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
+
+
                 }
+            }.start();
 
 
-            }
-        }.start();
+            return Service.START_STICKY;
+        } else if (variable.contains("2")) {
+            new Thread() {
+                @Override
+                public void run() {
+
+                    while (true) {
+                        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+                        Call<ResponseSongPollModel> call1 = apiInterface.analysePollSongs(batchIds);
+                        latch = new CountDownLatch(1);
+                        call1.enqueue(new Callback<ResponseSongPollModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
+
+                                if (response.isSuccessful()) {
+                                    Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
+                                    responseSongPollModel = response.body();
+                                    latch.countDown();
+                                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
+                                Log.e("RESPONSE ERROR ", "" + t.getMessage());
+                                latch.countDown();
+                            }
+                        });
+
+                        try {
+                            latch.await(10, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        if (responseSongPollModel != null) {
+                            if (responseSongPollModel.getStatus().equalsIgnoreCase("analysed")) {
+                                Intent intent = new Intent(SERVICE_EVENT);
+                                Log.e("songresponse", new Gson().toJson(responseSongPollModel));
+                                intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
+                                LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
+                                stopSelf();
+                                break;
+                            } else {
+                                try {
+                                    Thread.sleep(4000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
+                    }
 
 
-        return Service.START_STICKY;
+                }
+            }.start();
+
+
+            return Service.START_STICKY;
+        }
+
+        return 0;
     }
 }
