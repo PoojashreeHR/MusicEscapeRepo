@@ -57,7 +57,6 @@ public class AppInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
                 startActivity(intent);
-
             }
         });
         mAdapter = new AppInfoAdapter(itemList);
@@ -70,6 +69,7 @@ public class AppInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
+                AppInfo item = itemList.get(position);
                 switch(position){
                     case 0:
                         String url = "http://www.youngandwellcrc.org.au";

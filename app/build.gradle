@@ -28,6 +28,7 @@ dependencies {
     compile 'com.sothree.slidinguppanel:library:3.3.0'
     compile 'com.google.code.gson:gson:2.3'
     compile 'com.android.support:design:23.4.0'
+    compile "com.squareup.picasso:picasso:2.4.0"
     compile 'com.squareup.retrofit2:converter-gson:2.0.2'
     compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
     compile 'com.android.support:design:23.4.0'

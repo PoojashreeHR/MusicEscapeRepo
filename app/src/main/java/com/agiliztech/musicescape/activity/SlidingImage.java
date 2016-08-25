@@ -1,18 +1,13 @@
 package com.agiliztech.musicescape.activity;
 
-import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.SlidingImage_Adapter;
-import com.agiliztech.musicescape.models.AppInfo;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 public class SlidingImage extends AppCompatActivity {
     private static ViewPager mPager;
@@ -20,7 +15,7 @@ public class SlidingImage extends AppCompatActivity {
     private static int NUM_PAGES = 0;
     private static final Integer[] IMAGES = {
             R.drawable.tutorial_img_1,
-            R.drawable.tutorial_img_2,
+            R.drawable.tutorial_img,
             R.drawable.tutorial_img_3,
             R.drawable.tutorial_img_4,
             R.drawable.tutorial_img_5,
