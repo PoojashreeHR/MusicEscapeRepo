@@ -1,26 +1,22 @@
 package com.agiliztech.musicescape.activity;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.PrivacyActivity;
 import com.agiliztech.musicescape.R;
@@ -46,12 +42,12 @@ public class AppInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_info);
 
         recyclerView = (RecyclerView) findViewById(R.id.appInfoRecyclerView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
          tf = Typeface.createFromAsset(getAssets(),
-                "fonts/MontserratRegular.ttf");
+                "fonts/montserratRegular.ttf");
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
         appInfo.setTypeface(tf);
         relative = (RelativeLayout) findViewById(R.id.relativeLayout2);
@@ -59,8 +55,7 @@ public class AppInfoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
-                startActivity(intent);
+                finish();
 
             }
         });
