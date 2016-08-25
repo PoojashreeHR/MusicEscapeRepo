@@ -74,12 +74,13 @@
     android:layout_alignParentBottom="true">
     <ImageView
         android:id="@+id/infoButton"
-        android:layout_width="wrap_content"
+        android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:background="@drawable/menu_info_icon_manager"
         android:foregroundGravity="center"
         android:layout_marginLeft="20dp"
         android:layout_marginStart="20dp"
+        android:adjustViewBounds="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
