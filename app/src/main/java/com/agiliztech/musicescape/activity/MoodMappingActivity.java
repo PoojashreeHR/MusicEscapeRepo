@@ -35,6 +35,8 @@ import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.models.apimodels.Song;
+import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
+import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
@@ -115,6 +117,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e("ON RECIEVE CALLED ", " ON RECEIVED ");
+            DBHandler handler = new DBHandler(MoodMappingActivity.this);
+            ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
+            SpotifyModelMain spotifyModelMain = new SpotifyModelMain(getDeviceId(), spotifyInfos);
+            new ScanAndAnalyseAsync().execute(spotifyModelMain);
+
         }
     };
 
@@ -474,6 +481,40 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         intent.putExtra("service_data", "passDataToService");
         intent.putExtra("batchId", batchid);
         startService(intent);
+    }
+
+
+    /**
+     * AsyncTask to hit the api for analyse, and get the batchId in response
+     */
+    class ScanAndAnalyseAsync extends AsyncTask<SpotifyModelMain, Void, String> {
+
+
+        @Override
+        protected String doInBackground(SpotifyModelMain... params) {
+
+            String batchId = "";
+            ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+            Call<BatchIdResponseModel> calls = apiInterface.analyseScanSongs(params[0]);
+
+            try {
+                BatchIdResponseModel gettingBatchId = calls.execute().body();
+                batchId = gettingBatchId.getBatchId();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return batchId;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if (s != null) {
+                Log.e("PRINTING batch id ", " ANALYSE BATCH ID " + s);
+            }
+
+        }
     }
 
     class SyncSongsWithDB extends AsyncTask<DBHandler, Void, Void> {
