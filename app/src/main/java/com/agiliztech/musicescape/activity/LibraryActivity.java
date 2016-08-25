@@ -4,13 +4,11 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -22,13 +20,10 @@ import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.LibraryRecyclerView;
 import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewItemDecoration;
 import com.agiliztech.musicescape.models.SongsModel;
-import com.agiliztech.musicescape.utils.SongsManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener {
     Spinner sp;
