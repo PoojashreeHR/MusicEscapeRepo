@@ -13,13 +13,30 @@ import com.agiliztech.musicescape.view.PieChart;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings;
+    ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw;
     private ImageView menu_draw;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+
+        menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
+        menu_draw = (ImageView) findViewById(R.id.menu_draw);
+        menu_draw.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menu_activedraw.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(DashboardActivity.this,DrawingViewActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
+
+
+
         menu_activeSettings = (ImageView) findViewById(R.id.menu_activeSettings);
         menu_settings = (ImageView) findViewById(R.id.menu_settings);
         menu_settings.setOnClickListener(new View.OnClickListener() {
@@ -44,15 +61,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        menu_draw = (ImageView) findViewById(R.id.menu_draw);
-        menu_draw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(DashboardActivity.this,DrawingViewActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
 
         Resources res = getResources();
         final PieChart pie = (PieChart) this.findViewById(R.id.Pie);

@@ -45,9 +45,16 @@
                 android:id="@+id/menu_draw"
                 android:layout_width="110dp"
                 android:layout_height="155dp"
-
+                android:visibility="visible"
                 android:layout_marginLeft="44dp"
                 android:src="@drawable/m_draw_inactive" />
+            <ImageView
+                android:id="@+id/menu_activedraw"
+                android:layout_width="110dp"
+                android:layout_height="155dp"
+                android:visibility="gone"
+                android:layout_marginLeft="44dp"
+                android:src="@drawable/m_draw_active" />
 
             <ImageView
                 android:id="@+id/menu_history"
