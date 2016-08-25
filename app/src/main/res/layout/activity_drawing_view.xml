@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp"
+    android:paddingTop="12dp"
     tools:context="com.agiliztech.musicescape.activity.DrawingViewActivity">
 
 
@@ -26,9 +29,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="LIBRARY"
+            android:text="DRAW"
             android:textColor="#6E6E6E"
-            android:id="@+id/library"
+            android:id="@+id/draw"
             android:gravity="center"
             android:layout_alignBottom="@+id/view"
             android:layout_centerHorizontal="true"
@@ -46,8 +49,8 @@
         <ImageButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/library1"
-            android:background="@drawable/songscanmanageicons"
+            android:id="@+id/play"
+            android:background="@drawable/playsongicon"
             android:layout_alignParentTop="true"
             android:layout_alignBottom="@+id/view"
             android:layout_alignParentRight="true"
@@ -55,11 +58,20 @@
 
 
     </RelativeLayout>
-
+    <View
+        android:id="@+id/feedback_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:alpha="0.9"
+        android:background="#262626"
+        />
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/overlay"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/drawing_overlay"
         >
 

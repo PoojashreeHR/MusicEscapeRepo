@@ -1,10 +1,13 @@
 package com.agiliztech.musicescape.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.agiliztech.musicescape.R;
@@ -15,6 +18,7 @@ public class DrawingViewActivity extends AppCompatActivity {
 
     private JourneyView journey;
     private FrameLayout overlay;
+    private ImageView dashboardButton;
 
 
     public int dpToPx(int dp560) {
@@ -36,6 +40,16 @@ public class DrawingViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing_view);
+
+        dashboardButton = (ImageView) findViewById(R.id.imageButton2);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DrawingViewActivity.this,DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         journey = (JourneyView)findViewById(R.id.journey);
         overlay = (FrameLayout) findViewById(R.id.overlay);
