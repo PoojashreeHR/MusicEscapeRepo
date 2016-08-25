@@ -1,16 +1,12 @@
 package com.agiliztech.musicescape.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -29,7 +25,7 @@ public class FaqActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         TextView textView = (TextView) findViewById(R.id.listInfo);
         tf = Typeface.createFromAsset(getAssets(),
-                "fonts/montserratRegular.ttf");
+                "fonts/MontserratRegular.ttf");
         String name =  getIntent().getStringExtra("name");
         textView.setText(name);
         textView.setTypeface(tf);
