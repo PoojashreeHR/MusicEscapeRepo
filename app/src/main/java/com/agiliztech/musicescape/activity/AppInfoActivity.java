@@ -51,7 +51,7 @@ public class AppInfoActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
          tf = Typeface.createFromAsset(getAssets(),
-                "fonts/MontserratRegular.ttf");
+                "fonts/montserratRegular.ttf");
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
         appInfo.setTypeface(tf);
         relative = (RelativeLayout) findViewById(R.id.relativeLayout2);

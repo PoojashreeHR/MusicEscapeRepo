@@ -5,9 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
-    android:paddingLeft="25dp"
-    android:paddingRight="25dp"
-    android:paddingTop="15dp"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="12dp"
     tools:context="com.agiliztech.musicescape.activity.SettingsActivity">
 
 
@@ -39,14 +39,13 @@
             android:layout_alignParentTop="true" />
 
         <ImageButton
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/imageButton2"
             android:background="@drawable/menuiconmanager"
-            android:layout_alignBottom="@+id/view"
+            android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true" />
+            android:layout_alignParentStart="true" />
 
     </RelativeLayout>
 
@@ -55,7 +54,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/toolbar"
-        android:layout_marginTop="5dp"
         android:alpha="0.9"
         android:background="#262626"
         />
@@ -106,7 +104,7 @@
             android:textColor="#404040"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="15 MINS"
-            android:layout_marginLeft="17dp"
+            android:layout_marginLeft="15dp"
             android:adjustViewBounds="true"
             />
         <TextView
@@ -117,7 +115,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="30 MINS"
             android:layout_toRightOf="@+id/first_limit"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:adjustViewBounds="true"
             />
         <TextView
@@ -128,7 +126,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="45 MINS"
             android:layout_toRightOf="@+id/second_limit"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:adjustViewBounds="true"
             />
         <TextView
@@ -139,7 +137,7 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="60 MINS"
             android:layout_toRightOf="@+id/third_limit"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="25dp"
             android:adjustViewBounds="true"
             />
 

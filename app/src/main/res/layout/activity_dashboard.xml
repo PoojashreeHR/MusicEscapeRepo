@@ -3,7 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="#262626"
     tools:context="com.agiliztech.musicescape.activity.DashboardActivity">
+
+
+    <com.agiliztech.musicescape.view.PieChart
+
+    android:id="@+id/Pie"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+
+    android:layout_weight="100"
+    custom:labelHeight="20dp"
+    custom:labelWidth="110dp"
+    custom:labelY="85dp"
+    custom:labelPosition="left"
+    custom:highlightStrength="1.12"
+    android:background="#262626"
+    custom:pieRotation="0"
+    custom:labelColor="@android:color/black"
+    custom:autoCenterPointerInSlice="true"
+    custom:pointerRadius="4dp"
+    />
 
 
     <RelativeLayout
@@ -41,7 +63,17 @@
                 android:layout_height="130dp"
                 android:layout_marginLeft="0dp"
                 android:layout_marginTop="201dp"
+                android:visibility="visible"
                 android:src="@drawable/m_library_inactive" />
+
+            <ImageView
+                android:id="@+id/menu_activelibrary"
+                android:layout_width="154dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="201dp"
+                android:visibility="gone"
+                android:src="@drawable/m_library_active" />
 
             <ImageView
                 android:id="@+id/menu_settings"
@@ -49,7 +81,18 @@
                 android:layout_height="155dp"
                 android:layout_marginLeft="44dp"
                 android:layout_marginTop="248dp"
+                android:visibility="visible"
                 android:src="@drawable/m_settings_inactive" />
+
+            <ImageView
+                android:id="@+id/menu_activeSettings"
+                android:layout_width="110dp"
+                android:layout_height="155dp"
+                android:layout_marginLeft="44dp"
+                android:layout_marginTop="248dp"
+                android:visibility="gone"
+                android:src="@drawable/m_settings_active" />
+
 
         </FrameLayout>
 

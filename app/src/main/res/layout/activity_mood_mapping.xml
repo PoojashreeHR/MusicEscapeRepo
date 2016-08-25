@@ -4,8 +4,11 @@
     android:id="@+id/ll_child"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="12dp"
     android:weightSum="10"
     tools:context="com.agiliztech.musicescape.activity.MoodMappingActivity">
 
@@ -27,13 +30,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/view"
-            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
             android:gravity="center"
+            android:textColor="#6E6E6E"
             android:text="MOOD MAPPING"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/Gray"
-            android:textSize="20sp" />
+             />
 
         <ImageView
             android:id="@+id/dashboardButton"
@@ -42,6 +45,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
             android:background="@drawable/menuiconmanager" />
 
         <ImageButton
@@ -54,6 +58,15 @@
             android:layout_alignParentTop="true"
             android:background="@drawable/libraryiconmanager"
             android:clickable="true" />
+        <View
+            android:id="@+id/feedback_view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/libraryButton"
+
+            android:alpha="0.9"
+            android:background="#262626"
+            />
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
