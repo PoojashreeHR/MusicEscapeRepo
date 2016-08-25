@@ -42,10 +42,10 @@ public class AppInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_info);
 
         recyclerView = (RecyclerView) findViewById(R.id.appInfoRecyclerView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
          tf = Typeface.createFromAsset(getAssets(),
                  "fonts/MontserratRegular.ttf");
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
@@ -55,8 +55,7 @@ public class AppInfoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
-                startActivity(intent);
+                finish();
 
             }
         });

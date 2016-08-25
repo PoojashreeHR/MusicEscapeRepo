@@ -21,8 +21,6 @@ public class FaqActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_faq);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         TextView textView = (TextView) findViewById(R.id.listInfo);
         tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
@@ -37,8 +35,9 @@ public class FaqActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
-                startActivity(intent);
+//                Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
+//                startActivity(intent);
+                finish();
 
             }
         });

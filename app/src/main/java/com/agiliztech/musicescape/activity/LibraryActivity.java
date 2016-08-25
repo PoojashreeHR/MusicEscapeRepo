@@ -83,8 +83,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                         Toast.LENGTH_SHORT).show();
                 songScan.setFocusableInTouchMode(false);
                 songScan.setFocusable(false);
-                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
-                startActivity(intent);
                 finish();
             }
         });
