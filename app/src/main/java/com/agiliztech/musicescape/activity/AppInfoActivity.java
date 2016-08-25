@@ -42,10 +42,10 @@ public class AppInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_info);
 
         recyclerView = (RecyclerView) findViewById(R.id.appInfoRecyclerView);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
          tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
@@ -81,7 +81,7 @@ public class AppInfoActivity extends AppCompatActivity {
                         startActivity(new Intent(AppInfoActivity.this, PrivacyActivity.class));
                         break;
                     case 2:
-                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
+//                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
                         break;
                     case 3:
 

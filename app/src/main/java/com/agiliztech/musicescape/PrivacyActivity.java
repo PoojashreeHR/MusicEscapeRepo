@@ -14,21 +14,20 @@ import com.agiliztech.musicescape.activity.AppInfoActivity;
 import com.agiliztech.musicescape.models.AppInfo;
 
 public class PrivacyActivity extends AppCompatActivity {
+    ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_privacy);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         TextView textView = (TextView) findViewById(R.id.privacyText);
-
-        ImageView privacy = (ImageView) findViewById(R.id.backbutton2);
-        privacy.setOnClickListener(new View.OnClickListener() {
+        backButton = (ImageView) findViewById(R.id.backbutton1);
+        backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PrivacyActivity.this, AppInfoActivity.class));
+                finish();
+
             }
         });
     }

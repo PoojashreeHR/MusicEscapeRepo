@@ -640,7 +640,7 @@ public class PieChart extends ViewGroup {
 
         // Set up the paint for the label text
         mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setColor(mTextColor);
+        mTextPaint.setColor(getResources().getColor(android.R.color.white));
         if (mTextHeight == 0) {
             mTextHeight = mTextPaint.getTextSize();
         } else {
@@ -865,7 +865,7 @@ public class PieChart extends ViewGroup {
                 Item it = mData.get(l);
                 mArc.addArc(mBounds,180 - it.mEndAngle,it.mEndAngle - it.mStartAngle);
 
-                canvas.drawTextOnPath(array[k],mArc,0,50,mTextPaint);
+                canvas.drawTextOnPath(array[k],mArc,0,150,mTextPaint);
                 mArc = new Path();
                 k=(k+1)%(array.length);
             }
@@ -877,7 +877,7 @@ public class PieChart extends ViewGroup {
                 Item it = mData.get(l);
                 mArc.addArc(mBounds,180 - it.mEndAngle,it.mEndAngle - it.mStartAngle);
 
-                canvas.drawTextOnPath(array[k],mArc,0,50,mTextPaint);
+                canvas.drawTextOnPath(array[k],mArc,0,150,mTextPaint);
                 mArc = new Path();
                 k=(k-1);
                 if(k<0) {
