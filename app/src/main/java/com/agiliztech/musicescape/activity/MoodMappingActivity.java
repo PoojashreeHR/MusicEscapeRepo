@@ -134,7 +134,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
 
         Typeface tf = Typeface.createFromAsset(getAssets(),
-                "fonts/montserratRegular.ttf");
+                "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
         tv.setTypeface(tf);
         testButton = (Button) findViewById(R.id.button);
