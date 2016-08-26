@@ -1,11 +1,9 @@
 package com.agiliztech.musicescape.musicservices;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -42,6 +40,7 @@ public class MusicService extends Service implements
     //title of current song
     private String songTitle = "";
     private String songDetail = "";
+    private String songId = "";
     //notification id
     private static final int NOTIFY_ID = 1;
     //shuffle flag and random
@@ -54,7 +53,7 @@ public class MusicService extends Service implements
         return super.onStartCommand(intent, flags, startId);
     }
 
-
+    @Override
     public void onCreate() {
         //create the service
         super.onCreate();
@@ -68,7 +67,7 @@ public class MusicService extends Service implements
         initMusicPlayer();
     }
 
-    public void initMediaPlayer(){
+    public void initMediaPlayer() {
         player = new MediaPlayer();
     }
 
@@ -110,6 +109,7 @@ public class MusicService extends Service implements
     }
 
     SongsModel playSong;
+
     //play a song
     public void playSong() {
         //play
@@ -119,6 +119,7 @@ public class MusicService extends Service implements
         //get title
         songTitle = playSong.getTitle();
         songDetail = playSong.getArtist();
+        songId = String.valueOf(playSong.getId());
         //get id
         long currSong = playSong.getId();
         //set uri
@@ -211,12 +212,20 @@ public class MusicService extends Service implements
         return songDetail;
     }
 
+    public String getSongId() {
+        return songId;
+    }
+
     //playback methods
     public int getPosn() {
+        if (player == null)
+            return 0;
         return player.getCurrentPosition();
     }
 
     public int getDur() {
+        if(player == null)
+            return 0;
         return player.getDuration();
     }
 
@@ -225,12 +234,13 @@ public class MusicService extends Service implements
     }
 
     public void pausePlayer() {
-
-        player.pause();
+        if (player != null)
+            player.pause();
     }
 
     public void seek(int posn) {
-        player.seekTo(posn);
+        if (player != null && player.isPlaying())
+            player.seekTo(posn);
     }
 
     public void go() {

@@ -23,7 +23,7 @@ import retrofit2.Call;
  */
 public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
-
+    private String TAG = "SpotifyApiService.java";
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -39,7 +39,7 @@ public class SpotifyApiService extends Service {
                 DBHandler handler = new DBHandler(getBaseContext());
                 for (int i = 0; i < songNamesList.size(); i++) {
                     String name = songNamesList.get(i);
-                    if (name.contains("-")) {
+                    //if (name.contains("-")) {
 
                         String originalName = getOriginalSongName(name);
                         Map<String, String> data = new HashMap<>();
@@ -51,16 +51,18 @@ public class SpotifyApiService extends Service {
                         SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
                         Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
                         try {
+                            Log.e(TAG," SENDING QUERY TO SPOTIFY API : " + data.toString());
                             SpotifyMain main = call.execute().body();
                             if (main != null) {
                                 if (main.getTracks().getItems().size() > 0) {
                                     Log.e(" PRINTING ", " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
                                     String spotifyId = main.getTracks().getItems().get(0).getId();
-
+                                    Log.e(TAG," IF SPOTIFY ID FOUND THEN STORE IN DB  : "+ spotifyId);
                                     handler.updateSongWithSpotifyID(spotifyId, name);
                                 } else {
                                     handler.updateSongStatusForSpotifyError(name);
-                                    Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
+                                    //Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
+                                    Log.e(TAG," IF SPOTIFY ID NOT FOUND THEN STORE IN DB  : ORIGINAL NAME : "+ name + "\n NEW NAME : " +originalName);
                                 }
                             }
                         } catch (IOException e) {
@@ -69,7 +71,7 @@ public class SpotifyApiService extends Service {
 
                     }
 
-                }
+               // }
                 Intent sendingIntent = new Intent(SERVICE_EVENT);
                 LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
                 stopSelf();
@@ -83,20 +85,30 @@ public class SpotifyApiService extends Service {
     private String getOriginalSongName(String name) {
         String[] constantArray = new String[]{ "male", "female", "remix" };
         String newName = name;
-        String[] arrayName = new String[0];
+        String[] arrayName = new String[]{name};
+        boolean nameChanged = false;
         if (Character.isDigit(newName.charAt(0))) {
             newName = newName.replaceAll("\\d", "");
+            nameChanged = true;
         }
         if (newName.contains("-")) {
             arrayName = newName.split("-");
+            nameChanged = true;
         }
         if (arrayName[0].contains("(")) {
             arrayName = arrayName[0].split("\\(");
+            nameChanged = true;
         }
         if (arrayName[0].contains("[")) {
             arrayName = arrayName[0].split("\\[");
+            nameChanged = true;
         }
-        return arrayName[0];
+        if(nameChanged){
+            return arrayName[0];
+        }else{
+            return newName;
+        }
+       // return arrayName[0];
     }
 
 
