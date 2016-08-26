@@ -55,8 +55,8 @@ public class AppInfoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-
+                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
+                startActivity(intent);
             }
         });
         mAdapter = new AppInfoAdapter(itemList);
@@ -69,6 +69,7 @@ public class AppInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
+                AppInfo item = itemList.get(position);
                 switch(position){
                     case 0:
                         String url = "http://www.youngandwellcrc.org.au";
@@ -80,7 +81,7 @@ public class AppInfoActivity extends AppCompatActivity {
                         startActivity(new Intent(AppInfoActivity.this, PrivacyActivity.class));
                         break;
                     case 2:
-                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
+//                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
                         break;
                     case 3:
 

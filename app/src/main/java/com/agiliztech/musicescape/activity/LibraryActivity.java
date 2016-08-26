@@ -87,7 +87,19 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             }
         });
 
+        moodList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mViewGroup.getVisibility() == View.VISIBLE) {
+                    mButton.animate().rotation(360).start();
+                    mViewGroup.setVisibility(View.GONE);
 
+                } else {
+                    mViewGroup.setVisibility(View.VISIBLE);
+                    mButton.animate().rotation(180).start();
+                }
+            }
+        });
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,6 +114,19 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             }
         });
 
+        songs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (songViewGroup.getVisibility() == View.VISIBLE) {
+                    songButton.animate().rotation(360).start();
+                    songViewGroup.setVisibility(View.GONE);
+
+                } else {
+                    songViewGroup.setVisibility(View.VISIBLE);
+                    songButton.animate().rotation(180).start();
+                }
+            }
+        });
         songButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
