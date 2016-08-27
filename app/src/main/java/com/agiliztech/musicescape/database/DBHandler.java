@@ -3,6 +3,7 @@ package com.agiliztech.musicescape.database;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
@@ -208,24 +209,60 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //update status="{spotify_id}"
     public void updateSongWithSpotifyID(String spotifyId, String songName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_SPOTIFY_ID, spotifyId);
-        cv.put(KEY_STATUS, "identified");
-        int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
-        Log.e("UPDATED ", "SPOTIFY ID " + x);
-        db.close();
+        if(songName.contains("\'")){
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SPOTIFY_ID, spotifyId);
+            cv.put(KEY_STATUS, "identified");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
+            Log.e("UPDATED ", "SPOTIFY ID " + x);
+            db.close();
+        }else if(songName.contains("\"")){
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SPOTIFY_ID, spotifyId);
+            cv.put(KEY_STATUS, "identified");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
+            Log.e("UPDATED ", "SPOTIFY ID " + x);
+            db.close();
+        }else{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_SPOTIFY_ID, spotifyId);
+            cv.put(KEY_STATUS, "identified");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
+            Log.e("UPDATED ", "SPOTIFY ID " + x);
+            db.close();
+        }
+
     }
 
 
     //update status="identify_error" if some error occured while getting the spotify_id
     public void updateSongStatusForSpotifyError(String songName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_STATUS, "identify_error");
-        int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
-        Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
-        db.close();
+        if(songName.contains("\'")){
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_STATUS, "identify_error");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
+            Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
+            db.close();
+        }else if(songName.contains("\"")){
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_STATUS, "identify_error");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
+            Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
+            db.close();
+        }else{
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_STATUS, "identify_error");
+            int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
+            Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
+            db.close();
+        }
+
     }
 
 
@@ -263,6 +300,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
         }
         db.close();
+    }
+
+    public int getRowCount(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db,TABLE_SONGS, KEY_STATUS + "=\'identified\'",null);
+        Log.e("COUNT PRINTING " ," COUNT(*) : " +  count);
+        return (int)count;
     }
 
 }

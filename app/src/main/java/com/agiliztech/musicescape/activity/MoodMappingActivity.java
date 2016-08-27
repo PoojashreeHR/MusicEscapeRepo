@@ -129,7 +129,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             Log.e("ON RECIEVE CALLED ", " ON RECEIVED ");
 
             ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
-            SpotifyModelMain spotifyModelMain = new SpotifyModelMain(getDeviceId(), spotifyInfos);
+            SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
             new ScanAndAnalyseAsync().execute(spotifyModelMain);
 
             testButton.setText(getResources().getString(R.string.start));
@@ -468,10 +468,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     }
 
-    public String getDeviceId() {
-        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId();
-    }
+
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -526,7 +523,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         protected String doInBackground(DBHandler... params) {
             String batchId = "";
-            String deviceId = getDeviceId();
+            String deviceId = UtilityClass.getDeviceId(MoodMappingActivity.this);
             ArrayList<Song> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
             if(listWithScanAndScanError.size()>0) {
                 final DeviceIdModel model = new DeviceIdModel(deviceId, listWithScanAndScanError);
