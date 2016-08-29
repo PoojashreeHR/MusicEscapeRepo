@@ -22,7 +22,7 @@ public class PrivacyActivity extends AppCompatActivity {
         setContentView(R.layout.activity_privacy);
 
         TextView textView = (TextView) findViewById(R.id.privacyText);
-        backButton = (ImageView) findViewById(R.id.backbutton1);
+        backButton = (ImageView) findViewById(R.id.backbutton2);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

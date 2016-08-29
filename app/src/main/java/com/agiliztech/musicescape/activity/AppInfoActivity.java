@@ -81,7 +81,7 @@ public class AppInfoActivity extends AppCompatActivity {
                         startActivity(new Intent(AppInfoActivity.this, PrivacyActivity.class));
                         break;
                     case 2:
-//                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
+                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
                         break;
                     case 3:
 
