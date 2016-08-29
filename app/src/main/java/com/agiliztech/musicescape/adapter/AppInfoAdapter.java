@@ -23,6 +23,7 @@ import java.util.List;
 public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHolder> {
     private List<AppInfo> appInfo;
     public Context context;
+    public static int selected_item = 0;
 
     public AppInfoAdapter(List<AppInfo> itemsData) {
         this.appInfo = itemsData;
@@ -46,6 +47,11 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
         AppInfo movie = appInfo.get(position);
         holder.txtViewTitle.setText(movie.getTitle());
 
+        if(position == selected_item)
+        {
+          //  holder.tex.setTextColor(Color.parseColor("#00aaff"));
+            holder.imgViewIcon.setBackgroundResource(R.drawable.selector_row);
+        }
     }
     // Return the size of your itemsData (invoked by the layout manager)
     @Override
@@ -63,7 +69,6 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.ViewHold
             super(itemLayoutView);
             txtViewTitle = (TextView) itemLayoutView.findViewById(R.id.itemTitle);
             imgViewIcon = (ImageView) itemLayoutView.findViewById(R.id.imageUrl);
-
 
         }
 
