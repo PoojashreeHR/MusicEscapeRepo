@@ -1,5 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,10 +8,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.ActivityCompat;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
@@ -25,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
@@ -66,7 +71,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
     Button testButton;
-
+    private ImageView dashboardButton, infoButton;
     private boolean newSongAdded = false;
     private boolean oldSongRemoved = false;
 
@@ -282,7 +287,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
         super.onResume();
-
+        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
+                .putBoolean("isFirstRun", false).commit();
         if (sp != null) {
             tv_songname.setText(sp.getString("song_name", null));
             tv_song_detail.setText(sp.getString("song_detail", null));
@@ -450,7 +456,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     public void displayAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("TITLE")
+       // String text = "SCAN COMPLETED";
+        builder.setTitle("Scan Completed")
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -464,7 +471,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     public void onClick(DialogInterface dialog, int which) {
                         testButton.setText(getResources().getString(R.string.start));
                     }
-                }).setMessage("MESSAGE ").show();
+                }).setMessage("Message").show();
 
     }
 
@@ -514,7 +521,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
-            super.onBackPressed();
+          //  super.onBackPressed();
+            finish();
         }
     }
 

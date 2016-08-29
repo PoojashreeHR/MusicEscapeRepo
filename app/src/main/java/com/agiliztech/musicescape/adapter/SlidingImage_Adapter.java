@@ -33,7 +33,6 @@ public class SlidingImage_Adapter extends PagerAdapter {
     private Context context;
     ImageView imageView;
 
-
     public SlidingImage_Adapter(Context context, ArrayList<Integer> IMAGES) {
         this.context = context;
         this.IMAGES = IMAGES;
@@ -47,33 +46,25 @@ public class SlidingImage_Adapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return IMAGES.size();
+        return IMAGES.size()+1;
     }
 
     @Override
     public Object instantiateItem(ViewGroup view, int position) {
         View imageLayout = inflater.inflate(R.layout.sliding_image_layout, view, false);
 
-       /* final ImageView imageView = (ImageView) imageLayout
-                .findViewById(R.id.image);*/
-      /*  Picasso.
-                with(context)
-                .load(IMAGES.get(position))
-                //.fit() // will explain later
-                .into((ImageView) imageLayout);
-*/      //Bitmap largeIcon = BitmapFactory.decodeResource(context.getResources(), R.drawable.tutorial_img);
         assert imageLayout != null;
         imageView = (ImageView) imageLayout
                 .findViewById(R.id.image);
-        //imageView.setImageResource(IMAGES.get(position));
-        imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
-        view.addView(imageLayout, 0);
 
-        /*if(position == IMAGES.size())
-        {
-            Intent intent = new Intent(context,AppInfoActivity.class);
-            context.startActivity(intent);
-        }*/
+        if(position < getCount()-1) {
+
+            imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
+            view.addView(imageLayout, 0);
+        }
+       // imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
+      //  view.addView(imageLayout, 0);
+
         return imageLayout;
 }
     private static Bitmap decodeResource(Resources res, int id) {
