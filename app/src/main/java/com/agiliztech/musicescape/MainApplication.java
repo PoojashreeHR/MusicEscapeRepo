@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 
 import com.agiliztech.musicescape.utils.FontUtils;
 

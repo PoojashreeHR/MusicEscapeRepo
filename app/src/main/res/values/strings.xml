@@ -23,4 +23,7 @@
         Primary responsibility for investigating and responding to the complaint will rest with the head of the organisational unit, with advice from the Privacy Officer as required. QUT’s main objective in responding to privacy complaints is to conciliate an outcome which is acceptable to the complainant and which addresses any broader or systemic privacy issues which may arise. If a complainant does not agree with the University\'s response, an internal review process is available or a complainant may refer the matter for independent mediation by the Office of the Information Commissioner.\n\n
          By using this app you acknowledge that this app is released for the purpose of research only.  This version is not released for commercial purposes and cannot be on-sold or distributed without the express written consent of Young and Well CRC Ltd. You as the user of the app acknowledge that you remain solely responsible for obtaining licensed content. You warrant that you will not use this app to create any infringing copies, support, encourage or induce copyright infringement. You indemnify and release the producer and authors of the app from any claim of intellectual property infringement arising from your music collection or your use of this app. If you are a copyright holder and have concerns regarding potential copyright infringement, please contact Young and Well CRC Ltd.\n\n
 </string>
+    <string name="pref_previously_started">1</string>
+    <string name="start">START</string>
+    <string name="pause">PAUSE</string>
 </resources>

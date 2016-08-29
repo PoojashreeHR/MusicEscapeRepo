@@ -25,7 +25,7 @@ public class ApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_event_response";
     private CountDownLatch latch;
     private ResponseSongPollModel responseSongPollModel;
-
+    private String TAG = "ApiService.java";
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -46,128 +46,67 @@ public class ApiService extends Service {
         final String batchIds = intent.getStringExtra("batchId");
         final String variable = intent.getStringExtra("variable");
         Log.e("batchId", batchIds);
-        String batchId = batchIds;
+        final String batchId = batchIds;
 
-        if (variable.contains("1")) {
-            new Thread() {
-                @Override
-                public void run() {
+        new Thread() {
+            @Override
+            public void run() {
 
-                    while (true) {
-                        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-                        Call<ResponseSongPollModel> call1 = apiInterface.pollSongFromServer(batchIds);
-                        latch = new CountDownLatch(1);
-                        call1.enqueue(new Callback<ResponseSongPollModel>() {
-                            @Override
-                            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
+                while (true) {
+                    ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+                    Call<ResponseSongPollModel> call1 = apiInterface.pollSongFromServer(batchIds);
+                    Log.e(TAG," SENDING BATCH ID TO SCAN API (POLL ) : " + batchIds);
+                    latch = new CountDownLatch(1);
+                    call1.enqueue(new Callback<ResponseSongPollModel>() {
+                        @Override
+                        public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
 
-                                if (response.isSuccessful()) {
-                                    Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
-                                    responseSongPollModel = response.body();
-                                    latch.countDown();
-                                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
-                                Log.e("RESPONSE ERROR ", "" + t.getMessage());
+                            if (response.isSuccessful()) {
+                                Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
+                                responseSongPollModel = response.body();
                                 latch.countDown();
-                            }
-                        });
+                                // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
 
-                        try {
-                            latch.await(10, TimeUnit.SECONDS);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                            }
                         }
 
-                        if (responseSongPollModel != null) {
-                            if (responseSongPollModel.getStatus().equalsIgnoreCase("Completed")) {
-                                Intent intent = new Intent(SERVICE_EVENT);
-                                Log.e("songresponse", new Gson().toJson(responseSongPollModel));
-                                intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
-                                LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
-                                stopSelf();
-                                break;
-                            } else {
-                                try {
-                                    Thread.sleep(4000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
+                        @Override
+                        public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
+                            Log.e("RESPONSE ERROR ", "" + t.getMessage());
+                            latch.countDown();
+                        }
+                    });
+
+                    try {
+                        latch.await(10, TimeUnit.SECONDS);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (responseSongPollModel != null) {
+                        if (responseSongPollModel.getStatus().equalsIgnoreCase("Completed")) {
+                            Intent intent = new Intent(SERVICE_EVENT);
+                            Log.e(TAG," RESPONSE FROM AFTER SENDING BATCH ID(SCAN API) : "+ new Gson().toJson(responseSongPollModel));
+                            intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
+                            LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
+                            stopSelf();
+                            break;
+                        } else {
+                            try {
+                                Thread.sleep(4000);
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
                         }
                     }
-
-
                 }
-            }.start();
 
 
-            return Service.START_STICKY;
-        } else if (variable.contains("2")) {
-            new Thread() {
-                @Override
-                public void run() {
-
-                    while (true) {
-                        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-                        Call<ResponseSongPollModel> call1 = apiInterface.analysePollSongs(batchIds);
-                        latch = new CountDownLatch(1);
-                        call1.enqueue(new Callback<ResponseSongPollModel>() {
-                            @Override
-                            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
-
-                                if (response.isSuccessful()) {
-                                    Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
-                                    responseSongPollModel = response.body();
-                                    latch.countDown();
-                                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
-
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
-                                Log.e("RESPONSE ERROR ", "" + t.getMessage());
-                                latch.countDown();
-                            }
-                        });
-
-                        try {
-                            latch.await(10, TimeUnit.SECONDS);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-
-                        if (responseSongPollModel != null) {
-                            if (responseSongPollModel.getStatus().equalsIgnoreCase("analysed")) {
-                                Intent intent = new Intent(SERVICE_EVENT);
-                                Log.e("songresponse", new Gson().toJson(responseSongPollModel));
-                                intent.putExtra("songresponse", new Gson().toJson(responseSongPollModel));
-                                LocalBroadcastManager.getInstance(ApiService.this).sendBroadcast(intent);
-                                stopSelf();
-                                break;
-                            } else {
-                                try {
-                                    Thread.sleep(4000);
-                                } catch (InterruptedException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
+            }
+        }.start();
 
 
-                }
-            }.start();
+        return Service.START_STICKY;
 
-
-            return Service.START_STICKY;
-        }
-
-        return 0;
     }
 }

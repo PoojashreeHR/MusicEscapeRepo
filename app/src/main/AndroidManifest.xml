@@ -29,7 +29,7 @@
         <service android:name=".musicservices.MusicService" />
         <service android:name=".apiservices.ApiService" />
         <service android:name=".apiservices.SpotifyApiService" />
-
+        <service android:name=".apiservices.AnalyseApiService"/>
         <activity android:name=".activity.BaseMusicActivity" />
         <activity android:name=".activity.AllSongListAcitivity" />
         <activity android:name=".activity.LibraryActivity" />

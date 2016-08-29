@@ -18,6 +18,8 @@
     <include layout="@layout/slider_layout_to_play_song"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="bottom"/>
+        android:layout_gravity="bottom"
+        android:id="@+id/include_layout_for_mp"
+        />
 
 </FrameLayout>

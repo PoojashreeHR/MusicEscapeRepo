@@ -1,5 +1,8 @@
 package com.agiliztech.musicescape.utils;
 
+import android.content.Context;
+import android.telephony.TelephonyManager;
+
 /**
  * Created by Asif on 12-08-2016.
  */
@@ -18,6 +21,11 @@ public class UtilityClass {
 
         percentage = (((double)currentSeconds)/totalSeconds)*100;
         return percentage.intValue();
+    }
+
+    public static String getDeviceId(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        return telephonyManager.getDeviceId();
     }
 
 }
