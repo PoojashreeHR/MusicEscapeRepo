@@ -13,9 +13,9 @@
     tools:context="com.agiliztech.musicescape.activity.MoodMappingActivity">
 
     <RelativeLayout
+        android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="8.0"
+        android:layout_weight="1"
         android:orientation="horizontal">
 
         <android.support.v7.widget.Toolbar
@@ -33,6 +33,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentTop="true"
             android:gravity="center"
+            android:layout_marginTop="5dp"
             android:textColor="#6E6E6E"
             android:text="MOOD MAPPING"
             android:textAppearance="?android:attr/textAppearanceMedium"
@@ -56,25 +57,27 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:layout_marginTop="5dp"
             android:background="@drawable/libraryiconmanager"
             android:clickable="true" />
-        <View
-            android:id="@+id/feedback_view"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@+id/libraryButton"
-
-            android:alpha="0.9"
-            android:background="#262626"
-            />
+        </RelativeLayout>
+    <View
+        android:id="@+id/feedback_view"
+        android:layout_width="match_parent"
+        android:layout_marginTop="5dp"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:alpha="0.9"
+        android:background="#262626"
+        />
 <RelativeLayout
+    android:layout_height="0dp"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@+id/view"
-    android:layout_alignParentBottom="true">
+    android:layout_weight="1"
+    android:layout_below="@+id/feedback_view">
     <ImageView
         android:id="@+id/infoButton"
-        android:layout_width="45dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/menu_info_icon_manager"
         android:foregroundGravity="center"
@@ -87,13 +90,12 @@
         android:layout_alignParentBottom="true" />
 </RelativeLayout>
 
-    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/child_one"
+        android:layout_height="0dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="3.0"
+        android:layout_weight="7"
         android:background="@drawable/songscan_text_new">
 
         <Button

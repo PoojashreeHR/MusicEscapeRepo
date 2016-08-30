@@ -5,17 +5,18 @@
     android:layout_height="match_parent"
     android:background="@android:color/black"
     android:orientation="vertical"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp"
-    android:paddingTop="12dp"
+    android:weightSum="10"
+    android:paddingTop="18dp"
     tools:context="com.agiliztech.musicescape.activity.DrawingViewActivity">
 
 
     <RelativeLayout
         android:background="@color/colorPrimary"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_weight="0"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         android:orientation="horizontal">
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -56,22 +57,38 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
-
     </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_below="@+id/toolbar"
+        android:orientation="horizontal">
     <View
         android:id="@+id/feedback_view"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:layout_below="@+id/toolbar"
+
         android:alpha="0.9"
         android:background="#262626"
         />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.9">
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="match_parent"
         android:id="@+id/overlay"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="40dp"
+    android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="35dp"
+        android:scaleType = "centerCrop"
         android:background="@drawable/drawing_overlay"
         >
 
@@ -83,6 +100,7 @@
        />
 
     </FrameLayout>
+    </RelativeLayout>
 
 
 
