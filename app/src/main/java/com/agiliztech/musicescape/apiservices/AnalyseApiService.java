@@ -25,7 +25,8 @@ public class AnalyseApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_event_response_analyse";
     private CountDownLatch latch;
     private ResponseSongPollModel responseSongPollModel;
-    private String TAG="AnalyseApiService.java";
+    private String TAG = "AnalyseApiService.java";
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -45,43 +46,9 @@ public class AnalyseApiService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final String batchIds = intent.getStringExtra("batchId");
         //final String variable = intent.getStringExtra("variable");
-        Log.e(TAG, " SENDING BATCH ID TO ANALYSE API : "+ batchIds);
+        Log.e(TAG, " SENDING BATCH ID TO ANALYSE API : " + batchIds);
         String batchId = batchIds;
-        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-        Call<ResponseSongPollModel> call1 = apiInterface.analysePollSongs(batchIds);
-        //latch = new CountDownLatch(1);
-        call1.enqueue(new Callback<ResponseSongPollModel>() {
-            @Override
-            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
-
-                if (response.isSuccessful()) {
-                    Log.e(TAG, " RESPONSE FROM ANALYSE API : "+ new Gson().toJson(response.body()));
-                    responseSongPollModel = response.body();
-
-                    if (responseSongPollModel != null) {
-                        if (responseSongPollModel.getStatus().equalsIgnoreCase("completed")) {
-                            Intent intent = new Intent(SERVICE_EVENT);
-                           // Log.e(TAG," RE"+ new Gson().toJson(responseSongPollModel));
-                            intent.putExtra("songresponse_analysed", new Gson().toJson(responseSongPollModel));
-                            LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
-                            stopSelf();
-
-                        }
-                    }
-                    //latch.countDown();
-                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
-                Log.e("RESPONSE ERROR ", "" + t.getMessage());
-                //latch.countDown();
-            }
-        });
-        return Service.START_STICKY;
-      /*  new Thread() {
+        new Thread() {
             @Override
             public void run() {
 
@@ -135,8 +102,8 @@ public class AnalyseApiService extends Service {
                     }
                 }
             }
-        }.start();*/
-
+        }.start();
+        return Service.START_STICKY;
 
     }
 }

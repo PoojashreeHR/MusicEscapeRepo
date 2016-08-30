@@ -5,6 +5,7 @@ import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.models.apimodels.SongDetail;
 import com.agiliztech.musicescape.models.apimodels.SongRetagInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRetagMain;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.models.spotifymodels.SpotifyMain;
@@ -51,7 +52,6 @@ public interface ApiInterface {
     //SongRetag
     //Response String (HTTP 201)
     @POST("api/v3/songs/retag")
-    Call<String> retagSongs(@Body String user,
-                            @Body SongRetagInfo retagInfo);
+    Call<String> retagSongs(@Body SongRetagMain retagMain);
 
 }
