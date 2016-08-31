@@ -13,6 +13,7 @@ public class Global {
 
     public static final String JOURNEY_TBL_NAME = "TblJourney";
     public static final String JOURNEY_SESSION_TBL_NAME = "TblJourneySession";
+    public static final String PREF_NAME = "MyPrefs";
     public static ArrayList<Song> currentSongList;
     public static boolean isJourney;
     public static String INTROSCREENSSHOWN = "introScreensShown";

@@ -103,7 +103,7 @@ public class JourneyService {
         journeyDBHelper.close();
     }
 
-    private List<Song> filterNullSongs(List<Song> songArrayWithNull) {
+    public List<Song> filterNullSongs(List<Song> songArrayWithNull) {
         songArrayWithNull.removeAll(Collections.singleton(null));
         return songArrayWithNull;
     }
@@ -1063,7 +1063,7 @@ public class JourneyService {
         return weightObjects;
     }
 
-    private int getTotalSongsDuration(List<Song> playListArray) {
+    public int getTotalSongsDuration(List<Song> playListArray) {
         int total = 0;
         for(Song song : playListArray){
             if(song != null) {
@@ -1272,5 +1272,11 @@ public class JourneyService {
         journeySessionDBHelper.close();
     }
 
+    public JourneySession getCurrentSession(){
+        return currentSession;
+    }
 
+    public void setCurrentSession(JourneySession currentSession) {
+        this.currentSession = currentSession;
+    }
 }

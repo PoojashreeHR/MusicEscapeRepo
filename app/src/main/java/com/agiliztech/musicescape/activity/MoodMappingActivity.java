@@ -45,6 +45,7 @@ import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.agiliztech.musicescape.view.CustomDrawableForSeekBar;
 import com.google.gson.Gson;
@@ -57,16 +58,16 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 public class MoodMappingActivity extends BaseMusicActivity implements
-        View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
+        View.OnClickListener {
 
 
     Typeface tf;
     SharedPreferences sp;
-    RecyclerView mRecyclerView;
-    RecyclerViewAdapter mAdapter;
-    SlidingUpPanelLayout slidingUpPanelLayout;
+    //RecyclerView mRecyclerView;
+    //RecyclerViewAdapter mAdapter;
+    //SlidingUpPanelLayout slidingUpPanelLayout;
     ImageButton library;
-    private Handler handler = new Handler();
+
     // Button musicButton;
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
@@ -92,14 +93,14 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String curSongJson = intent.getStringExtra("currentSong");
-            SongsModel songsModel = new Gson().fromJson(curSongJson, SongsModel.class);
-            tv_songname.setText(songsModel.getTitle());
-            tv_song_detail.setText(songsModel.getArtist());
-
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("song_name", songsModel.getTitle());
-            editor.putString("song_detail", songsModel.getArtist());
-            editor.apply();
+//            SongsModel songsModel = new Gson().fromJson(curSongJson, SongsModel.class);
+//            tv_songname.setText(songsModel.getTitle());
+//            tv_song_detail.setText(songsModel.getArtist());
+//
+//            SharedPreferences.Editor editor = sp.edit();
+//            editor.putString("song_name", songsModel.getTitle());
+//            editor.putString("song_detail", songsModel.getArtist());
+//            editor.apply();
         }
     };
 
@@ -181,6 +182,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
+//        if(dbHandler.getRowCount() <= 0){
+//            hideMusicPlayer();
+//        }
+//        else{
+//            hideMusicPlayer();
+//        }
         tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
@@ -206,8 +213,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
         tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
 
-        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
+//        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
+//        mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
 
 
         library = (ImageButton) findViewById(R.id.libraryButton);
@@ -253,41 +260,41 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 startActivity(intent);
             }
         });
-        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
-        if (list.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(list, this, MoodMappingActivity.this);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-
-        }
-        play_music_seek_bar.setOnSeekBarChangeListener(this);
-        slidingUpPanelLayout.setScrollableView(mRecyclerView);
+//        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
+//        if (list.size() > 0) {
+//            mAdapter = new RecyclerViewAdapter(list, this, MoodMappingActivity.this);
+//            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//            mRecyclerView.setLayoutManager(mLayoutManager);
+//            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//            mRecyclerView.setAdapter(mAdapter);
+//            mAdapter.notifyDataSetChanged();
+//
+//        }
+        //play_music_seek_bar.setOnSeekBarChangeListener(this);
+        //slidingUpPanelLayout.setScrollableView(mRecyclerView);
         //setup controller
         setController();
 
     }
 
-    private void updateProgressBar() {
-        handler.postDelayed(mUpdateTimeTask, 100);
-    }
+//    private void updateProgressBar() {
+//        handler.postDelayed(mUpdateTimeTask, 100);
+//    }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        @Override
-        public void run() {
-
-            if (musicSrv != null) {
-                long totalDuration = musicSrv.getDur();
-                long currDuration = musicSrv.getPosn();
-
-                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
-                play_music_seek_bar.setProgress(progress);
-                handler.postDelayed(this, 100);
-            }
-        }
-    };
+//    private Runnable mUpdateTimeTask = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//            if (musicSrv != null) {
+//                long totalDuration = musicSrv.getDur();
+//                long currDuration = musicSrv.getPosn();
+//
+//                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
+//                play_music_seek_bar.setProgress(progress);
+//                handler.postDelayed(this, 100);
+//            }
+//        }
+//    };
     private void setController() {
 
     }
@@ -317,7 +324,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
         super.onPause();
-        paused = true;
+
 
     }
 
@@ -333,55 +340,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
 
-        getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
-                .putBoolean("isFirstRun", false).commit();
-        if (sp != null) {
-            tv_songname.setText(sp.getString("song_name", null));
-            tv_song_detail.setText(sp.getString("song_detail", null));
-            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
 
-            if (sp.getString("song_id_sp", null) != null) {
-                Log.e("SONG ID SP", "" + sp.getString("song_id_sp", null));
-            }
-            if (sp.getString("song_position", null) != null) {
-                Log.e(" SONG POSITION SP ", "" + sp.getString("song_position", null));
-                //updateProgressBar();
-            }
-            if (sp.getString("song_name_sp", null) != null) {
-                Log.e(" SONG NAME SP ", "" + sp.getString("song_name_sp", null));
-            }
-            //updateProgressBar();
-            /*SharedPreferences.Editor editor = sp.edit();
-            editor.putString("playbackpaused", "" + playbackPaused);
-            editor.putString("song_id_sp",musicSrv.getSongId());
-            editor.putString("song_position",""+musicSrv.getPosn());
-            editor.putString("song_name",musicSrv.getSongName());
-            editor.commit();*/
-        }
-
-        if (isSongPlaying) {
-            //updateProgressBar();
-            if (musicSrv == null) {
-                Log.e("Music service ", "is null");
-            } else {
-                tv_songname.setText(musicSrv.getSongName());
-                tv_song_detail.setText(musicSrv.getSongDetail());
-                Log.e("Music service ", " is  Not null");
-            }
-            ibPlayPause.setVisibility(View.GONE);
-            btn_pause.setVisibility(View.VISIBLE);
-        } else {
-            ibPlayPause.setVisibility(View.VISIBLE);
-            btn_pause.setVisibility(View.GONE);
-        }
-        /*if (paused) {
-            updateProgressBar();
-            paused = false;
-        }*/
-        /*if(musicSrv.isPng()) {
-            tv_songname.setText(musicSrv.getSongName());
-            tv_song_detail.setText(musicSrv.getSongDetail());
-        }*/
 
     }
 
@@ -392,16 +351,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
-        if (sp != null) {
-            if (playbackPaused) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("playbackpaused", "" + playbackPaused);
-                editor.putString("song_id_sp", musicSrv.getSongId());
-                editor.putString("song_position", "" + musicSrv.getPosn());
-                editor.putString("song_name_sp", musicSrv.getSongName());
-                editor.apply();
-            }
-        }
+
         super.onStop();
     }
 
@@ -426,49 +376,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.btn_play_pause:
-                if (!musicSrv.isPng()) {
-                    if (playbackPaused) {
-                        musicSrv.go();
-                        isSongPlaying = true;
-                        play_music_seek_bar.setProgress(0);
-                        play_music_seek_bar.setMax(100);
-                        //updateProgressBar();
-                        btn_pause.setVisibility(View.VISIBLE);
-                        ibPlayPause.setVisibility(View.GONE);
-                    } else {
-                        // songPicked();
-                        //musicSrv.go();
-                        //updateProgressBar();
-                        if (sp.getString("song_name", null) != null) {
-                            isSongPlaying = true;
-                            btn_pause.setVisibility(View.VISIBLE);
-                            ibPlayPause.setVisibility(View.GONE);
-                        }
-                    }
-                } else {
-                    isSongPlaying = false;
-                }
-                break;
-            case R.id.btn_pause:
-                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                nMgr.cancelAll();
-                //musicSrv.stopForeground(true);
-                isSongPlaying = false;
-                playbackPaused = true;
-                // stopService(playIntent);
-                musicSrv.pausePlayer();
-                btn_pause.setVisibility(View.GONE);
-                ibPlayPause.setVisibility(View.VISIBLE);
-                break;
-            case R.id.loop_selected:
-                loop_not_selected.setVisibility(View.VISIBLE);
-                loop_selected.setVisibility(View.GONE);
-                break;
-            case R.id.loop_not_selected:
-                loop_not_selected.setVisibility(View.GONE);
-                loop_selected.setVisibility(View.VISIBLE);
-                break;
+
             case R.id.button:
                 if (!isPlaying) {
                     //  mPlayer.start();
@@ -486,11 +394,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             displayAlertDialog();
                         } else {
                             Log.e("NOT SAME", " NOT SAME");
-                            new SyncSongsWithDB().execute(dbHandler);
+                            new SyncSongsWithDB(this).execute(dbHandler);
                             //displayAlertDialog();
                         }
                     } else {
-                        new SyncSongsWithDB().execute(dbHandler);
+                        new SyncSongsWithDB(this).execute(dbHandler);
 
 
                         //displayAlertDialog();
@@ -533,73 +441,34 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        handler.removeCallbacks(mUpdateTimeTask);
+
+        //handler.removeCallbacks(mUpdateTimeTask);
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        handler.removeCallbacks(mUpdateTimeTask);
-        int totalDuration = musicSrv.getDur();
-        int currPosition = UtilityClass.progressToTimer(seekBar.getProgress(), totalDuration);
-        musicSrv.seek(currPosition);
+
         //updateProgressBar();
     }
 
 
-    @Override
-    public void playSelectedSong(int position, View view) {
-        musicSrv.setSong(position);
-        musicSrv.playSong();
-        isSongPlaying = true;
-        //updateProgressBar();
-        ibPlayPause.setVisibility(View.GONE);
-        btn_pause.setVisibility(View.VISIBLE);
-
-        //Pass color as the song mood color
-        changeSeekbarColor(play_music_seek_bar,getResources().getColor(R.color.happy));
-       /* if (playbackPaused) {
-            //setController();
-            playbackPaused = false;
-        }
-        if (musicSrv.isPng()) {
-
-        }*/
-    }
-
-    public void changeSeekbarColor(SeekBar s, int colorp) {
-        CustomDrawableForSeekBar drawableForSeekBar =
-                new CustomDrawableForSeekBar(0, 0, 0, 25, colorp, 0);
 
 
-        if (Build.VERSION.SDK_INT > 16) {
-            s.setBackground(drawableForSeekBar);
-        }
-        if (Build.VERSION.SDK_INT < 16) {
-            s.setBackgroundDrawable(drawableForSeekBar);
-        }
-
-        /*Drawable drawable = getResources().getDrawable(R.drawable.progress_drawable_demo);
-        s.setProgressDrawable(drawable);
-*/
-
-       /* GradientDrawable drawable = (GradientDrawable)s.getBackground();
-        drawable.setStroke(20, getResources().getColor(R.color.happy)); // set stroke width and stroke color
-*/
-    }
 
 
-    @Override
-    public void onBackPressed() {
-        if (slidingUpPanelLayout != null &&
-                (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
-                        || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
-            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
-        } else {
-            //  super.onBackPressed();
-            finish();
 
-        }
-    }
+//    @Override
+//    public void onBackPressed() {
+//        if (slidingUpPanelLayout != null &&
+//                (slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.EXPANDED
+//                        || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
+//            slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+//        } else {
+//            //  super.onBackPressed();
+//            finish();
+//
+//        }
+//    }
 
     public  void alertDialog()
     {   LayoutInflater factory = LayoutInflater.from(this);
@@ -759,6 +628,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     class SyncSongsWithDB extends AsyncTask<DBHandler, Void, Void> {
 
         //Button btn = (Button) findViewById(R.id.button);
+        Context ssContext;
+
+        public SyncSongsWithDB(Context ctx){
+            ssContext = ctx;
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -767,9 +642,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         @Override
         protected Void doInBackground(DBHandler... params) {
-            ArrayList<com.agiliztech.musicescape.models.Song> songs = new ArrayList<>(songList);
+            ArrayList<com.agiliztech.musicescape.models.Song> songs = new SongsManager(ssContext).getSongList();
             //songs = songList;
-            ArrayList<com.agiliztech.musicescape.models.Song> dbList = params[0].getAllSongsFromDB();
+            ArrayList<com.agiliztech.musicescape.models.Song> dbList = songList;
 
             if (songs.equals(dbList)) {
                 Log.e("EQUAL ", " BOTH LISTS ARE EQUAL IN CONTENT");
@@ -827,15 +702,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             isPlaying = false;
             //displayAlertDialog();
 
-            ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
-            if (list.size() > 0) {
-                mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this, MoodMappingActivity.this);
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-                mRecyclerView.setLayoutManager(mLayoutManager);
-                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                mRecyclerView.setAdapter(mAdapter);
-                mAdapter.notifyDataSetChanged();
-            }
+            setUpPlaylist();
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
             SharedPreferences.Editor edit = prefs.edit();
             edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
@@ -843,7 +710,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             baseLayout.setVisibility(View.VISIBLE);
             contentFrame.setVisibility(View.VISIBLE);
             play_music_seek_bar.setOnSeekBarChangeListener(MoodMappingActivity.this);
-            slidingUpPanelLayout.setScrollableView(mRecyclerView);
+
         }
 
         public void storeSongsINDB(DBHandler dbHandler, ArrayList<com.agiliztech.musicescape.models.Song> models) {

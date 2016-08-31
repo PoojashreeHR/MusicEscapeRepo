@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Album;
 import com.agiliztech.musicescape.models.Artist;
@@ -210,5 +211,72 @@ public class SongsManager {
                 return 7;
         }
         return 8;
+    }
+
+    public static int getImageResource(SongMoodCategory mood, boolean isPlay) {
+        switch (mood){
+            case scExcited:
+                if(isPlay) {
+                    return R.drawable.excited_play;
+                }
+                else{
+                    return R.drawable.excited_pause;
+                }
+            case scHappy:
+                if(isPlay) {
+                    return R.drawable.happy_play;
+                }
+                else{
+                    return R.drawable.happy_pause;
+                }
+            case scChilled:
+                if(isPlay) {
+                    return R.drawable.chilled_play;
+                }
+                else{
+                    return R.drawable.chilled_pause;
+                }
+            case scPeaceful:
+                if(isPlay) {
+                    return R.drawable.peaceful_play;
+                }
+                else{
+                    return R.drawable.peaceful_pause;
+                }
+            case scBored:
+                if(isPlay) {
+                    return R.drawable.bored_play;
+                }
+                else{
+                    return R.drawable.bored_pause;
+                }
+            case scDepressed:
+                if(isPlay) {
+                    return R.drawable.depressed_play;
+                }
+                else{
+                    return R.drawable.depressed_pause;
+                }
+            case scStressed:
+                if(isPlay) {
+                    return R.drawable.stressed_play;
+                }
+                else{
+                    return R.drawable.stressed_pause;
+                }
+            case scAggressive:
+                if(isPlay) {
+                    return R.drawable.aggressive_play;
+                }
+                else{
+                    return R.drawable.aggressive_pause;
+                }
+        }
+        if(isPlay) {
+            return R.mipmap.play_not_found;
+        }
+        else{
+            return R.mipmap.pause_not_found;
+        }
     }
 }

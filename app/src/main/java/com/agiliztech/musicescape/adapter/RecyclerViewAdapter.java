@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -66,6 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 // iClickListener.playSelectedSong(pos,holder.rv_ll);
+              //  iClickListener.playSelectedSong(pos, holder.rv_ll);
             }
         });
         holder.swipe_layout.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener() {
@@ -119,7 +121,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                iClickListener.playSelectedSong(pos, holder.rv_ll);
+     //           iClickListener.playSelectedSong(pos, holder.rv_ll);
+            }
+        });
+
+        holder.container_song_item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -154,6 +163,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView rv_song_name;
         private TextView rv_song_detail;
         private SwipeRevealLayout rv_ll, swipe_layout;
+        private LinearLayout container_song_item;
         private ImageView rv_retag;
         private ImageView rv_swap;
 
@@ -165,6 +175,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             rv_song_detail = (TextView) itemView.findViewById(R.id.rv_song_detail);
             rv_retag = (ImageView) itemView.findViewById(R.id.rv_retag);
             rv_swap = (ImageView) itemView.findViewById(R.id.rv_swap);
+            container_song_item = (LinearLayout) itemView.findViewById(R.id.container_song_item);
         }
     }
 }

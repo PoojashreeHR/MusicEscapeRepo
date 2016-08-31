@@ -17,6 +17,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
+import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySong;
+import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
@@ -24,6 +27,7 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MusicService extends Service implements
@@ -90,6 +94,19 @@ public class MusicService extends Service implements
         Global.currentSongList = songs;
     }
 
+    public void playCurrentSession() {
+        JourneySession session = JourneyService.getInstance(this).getCurrentSession();
+        List<JourneySong> journeySongList = session.getSongs();
+
+        ArrayList<Song> songList = new ArrayList<>();
+        for(JourneySong journeySong : journeySongList){
+            songList.add(journeySong.getSong());
+        }
+
+        setList(songList);
+
+    }
+
     //binder
     public class MusicBinder extends Binder {
         public MusicService getService() {
@@ -112,6 +129,11 @@ public class MusicService extends Service implements
     }
 
     Song playSong;
+
+    public Song getCurrentPlayed(){
+        return playSong;
+    }
+
     //play a song
     public void playSong() {
         //play
@@ -269,6 +291,11 @@ public class MusicService extends Service implements
         }
         playSong();
 
+    }
+
+    public void killService(){
+        stopForeground(true);
+        stopSelf();
     }
 
     @Override
