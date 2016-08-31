@@ -309,4 +309,12 @@ public class Song {
     public void setJourneySongs(List<JourneySongs> journeySongs) {
         this.journeySongs = journeySongs;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Song) && this.pID == ((Song) obj).getpID()
+                && this.songName.equals(((Song) obj).getSongName())
+                && this.artist.getArtistName().equals(((Song) obj).getArtist().getArtistName())
+                && this.album.getAlbumTitle().equals(((Song) obj).getAlbum().getAlbumTitle());
+    }
 }

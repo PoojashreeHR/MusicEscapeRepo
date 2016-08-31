@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,25 +84,12 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
             holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scExcited));
         }else if(mood.contains("nomood")) {
             holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scMoodNotFound));
-        }else if(mood.contains("allmood")) {
-            String moodText = SongsManager.textForMood(SongsManager.getIntValue(model.getMood()));
-            if(moodText.contains("depressed")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scDepressed));
-            }else if((moodText.contains("happy"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scHappy));
-            }else if((moodText.contains("chilled"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scChilled));
-            }else if((moodText.contains("peaceful"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scPeaceful));
-            }else if((moodText.contains("bored"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scBored));
-            }else if((moodText.contains("stressed"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scStressed));
-            }else if((moodText.contains("aggressive"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scAggressive));
-            }else if((moodText.contains("excited"))) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scExcited));
+        }else if(mood.contains("allmood") || TextUtils.isEmpty(mood)) {
+            SongMoodCategory mood = model.getMood();
+            if(mood == null){
+                mood = SongMoodCategory.scAllSongs;
             }
+            holder.title.setTextColor(SongsManager.colorForMood(mood));
         }
         holder.artist.setText(model.getArtist().getArtistName());
         holder.songlistLayout.setTag(pos);

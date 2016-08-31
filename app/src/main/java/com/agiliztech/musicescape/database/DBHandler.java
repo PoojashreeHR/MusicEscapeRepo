@@ -96,7 +96,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(KEY_ALBUM_NAME, songsModel.get(i).getAlbum().getAlbumTitle());
             values.put(KEY_STATUS, "scan");
             values.put(KEY_SONG_MOOD, "");
-            values.put(KEY_META_DATA, new Gson().toJson(songsModel));
+            values.put(KEY_META_DATA, new Gson().toJson(songsModel.get(i)));
             values.put(KEY_ENERGY, songsModel.get(i).getEnergy());
             values.put(KEY_VALENCE, songsModel.get(i).getValance());
             values.put(KEY_BATCH_ID, "");
@@ -294,6 +294,10 @@ public class DBHandler extends SQLiteOpenHelper {
             String query = "select * from " + TABLE_SONGS + " where " +
                     KEY_SERVER_SONG_ID + "=\'" + spotifyInfos.get(i).getId() + "\'";
             ContentValues cv = new ContentValues();
+
+
+
+
             cv.put(KEY_API_STATUS, "again_analysing");
             db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
@@ -330,6 +334,13 @@ public class DBHandler extends SQLiteOpenHelper {
             contentValues.put(KEY_VALENCE, model.get(i).getValence());
             contentValues.put(KEY_SONG_MOOD, model.get(i).getMood());
             contentValues.put(KEY_STATUS, model.get(i).getEchonestAnalysisStatus());
+            Song oldSong = getSongObject(model.get(i).getId());
+            if(oldSong != null){
+                oldSong.setEnergy((float) model.get(i).getEnergy());
+                oldSong.setValance((float) model.get(i).getValence());
+                oldSong.setMood(SongsManager.getMoodForText(model.get(i).getMood()));
+                contentValues.put(KEY_META_DATA, new Gson().toJson(oldSong));
+            }
             contentValues.put(KEY_API_STATUS, "analysed");
             int x = db.update(TABLE_SONGS, contentValues, KEY_SERVER_SONG_ID + "=\'" + model.get(i).getId() + "\'", null);
             //Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + KEY_SERVER_SONG_ID);
@@ -362,6 +373,9 @@ public class DBHandler extends SQLiteOpenHelper {
             do {
                 String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
                 Song model = new Gson().fromJson(jsonStr, Song.class);
+                if(model.getMood() == null){
+                    model.setMood(SongsManager.getMoodForText(mood));
+                }
                 models.add(model);
             } while (cursor.moveToNext());
         }
@@ -391,13 +405,31 @@ public class DBHandler extends SQLiteOpenHelper {
     public Song getSongObject(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         String query = "select * from " + TABLE_SONGS + " where " +
-                KEY_ID + "= \'" + id + "\'";
+                KEY_SERVER_SONG_ID + "= \'" + id + "\'";
         Cursor cursor = db.rawQuery(query, null);
         Song model = null;
         if (cursor.moveToFirst()) {
             do {
                 String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
                  model = new Gson().fromJson(jsonStr, Song.class);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return model;
+    }
+
+
+    public Song getSongObjectFromServerid(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "select * from " + TABLE_SONGS + " where " +
+                KEY_SERVER_SONG_ID + "= \'" + id + "\'";
+        Cursor cursor = db.rawQuery(query, null);
+        Song model = null;
+        if (cursor.moveToFirst()) {
+            do {
+                String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
+                model = new Gson().fromJson(jsonStr, Song.class);
 
             } while (cursor.moveToNext());
         }
