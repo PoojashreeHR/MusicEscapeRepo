@@ -37,9 +37,9 @@ public class SpotifyApiClient {
                         .method(original.method(), original.body());
 
                 Request request = requestBuilder.build();
-                /*Response response = chain.proceed(request);
+                Response response = chain.proceed(request);
                 Headers allHeaders = response.headers();
-                String headerValue = allHeaders.get("headerName");*/
+                String headerValue = allHeaders.get("headerName");
                 // Log.e("HEADER DISPLAYING ", headerValue);
                 return chain.proceed(request);
             }

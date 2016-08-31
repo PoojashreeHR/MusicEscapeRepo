@@ -8,6 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
@@ -21,7 +27,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.TelephonyManager;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +68,7 @@ import retrofit2.Response;
 public class MoodMappingActivity extends BaseMusicActivity implements
         View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
 
-
+    private Paint p;
     Typeface tf;
     SharedPreferences sp;
     RecyclerView mRecyclerView;
@@ -74,6 +80,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private boolean isPlaying = false;
     private static boolean isSongPlaying = false;
     Button testButton;
+    TextView tv_aggressive;
+    TextView tv_excited;
+    TextView tv_happy;
+    TextView tv_chilled;
+    TextView tv_peaceful;
+    TextView tv_bored;
+    TextView tv_depressed;
+    TextView tv_stressed;
+
     private ImageView dashboardButton, infoButton;
     private boolean newSongAdded = false;
     private boolean oldSongRemoved = false;
@@ -126,8 +141,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     startService(callSpotifyService);
                 }
             }.start();
-
-
         }
     };
 
@@ -139,6 +152,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
             SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
             new ScanAndAnalyseAsync().execute(spotifyModelMain);
+            Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
 
             testButton.setText(getResources().getString(R.string.start));
         }
@@ -151,11 +165,19 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             final ResponseSongPollModel model = new Gson().fromJson(songJson, ResponseSongPollModel.class);
             //Log.e("ON RECEIVE ANALYSED " ," : " + model.getSongs().get(0).getMood());
             ArrayList<SongInfo> info = new ArrayList<>();
-            for(int i=0;i<model.getSongs().size();i++){
+            for (int i = 0; i < model.getSongs().size(); i++) {
                 info.add(model.getSongs().get(i));
             }
             dbHandler.updateSongsWithEnergyAndValence(info);
-
+            tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
+            tv_excited.setText(dbHandler.getMoodCount("excited") + "");
+            tv_happy.setText(dbHandler.getMoodCount("happy") + "");
+            tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
+            tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
+            tv_bored.setText(dbHandler.getMoodCount("bored") + "");
+            tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
+            tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
+            testButton.setText(getResources().getString(R.string.start));
         }
     };
     SharedPreferences settings;
@@ -175,6 +197,23 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         testButton = (Button) findViewById(R.id.button);
         testButton.setText(getResources().getString(R.string.start));
         testButton.setOnClickListener(this);
+
+        tv_aggressive = (TextView) findViewById(R.id.tv_aggressive);
+        tv_excited = (TextView) findViewById(R.id.tv_excited);
+        tv_happy = (TextView) findViewById(R.id.tv_happy);
+        tv_chilled = (TextView) findViewById(R.id.tv_chilled);
+        tv_peaceful = (TextView) findViewById(R.id.tv_peaceful);
+        tv_bored = (TextView) findViewById(R.id.tv_bored);
+        tv_depressed = (TextView) findViewById(R.id.tv_depressed);
+        tv_stressed = (TextView) findViewById(R.id.tv_stressed);
+        tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
+        tv_excited.setText(dbHandler.getMoodCount("excited") + "");
+        tv_happy.setText(dbHandler.getMoodCount("happy") + "");
+        tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
+        tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
+        tv_bored.setText(dbHandler.getMoodCount("bored") + "");
+        tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
+        tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
 
         slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
@@ -217,15 +256,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 startActivity(intent);
             }
         });
-
+        p = new Paint();
         ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
         if (list.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(list, this);
+            mAdapter = new RecyclerViewAdapter(list, this,MoodMappingActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
+
         }
         play_music_seek_bar.setOnSeekBarChangeListener(this);
         slidingUpPanelLayout.setScrollableView(mRecyclerView);
@@ -233,7 +273,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         setController();
 
     }
-
 
     private void updateProgressBar() {
         handler.postDelayed(mUpdateTimeTask, 100);
@@ -243,7 +282,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void run() {
 
-            if(musicSrv!=null) {
+            if (musicSrv != null) {
                 long totalDuration = musicSrv.getDur();
                 long currDuration = musicSrv.getPosn();
 
@@ -353,7 +392,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     protected void onStop() {
         //controller.hide();
         if (sp != null) {
-            if(playbackPaused) {
+            if (playbackPaused) {
                 SharedPreferences.Editor editor = sp.edit();
                 editor.putString("playbackpaused", "" + playbackPaused);
                 editor.putString("song_id_sp", musicSrv.getSongId());
@@ -400,7 +439,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         // songPicked();
                         //musicSrv.go();
                         //updateProgressBar();
-                        if(sp.getString("song_name",null) != null){
+                        if (sp.getString("song_name", null) != null) {
                             isSongPlaying = true;
                             btn_pause.setVisibility(View.VISIBLE);
                             ibPlayPause.setVisibility(View.GONE);
@@ -486,7 +525,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     }
 
 
-
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
@@ -563,9 +601,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             String batchId = "";
             String deviceId = UtilityClass.getDeviceId(MoodMappingActivity.this);
             ArrayList<Song> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
-            if(listWithScanAndScanError.size()>0) {
+            if (listWithScanAndScanError.size() > 0) {
                 final DeviceIdModel model = new DeviceIdModel(deviceId, listWithScanAndScanError);
-                Log.e(TAG, " SENDING DeviceIdModel Object (SCAN API) : "+new Gson().toJson(model));
+                Log.e(TAG, " SENDING DeviceIdModel Object (SCAN API) : " + new Gson().toJson(model));
                 ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
                 Call<BatchIdResponseModel> calls = apiInterface.sendSongToServerToScan(model);
 
@@ -573,7 +611,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     Response<BatchIdResponseModel> gettingBatchId = calls.execute();
                     if (gettingBatchId.body() != null) {
                         batchId = gettingBatchId.body().getBatchId();
-                        Log.e(TAG, " Response From SCAN API (BATCH ID) : "+new Gson().toJson(model));
+                        Log.e(TAG, " Response From SCAN API (BATCH ID) : " + new Gson().toJson(model));
                     }
                     if (!gettingBatchId.isSuccessful() && gettingBatchId.errorBody() != null) {
                         Log.e("Error Handling", "HANDLE ERRORS 1 ");
@@ -582,7 +620,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     e.printStackTrace();
                 }
                 return batchId;
-            }else{
+            } else {
                 return "";
             }
 
@@ -595,9 +633,22 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             if (!aVoid.equals("")) {
                 callService(aVoid);
             } else {
-                //if()
-                testButton.setText(getResources().getString(R.string.start));
-                Log.e("Error Handling", "HANDLE ERRORS " + " onPostExecute() 1");
+                if (dbHandler.getSongsWithPendingStatus("pending").size() > 0) {
+                    ArrayList<String> songNames = dbHandler.getSongsWithPendingStatus("pending");
+                    Log.e(TAG, " SONG NAMES SENT TO SpotifyApiService.java : " + songNames.toString());
+                    //ArrayList<SpotifyInfo> songsIdSentFromServer = handler.getSongsIdSentFromServer();
+
+                    Intent callSpotifyService = new Intent(MoodMappingActivity.this, SpotifyApiService.class);
+                    callSpotifyService.putExtra("service_data", "passDataToService");
+                    callSpotifyService.putStringArrayListExtra("spotifyList", songNames);
+                    //callSpotifyService.putExtra("batchId", batchid);
+                    startService(callSpotifyService);
+                } else {
+
+                    //DISPLAY MESSAGE THAT ALL SONGS ARE SYNCED
+                    testButton.setText(getResources().getString(R.string.start));
+                    Log.e("Error Handling", "HANDLE ERRORS " + " onPostExecute() 1");
+                }
             }
         }
     }
@@ -622,14 +673,14 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
             String batchId = "";
             ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-            Log.e(TAG," PASSING SpotifyModelMain object to Analyse API : "+ new Gson().toJson(params[0]));
+            Log.e(TAG, " PASSING SpotifyModelMain object to Analyse API : " + new Gson().toJson(params[0]));
             Call<BatchIdResponseModel> calls = apiInterface.analyseScanSongs(params[0]);
 
             try {
                 Response<BatchIdResponseModel> gettingBatchId = calls.execute();
                 if (gettingBatchId.body() != null) {
                     batchId = gettingBatchId.body().getBatchId();
-                    Log.e(TAG," RESPONSE FROM ANALYSE API (BATCH ID) : " + batchId);
+                    Log.e(TAG, " RESPONSE FROM ANALYSE API (BATCH ID) : " + batchId);
                 } else {
                     //Toast.makeText(MoodMappingActivity.this, "Sorry!! Server is down right now", Toast.LENGTH_SHORT).show();
                     Log.e("Error Handling", "HANDLE ERRORS 2");
@@ -733,7 +784,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
             ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
             if (list.size() > 0) {
-                mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this);
+                mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this,MoodMappingActivity.this);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());

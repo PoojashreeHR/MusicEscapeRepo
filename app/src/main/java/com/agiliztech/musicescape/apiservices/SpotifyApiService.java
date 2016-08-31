@@ -7,15 +7,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.database.DBHandler;
-import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
-import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.models.spotifymodels.SpotifyMain;
-import com.agiliztech.musicescape.rest.ApiClient;
-import com.agiliztech.musicescape.rest.ApiInterface;
 import com.agiliztech.musicescape.rest.SpotifyApiClient;
 import com.agiliztech.musicescape.rest.SpotifyApiInterface;
-import com.agiliztech.musicescape.utils.UtilityClass;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,14 +18,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import retrofit2.Call;
-import retrofit2.Response;
 
 /**
  * Created by Asif on 23-08-2016.
  */
 public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
-
+    DBHandler handler;
     private String TAG = "SpotifyApiService.java";
 
     @Override
@@ -41,14 +35,10 @@ public class SpotifyApiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
-
+        handler = new DBHandler(getBaseContext());
         new Thread() {
             @Override
             public void run() {
-                DBHandler handler = new DBHandler(getBaseContext());
-                int globalRowCounter = 0;
-                boolean exhausted = false;
-                int globalCount = 0;
                 int sentRows = 0;
                 int sizeOfLoop = 0;
                 for (int i = 0; i < songNamesList.size(); i++) {
@@ -75,46 +65,20 @@ public class SpotifyApiService extends Service {
                                 handler.updateSongWithSpotifyID(spotifyId, name);
                                 int identifiedCount = handler.getRowCount();
 
-
-                                //globalRowCounter = i + 1;
-                                ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
-                                String deviceId = UtilityClass.getDeviceId(SpotifyApiService.this);
-                                SpotifyModelMain spotifyModelMain = new SpotifyModelMain(deviceId, spotifyInfos);
-
                                 if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) {
-                                    Log.e(TAG," PRINTING if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) : " + i);
+                                    Log.e(TAG, " PRINTING if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) : " + i);
                                     sendToAnalyseAPI();
-                                }
-                                else if (identifiedCount - sentRows >= 100 || (identifiedCount -sentRows <100 && sizeOfLoop==songNamesList.size())) {
+                                    break;
+                                } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size())) {
                                     //globalRowCounter = globalRowCounter + 1;
                                     if (sizeOfLoop != songNamesList.size()) {
-                                        Log.e(TAG," PRINTING identifiedCount - sentRows >= 100 || (identifiedCount -sentRows <100 && sizeOfLoop==songNamesList.size())");
-                                        Log.e(TAG," PRINTING sizeOfLoop != songNamesList.size()" +i);
+                                        sendToAnalyseAPI();
+                                        Log.e(TAG, " PRINTING identifiedCount - sentRows >= 100 || (identifiedCount -sentRows <100 && sizeOfLoop==songNamesList.size())");
+                                        Log.e(TAG, " PRINTING sizeOfLoop != songNamesList.size()" + i);
                                     } else if (sizeOfLoop == songNamesList.size()) {
-                                        Log.e(TAG," PRINTING sizeOfLoop == songNamesList.size()" +i);
-                                        /*String batchId = "";
-                                        ApiInterface analyseApiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-                                        Call<BatchIdResponseModel> calls = analyseApiInterface.analyseScanSongs(spotifyModelMain);
-                                        try {
-                                            Response<BatchIdResponseModel> gettingBatchId = calls.execute();
-                                            sentRows = sentRows + 100;
-                                            if (gettingBatchId.body() != null) {
-                                                batchId = gettingBatchId.body().getBatchId();
-                                                for (int j = 0; j < spotifyInfos.size(); j++) {
-                                                    spotifyInfos.remove(j);
-                                                }
-                                                globalCount = 0;
-                                                Log.e(TAG, " RESPONSE FROM ANALYSE API (BATCH ID) : " + batchId);
-                                            } else {
-                                                //Toast.makeText(MoodMappingActivity.this, "Sorry!! Server is down right now", Toast.LENGTH_SHORT).show();
-                                                Log.e("Error Handling", "HANDLE ERRORS 2");
-                                            }
-
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }*/
+                                        Log.e(TAG, " PRINTING sizeOfLoop == songNamesList.size()" + i);
+                                        sendToAnalyseAPI();
                                     }
-
                                 }
                             } else {
                                 handler.updateSongStatusForSpotifyError(name);
@@ -125,45 +89,24 @@ public class SpotifyApiService extends Service {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
                 }
-
                 // }
                 Intent sendingIntent = new Intent(SERVICE_EVENT);
-                //LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
+                LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
                 //stopSelf();
             }
         }.start();
-
-
         return START_STICKY;
     }
 
-    public void sendToAnalyseAPI(){
+    public void sendToAnalyseAPI() {
 
-        /*ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
-        String deviceId = UtilityClass.getDeviceId(SpotifyApiService.this);
-        SpotifyModelMain spotifyModelMain = new SpotifyModelMain(deviceId, spotifyInfos);
-        String batchId = "";
-        ApiInterface analyseApiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-        Call<BatchIdResponseModel> calls = analyseApiInterface.analyseScanSongs(spotifyModelMain);
-        try {
-            Response<BatchIdResponseModel> gettingBatchId = calls.execute();
-            //sentRows = sentRows + 100;
-            if (gettingBatchId.body() != null) {
-                batchId = gettingBatchId.body().getBatchId();
-                for (int j = 0; j < spotifyInfos.size(); j++) {
-                    spotifyInfos.remove(j);
-                }
-                Log.e(TAG, " RESPONSE FROM ANALYSE API (BATCH ID) : " + batchId);
-            } else {
-                //Toast.makeText(MoodMappingActivity.this, "Sorry!! Server is down right now", Toast.LENGTH_SHORT).show();
-                Log.e("Error Handling", "HANDLE ERRORS 2");
-            }
+        ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
+        handler.updateSongWithAnalysingStatus(spotifyInfos);
+        // Send TO ANALYSE
+        Intent sendingIntent = new Intent(SERVICE_EVENT);
+        LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
     }
 
 

@@ -67,7 +67,7 @@ public class AppInfoActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(), recyclerView, new ClickListener() {
             @Override
             public void onClick(View view, int position) {
-               // position = getLayoutPosition(); // gets item position
+
                 AppInfo item = itemList.get(position);
                 switch(position){
                     case 0:

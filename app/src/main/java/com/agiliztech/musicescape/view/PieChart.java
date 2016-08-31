@@ -27,6 +27,7 @@ import android.content.res.TypedArray;
 import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
@@ -650,6 +651,10 @@ public class PieChart extends ViewGroup {
         // Set up the paint for the pie slices
         mPiePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPiePaint.setStyle(Paint.Style.FILL);
+
+
+      //  mPiePaint.setShader(new R(0, 0, getWidth(), 0, Color.parseColor("#313131"), Color.parseColor("#0f0f0f"), Shader.TileMode.CLAMP));
+
         mPiePaint.setTextSize(mTextHeight);
 
         // Set up the paint for the shadow

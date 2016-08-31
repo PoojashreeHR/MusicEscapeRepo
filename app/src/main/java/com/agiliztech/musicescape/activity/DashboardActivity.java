@@ -18,7 +18,7 @@ import java.util.TimerTask;
 
 public class DashboardActivity extends AppCompatActivity {
 
-    ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw;
+    ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
     String dashboard;
     @Override
@@ -35,6 +35,18 @@ public class DashboardActivity extends AppCompatActivity {
             public void onClick(View v) {
                 menu_activedraw.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(DashboardActivity.this,DrawingViewActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        menu_activehistory = (ImageView) findViewById(R.id.menu_activehistory);
+        menu_history = (ImageView) findViewById(R.id.menu_history);
+        menu_history.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                menu_activehistory.setVisibility(View.VISIBLE);
+                Intent intent = new Intent(DashboardActivity.this,HistoryActivity.class);
                 startActivity(intent);
                 finish();
             }
