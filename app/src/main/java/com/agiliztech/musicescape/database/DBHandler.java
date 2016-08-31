@@ -13,6 +13,7 @@ import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.google.gson.Gson;
@@ -38,8 +39,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Songs Table Columns names
     private static final String KEY_ID = "id";  //primary key
-    private static final String KEY_CLIENT_ID = "song_id"; // int (device Song id)
-    private static final String KEY_SONG_TITLE = "song_title";  // Song Name
+    private static final String KEY_CLIENT_ID = "song_id"; // int (device SongRequest id)
+    private static final String KEY_SONG_TITLE = "song_title";  // SongRequest Name
     private static final String KEY_ARTIST_NAME = "artist_name";    // Artist Name
     private static final String KEY_ALBUM_NAME = "album_name";      // Album Name
     private static final String KEY_STATUS = "status";  //"scan"(first time song added),"scan_error"(if Error occurs)
@@ -138,7 +139,7 @@ public class DBHandler extends SQLiteOpenHelper {
         if (spotifyId != null) {
             values.put(KEY_SPOTIFY_ID, spotifyId);
         }
-        Song oldSong = getSongObject(id);
+        SongRequest oldSong = getSongObject(id);
         if(oldSong != null){
             values.put(KEY_META_DATA, new Gson().toJson(oldSong));
         }
@@ -174,8 +175,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //getting the list of songs with status="scan" and status="scan_error"
-    public ArrayList<Song> getSongsBasedOnWhereParam(String whereParam1, String whereParam2) {
-        ArrayList<Song> getSongList = new ArrayList<>();
+    public ArrayList<SongRequest> getSongsBasedOnWhereParam(String whereParam1, String whereParam2) {
+        ArrayList<SongRequest> getSongList = new ArrayList<>();
         String scan = whereParam1;
         String scan_error = whereParam2;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -184,8 +185,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (findEntry.moveToFirst()) {
             do {
 
-                String jsonStr = findEntry.getString(findEntry.getColumnIndex(KEY_META_DATA));
-                Song model = new Gson().fromJson(jsonStr, Song.class);
+                SongRequest model = new SongRequest();
+                model.setSongName(findEntry.getString(2));
+                model.setArtistName(findEntry.getString(3));
+                model.setClientId(Integer.valueOf(findEntry.getString(1)));
+                model.setAlbumName(findEntry.getString(4));
                 getSongList.add(model);
             } while (findEntry.moveToNext());
         }

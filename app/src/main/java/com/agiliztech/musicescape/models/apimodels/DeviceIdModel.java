@@ -13,9 +13,9 @@ public class DeviceIdModel {
     @SerializedName("user")
     private String user;
     @SerializedName("songs")
-    private List<Song> songs = new ArrayList<Song>();
+    private List<SongRequest> songs = new ArrayList<SongRequest>();
 
-    public DeviceIdModel(String user, List<Song> songs) {
+    public DeviceIdModel(String user, List<SongRequest> songs) {
         this.user = user;
         this.songs = songs;
     }
@@ -28,11 +28,11 @@ public class DeviceIdModel {
         this.user = user;
     }
 
-    public List<Song> getSongs() {
+    public List<SongRequest> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
+    public void setSongs(List<SongRequest> songs) {
         this.songs = songs;
     }
 

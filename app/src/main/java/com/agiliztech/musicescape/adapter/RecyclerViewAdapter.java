@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
@@ -28,10 +29,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
     IClickListener iClickListener;
-    List<SongsModel> listOfSongs;
+    List<Song> listOfSongs;
     Context context;
 
-    public RecyclerViewAdapter(List<SongsModel> listOfSongs, IClickListener iClickListener, Context context) {
+    public RecyclerViewAdapter(List<Song> listOfSongs, IClickListener iClickListener, Context context) {
         this.listOfSongs = listOfSongs;
         this.iClickListener = iClickListener;
         this.context = context;
@@ -54,12 +55,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
 
         final int pos = position;
-        SongsModel model = listOfSongs.get(position);
-        viewBinderHelper.bind(holder.swipe_layout, String.valueOf(model.getId()));
-        viewBinderHelper.bind(holder.rv_ll, String.valueOf(model.getId()));
+        Song model = listOfSongs.get(position);
+        viewBinderHelper.bind(holder.swipe_layout, String.valueOf(model.getpID()));
+        viewBinderHelper.bind(holder.rv_ll, String.valueOf(model.getpID()));
 
-        holder.rv_song_name.setText(model.getTitle());
-        holder.rv_song_detail.setText(model.getArtist());
+        holder.rv_song_name.setText(model.getSongName());
+        holder.rv_song_detail.setText(model.getArtist().getArtistName());
         holder.rv_ll.setTag(pos);
         holder.rv_ll.setOnClickListener(new View.OnClickListener() {
             @Override
