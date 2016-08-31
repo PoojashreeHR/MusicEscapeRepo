@@ -1,9 +1,16 @@
 package com.agiliztech.musicescape.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -12,14 +19,38 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.utils.Global;
 
-public class MainSplashScreen extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 3000;
+import java.util.Timer;
+import java.util.TimerTask;
+
+public class MainSplashScreen extends Activity {
+    private static final int MY_PERMISSIONS_REQUEST = 1234;
     TextView mTextView;
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_splash_screen);
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    proceedWithAppLaunch();
+
+                } else {
+
+                    // pe   rmission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+        }
+    }
+
+    private void proceedWithAppLaunch() {
 
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
@@ -32,7 +63,7 @@ public class MainSplashScreen extends AppCompatActivity {
         mTextView = (TextView) findViewById(R.id.textView11);
         String red = "music\t";
         SpannableString redSpannable= new SpannableString(red);
-        redSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), 0, red.length(), 0);
+        redSpannable.setSpan(new ForegroundColorSpan(Color.parseColor("#9D9D9D")), 0, red.length(), 0);
         builder.append(redSpannable);
 
         String white = "e";
@@ -42,27 +73,74 @@ public class MainSplashScreen extends AppCompatActivity {
 
         String blue = "Scape";
         SpannableString blueSpannable = new SpannableString(blue);
-        blueSpannable.setSpan(new ForegroundColorSpan(Color.GRAY), 0, blue.length(), 0);
+        blueSpannable.setSpan(new ForegroundColorSpan(Color.parseColor("#9D9D9D")), 0, blue.length(), 0);
         builder.append(blueSpannable);
 
         mTextView.setText(builder, TextView.BufferType.SPANNABLE);
-        new Handler().postDelayed(new Runnable() {
 
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
+        final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        final boolean introScreensShown = sharedPreferences.getBoolean(Global.INTROSCREENSSHOWN, false);
 
+        new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
-                Intent i = new Intent(MainSplashScreen.this, MoodMappingActivity.class);
-                startActivity(i);
-
-                // close this activity
-                finish();
+                if(!introScreensShown){
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.putBoolean(Global.INTROSCREENSSHOWN, true);
+                    edit.commit();
+                    startActivity(new Intent(MainSplashScreen.this, SplashScreen.class));
+                    finish();
+                }
+                else {
+                    startActivity(new Intent(MainSplashScreen.this, MoodMappingActivity.class));
+                    finish();
+                }
             }
-        }, SPLASH_TIME_OUT);
+        },5000);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main_splash_screen);
+
+        String[] allPermissions = new String[2];
+        int i = 0;
+
+        int storagePermissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if(storagePermissionCheck != PackageManager.PERMISSION_GRANTED){
+            allPermissions[i] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+            i++;
+        }
+
+        int phonePermissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CALL_PHONE);
+        if(phonePermissionCheck != PackageManager.PERMISSION_GRANTED){
+            allPermissions[i] = Manifest.permission.CALL_PHONE;
+            i++;
+        }
+
+
+        String[] allPerms = new String[i];
+        for(int k=0;k<i;k++){
+            allPerms[k] = allPermissions[k];
+        }
+
+        if(i>0){
+            if(Build.VERSION.SDK_INT >= 23) {
+                requestPermissions(
+                        allPerms,
+                        MY_PERMISSIONS_REQUEST);
+            }
+            else{
+                proceedWithAppLaunch();
+            }
+        }
+        else{
+            proceedWithAppLaunch();
+        }
+
+
     }
 }

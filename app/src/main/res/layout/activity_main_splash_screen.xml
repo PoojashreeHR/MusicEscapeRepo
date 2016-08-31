@@ -49,7 +49,7 @@
         android:id="@+id/textView12"
         android:textSize="18sp"
         android:gravity="center"
-        android:textColor="@color/Gray"
+        android:textColor="#7A7A7A"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp" />
 </RelativeLayout>
