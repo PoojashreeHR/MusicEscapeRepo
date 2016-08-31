@@ -1,4 +1,4 @@
-package com.agiliztech.musicescape;
+package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.activity.AppInfoActivity;
 import com.agiliztech.musicescape.activity.SplashScreen;
 

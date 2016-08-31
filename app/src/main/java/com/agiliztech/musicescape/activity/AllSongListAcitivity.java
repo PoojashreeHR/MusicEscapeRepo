@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
 
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
-    List<SongsModel> listOfSongs;
+    List<Song> listOfSongs;
 
 
     @Override
@@ -53,6 +54,8 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     protected void onPause() {
         super.onPause();
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+        getSharedPreferences("MyPreference", MODE_PRIVATE).edit()
+                .putBoolean("playlist_first_run", false).commit();
     }
 
     @Override

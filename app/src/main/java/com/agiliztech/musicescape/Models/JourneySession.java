@@ -1,5 +1,9 @@
 package com.agiliztech.musicescape.models;
 
+import com.agiliztech.musicescape.journey.JourneySong;
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -7,10 +11,10 @@ import java.util.List;
  * Created by amrithamayangorky on 8/12/16.
  */
 public class JourneySession {
-    private int currentMood;
+    private SongMoodCategory currentMood;
     private int favourite;
     private Date finished;
-    private int finishMood;
+    private SongMoodCategory finishMood;
     private int interruptionTime;
     private int listeningMindfully;
     private int looped;
@@ -23,13 +27,13 @@ public class JourneySession {
     private int totalPlaylistDuration;
     private String journeyID;
     private Journey journey;
-    private List<Song> songs;
+    private List<JourneySong> songs;
 
-    public int getCurrentMood() {
+    public SongMoodCategory getCurrentMood() {
         return currentMood;
     }
 
-    public void setCurrentMood(int currentMood) {
+    public void setCurrentMood(SongMoodCategory currentMood) {
         this.currentMood = currentMood;
     }
 
@@ -42,11 +46,11 @@ public class JourneySession {
     }
 
 
-    public int getFinishMood() {
+    public SongMoodCategory getFinishMood() {
         return finishMood;
     }
 
-    public void setFinishMood(int finishMood) {
+    public void setFinishMood(SongMoodCategory finishMood) {
         this.finishMood = finishMood;
     }
 
@@ -147,11 +151,11 @@ public class JourneySession {
         this.journey = journey;
     }
 
-    public List<Song> getSongs() {
+    public List<JourneySong> getSongs() {
         return songs;
     }
 
-    public void setSongs(List<Song> songs) {
+    public void setSongs(List<JourneySong> songs) {
         this.songs = songs;
     }
 
@@ -161,5 +165,18 @@ public class JourneySession {
 
     public void setFinished(Date finished) {
         this.finished = finished;
+    }
+
+    public void addSongObj(JourneySong songObj) {
+        if(songs == null){
+            songs = new ArrayList<>();
+        }
+        songs.add(songObj);
+    }
+
+    public void removeObject(JourneySong songObj) {
+        if(songs.contains(songObj)){
+            songs.remove(songObj);
+        }
     }
 }

@@ -20,6 +20,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -37,7 +38,7 @@ import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
-import com.agiliztech.musicescape.models.apimodels.Song;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
@@ -59,6 +60,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
 
 
+    Typeface tf;
     SharedPreferences sp;
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
@@ -137,7 +139,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e("ON RECIEVE CALLED ", " ON RECEIVED ");
-            Log.e("BROADCAST SPOTIFY ",""+intent.getStringExtra("spotify_data"));
+
             ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
             SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
             new ScanAndAnalyseAsync().execute(spotifyModelMain);
@@ -169,17 +171,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             testButton.setText(getResources().getString(R.string.start));
         }
     };
-
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
 
-        //musicSrv.initMediaPlayer();
+        settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
-        Typeface tf = Typeface.createFromAsset(getAssets(),
+        tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
         tv.setTypeface(tf);
@@ -212,19 +214,34 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                library.setFocusableInTouchMode(false);
-                library.setFocusable(false);
-                Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
-                startActivity(intent);
+                if (settings.getBoolean("first_time_library", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("library","Library");
+                    startActivity(intent);
+                }
+             else {
+                    Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
         dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                if (settings.getBoolean("is_first_time", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("dashboard","Dashboard");
+                    startActivity(intent);
+                }
+                else
+                {
                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                startActivity(intent);
+                startActivity(intent);}
             }
         });
 
@@ -236,7 +253,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 startActivity(intent);
             }
         });
-        ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
+        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
         if (list.size() > 0) {
             mAdapter = new RecyclerViewAdapter(list, this, MoodMappingActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -271,8 +288,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         }
     };
-
-
     private void setController() {
 
     }
@@ -297,7 +312,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     protected void onPause() {
-
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
         super.onPause();
         paused = true;
 
@@ -457,8 +475,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     testButton.setText(getResources().getString(R.string.pause));
                     isPlaying = true;
 
-                    ArrayList<SongsModel> originalList = new ArrayList<>(songList);
-                    ArrayList<SongsModel> listFromDB = dbHandler.getAllSongsFromDB();
+                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = new ArrayList<>(songList);
+                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
 
                     if (listFromDB.size() > 0) {
                         if (originalList.containsAll(listFromDB)) {
@@ -579,7 +597,46 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         } else {
             //  super.onBackPressed();
             finish();
+
         }
+    }
+
+    public  void alertDialog()
+    {   LayoutInflater factory = LayoutInflater.from(this);
+        final View alertDialogView = factory.inflate(R.layout.dialog_layout, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setView(alertDialogView);
+        TextView scan_msg = (TextView) alertDialogView.findViewById(R.id.scan_completed);
+        TextView text_dialog = (TextView) alertDialogView.findViewById(R.id.text_dialog);
+        scan_msg.setTypeface(tf);
+        text_dialog.setTypeface(tf);
+        alertDialogView.findViewById(R.id.dismiss_dialog).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //your business logic
+                alertDialog.dismiss();
+            }
+        }); alertDialog.show();
+    }
+
+    public  void networkAlertDialog()
+    {   LayoutInflater factory = LayoutInflater.from(this);
+        final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
+        final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
+        networkDialog.setView(networkDialogView);
+        TextView scan_msg = (TextView) networkDialogView.findViewById(R.id.nt_dialog_title);
+        TextView text_dialog = (TextView) networkDialogView.findViewById(R.id.nt_text_dialog);
+        scan_msg.setTypeface(tf);
+        text_dialog.setTypeface(tf);
+        networkDialogView.findViewById(R.id.nt_dismiss_dialog).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //your business logic
+                networkDialog.dismiss();
+            }
+        }); networkDialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {
@@ -588,7 +645,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         protected String doInBackground(DBHandler... params) {
             String batchId = "";
             String deviceId = UtilityClass.getDeviceId(MoodMappingActivity.this);
-            ArrayList<Song> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
+            ArrayList<SongRequest> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
             if (listWithScanAndScanError.size() > 0) {
                 final DeviceIdModel model = new DeviceIdModel(deviceId, listWithScanAndScanError);
                 Log.e(TAG, " SENDING DeviceIdModel Object (SCAN API) : " + new Gson().toJson(model));
@@ -710,16 +767,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         @Override
         protected Void doInBackground(DBHandler... params) {
-            ArrayList<SongsModel> songs = new ArrayList<>(songList);
+            ArrayList<com.agiliztech.musicescape.models.Song> songs = new ArrayList<>(songList);
             //songs = songList;
-            ArrayList<SongsModel> dbList = params[0].getAllSongsFromDB();
+            ArrayList<com.agiliztech.musicescape.models.Song> dbList = params[0].getAllSongsFromDB();
 
             if (songs.equals(dbList)) {
                 Log.e("EQUAL ", " BOTH LISTS ARE EQUAL IN CONTENT");
             } else {
                 Log.e("NOT EQUAL ", " BOTH LISTS ARE NOT EQUAL IN CONTENT");
                 if (dbList.size() > 0) {
-                    //If New Song added
+                    //If New SongRequest added
                     if ((songs.size() > dbList.size())) {
                         songs.removeAll(dbList);
                         for (int i = 0; i < songs.size(); i++) {
@@ -770,7 +827,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             isPlaying = false;
             //displayAlertDialog();
 
-            ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
+            ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
             if (list.size() > 0) {
                 mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this, MoodMappingActivity.this);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -789,15 +846,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             slidingUpPanelLayout.setScrollableView(mRecyclerView);
         }
 
-        public void storeSongsINDB(DBHandler dbHandler, ArrayList<SongsModel> models) {
+        public void storeSongsINDB(DBHandler dbHandler, ArrayList<com.agiliztech.musicescape.models.Song> models) {
 
             if (models.size() > 0) {
                 dbHandler.addDeviceSongsToDB(models);
             }
         }
 
-        public void removeSongFromDB(DBHandler dbHandler, SongsModel model) {
-            dbHandler.removeDeviceSongsFromDB(model.getId());
+        public void removeSongFromDB(DBHandler dbHandler, com.agiliztech.musicescape.models.Song model) {
+            dbHandler.removeDeviceSongsFromDB(model.getpID());
         }
     }
 }

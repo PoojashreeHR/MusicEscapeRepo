@@ -5,7 +5,7 @@ package com.agiliztech.musicescape.models.apimodels;
  */
 import com.google.gson.annotations.SerializedName;
 
-public class Song {
+public class SongRequest {
 
     @SerializedName("artistName")
     private String artistName;

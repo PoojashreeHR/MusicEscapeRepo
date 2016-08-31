@@ -1,5 +1,7 @@
 package com.agiliztech.musicescape.models;
 
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+
 import java.util.List;
 
 /**
@@ -12,15 +14,15 @@ public class Song {
     private String artistNameFirstLetter;
     private int danceability;
     private int durationEN;
-    private int energy;
+    private float energy;
     private String genre;
     private int key;
     private int liveness;
     private int loudness;
     private String md5Hash;
     private int mode;
-    private int mood;
-    private int pID;
+    private SongMoodCategory mood;
+    private long pID;
     private int playbackDuration;
     private int scannedMood;
     private int serverID;
@@ -31,14 +33,25 @@ public class Song {
     private String songURL;
     private int speechiness;
     private int tempo;
-    private int userChangedEnergy;
-    private int userChangedMood;
-    private int userChangedValance;
+    private float userChangedEnergy;
+    private boolean userChangedMood;
+    private float userChangedValance;
     private String userRetaggedMood;
-    private int valance;
+    private float valance;
     private Album album;
     private Artist artist;
     private List<JourneySongs>  journeySongs;
+
+    public Song(long pid, String title, Artist artist, Album album) {
+        this.pID = pid;
+        this.songName = title;
+        this.artist = artist;
+        this.album = album;
+    }
+
+    public Song() {
+
+    }
 
     public int getAcousticness() {
         return acousticness;
@@ -80,11 +93,11 @@ public class Song {
         this.durationEN = durationEN;
     }
 
-    public int getEnergy() {
+    public float getEnergy() {
         return energy;
     }
 
-    public void setEnergy(int energy) {
+    public void setEnergy(float energy) {
         this.energy = energy;
     }
 
@@ -129,11 +142,11 @@ public class Song {
     }
 
 
-    public int getMood() {
+    public SongMoodCategory getMood() {
         return mood;
     }
 
-    public void setMood(int mood) {
+    public void setMood(SongMoodCategory mood) {
         this.mood = mood;
     }
 
@@ -145,7 +158,7 @@ public class Song {
         this.mode = mode;
     }
 
-    public int getpID() {
+    public long getpID() {
         return pID;
     }
 
@@ -233,27 +246,27 @@ public class Song {
         this.tempo = tempo;
     }
 
-    public int getUserChangedEnergy() {
+    public float getUserChangedEnergy() {
         return userChangedEnergy;
     }
 
-    public void setUserChangedEnergy(int userChangedEnergy) {
+    public void setUserChangedEnergy(float userChangedEnergy) {
         this.userChangedEnergy = userChangedEnergy;
     }
 
-    public int getUserChangedMood() {
+    public boolean getUserChangedMood() {
         return userChangedMood;
     }
 
-    public void setUserChangedMood(int userChangedMood) {
+    public void setUserChangedMood(boolean userChangedMood) {
         this.userChangedMood = userChangedMood;
     }
 
-    public int getUserChangedValance() {
+    public float getUserChangedValance() {
         return userChangedValance;
     }
 
-    public void setUserChangedValance(int userChangedValance) {
+    public void setUserChangedValance(float userChangedValance) {
         this.userChangedValance = userChangedValance;
     }
 
@@ -265,11 +278,11 @@ public class Song {
         this.userRetaggedMood = userRetaggedMood;
     }
 
-    public int getValance() {
+    public float getValance() {
         return valance;
     }
 
-    public void setValance(int valance) {
+    public void setValance(float valance) {
         this.valance = valance;
     }
 
@@ -295,5 +308,13 @@ public class Song {
 
     public void setJourneySongs(List<JourneySongs> journeySongs) {
         this.journeySongs = journeySongs;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return (obj instanceof Song) && this.pID == ((Song) obj).getpID()
+                && this.songName.equals(((Song) obj).getSongName())
+                && this.artist.getArtistName().equals(((Song) obj).getArtist().getArtistName())
+                && this.album.getAlbumTitle().equals(((Song) obj).getAlbum().getAlbumTitle());
     }
 }

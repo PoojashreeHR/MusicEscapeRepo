@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,7 +16,7 @@ import java.util.TimerTask;
 public class SlidingImage extends AppCompatActivity {
     private static ViewPager mPager;
     private static int currentPage = 0;
-    private static int NUM_PAGES = 0;
+    private static int NUM_PAGES = 8;
     private static final Integer[] IMAGES = {
             R.drawable.tutorial_img_1,
             R.drawable.tutorial_img,
@@ -24,26 +25,32 @@ public class SlidingImage extends AppCompatActivity {
             R.drawable.tutorial_img_5,
             R.drawable.tutorial_img_6,
             R.drawable.tutorial_img_7,
-            R.drawable.tutorial_img_8 };
+            R.drawable.tutorial_img_8};
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
-    String appInfo;
+    String appInfo, splashScreen, dashboard, library, history, draw, playlist;
     String isClicked = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sliding_image);
         mPager = (ViewPager) findViewById(R.id.pager);
 
-        appInfo =  getIntent().getStringExtra("moodMapping");
-        final String  splashScreen =  getIntent().getStringExtra("splash");
+        appInfo = getIntent().getStringExtra("fullSlide");
+        splashScreen = getIntent().getStringExtra("moodMapping");
+        dashboard = getIntent().getStringExtra("dashboard");
+        library = getIntent().getStringExtra("library");
+        history = getIntent().getStringExtra("history");
+        draw = getIntent().getStringExtra("draw");
+        playlist = getIntent().getStringExtra("playlist");
 
         init();
-       mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
                 // TODO Auto-generated method stub
-
+                currentPage = position;
                 if (appInfo == isClicked) {
                     if (position == mPager.getAdapter().getCount() - 1) {
                         Intent reg = new
@@ -51,13 +58,6 @@ public class SlidingImage extends AppCompatActivity {
                         startActivity(reg);
                         //start next Activity
                     }
-                } else {
-                    if (position == 0) {
-                        Intent reg = new Intent(SlidingImage.this, MoodMappingActivity.class);
-                        startActivity(reg);
-                        finish();
-                    }
-
                 }
             }
 
@@ -73,31 +73,66 @@ public class SlidingImage extends AppCompatActivity {
 
             }
         });
-}
-
+    }
 
     private void init() {
 
-        if(appInfo == isClicked) {
+        if (appInfo != isClicked) {
             for (int i = 0; i < IMAGES.length; i++)
                 ImagesArray.add(IMAGES[i]);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
-        }
-        else{
+        } else if (splashScreen != isClicked) {
             ImagesArray.add(R.drawable.tutorial_img_1);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
-           run();
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                        startActivity(new Intent(SlidingImage.this, MoodMappingActivity.class));
+                        finish();
+                    }
+            }, 3000);
+        } else if (library != isClicked) {
+            ImagesArray.add(R.drawable.tutorial_img);
+            ImagesArray.add(R.drawable.tutorial_img_3);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    startActivity(new Intent(SlidingImage.this, LibraryActivity.class));
+                    finish();
+                }
+            }, 3000);
+        } else if (dashboard != isClicked) {
+            ImagesArray.add(R.drawable.tutorial_img_4);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    startActivity(new Intent(SlidingImage.this, DashboardActivity.class));
+                    finish();
+                }
+            }, 3000);
+        } else if (history != isClicked) {
+            ImagesArray.add(R.drawable.tutorial_img_5);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    startActivity(new Intent(SlidingImage.this, HistoryActivity.class));
+                    finish();
+                }
+            }, 3000);
+        } else {
+            ImagesArray.add(R.drawable.tutorial_img_6);
+            ImagesArray.add(R.drawable.tutorial_img_7);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            new Timer().schedule(new TimerTask() {
+                public void run() {
+                    startActivity(new Intent(SlidingImage.this, DrawingViewActivity.class));
+                    finish();
+                }
+            }, 5000);
         }
+
     }
 
-    public void  run()
-    {
-    new Timer().schedule(new TimerTask(){
-        public void run() {
-            startActivity(new Intent(SlidingImage.this, MoodMappingActivity.class));
-            finish();
-        }
-    }, 3000);
-    }
+
+
 }

@@ -1,5 +1,9 @@
 package com.agiliztech.musicescape.utils;
 
+import android.util.Log;
+
+import com.agiliztech.musicescape.models.Journey;
+import com.google.gson.Gson;
 import android.content.Context;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -8,6 +12,9 @@ import android.util.Log;
  * Created by Asif on 12-08-2016.
  */
 public class UtilityClass {
+
+    static Gson gson = new Gson();
+
     public static int progressToTimer(int progress,int totalDuration){
         int currentDuration = 0 ;
         totalDuration = (int) (totalDuration/1000);
@@ -32,4 +39,11 @@ public class UtilityClass {
 
     }
 
+    public static Gson getJsonConvertor() {
+        return gson;
+    }
+
+    public static void log(String tagName, String message) {
+        Log.d(tagName,message);
+    }
 }

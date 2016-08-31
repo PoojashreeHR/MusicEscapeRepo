@@ -18,7 +18,9 @@
         android:theme="@style/AppTheme">
         <activity
             android:screenOrientation="portrait"
-            android:name=".activity.SplashScreen"
+            android:name=".activity.MainSplashScreen"
+            android:theme="@style/AppFullScreenTheme"
+            android:label="musicEscape"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,7 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agiliztech.musicescape.activity.MoodMappingActivity" />
         </activity>
-        <activity android:name=".activity.SettingsActivity"
+           <activity android:name=".activity.SettingsActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
@@ -60,16 +62,20 @@
         <activity android:name=".activity.SlidingImage"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".PrivacyActivity"
+            android:name=".activity.PrivacyActivity"
             android:label="@string/title_activity_privacy"
             android:theme="@style/AppTheme"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.DrawingViewActivity"
-            android:screenOrientation="portrait"/>
-            android:theme="@style/AppTheme" />
-        <activity android:name=".activity.MoodMappingActivity"
             android:screenOrientation="portrait"
-            />
+            android:theme="@style/AppTheme" />
+       <activity android:name=".activity.MoodMappingActivity" />
+        <!--<activity android:name=".activity.MainSplashScreen"-->
+            <!--android:theme="@style/AppFullScreenTheme"-->
+            <!--android:screenOrientation="portrait"/>-->
+        <activity android:name=".activity.SplashScreen"
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.HistoryActivity"
             android:screenOrientation="portrait"
             />

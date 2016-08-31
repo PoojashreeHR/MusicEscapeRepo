@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="10"
+    android:orientation="vertical"
+    android:layout_centerHorizontal="true"
+    android:background="@color/colorPrimary"
+    tools:context=".activity.MainSplashScreen">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:id="@+id/rl_blank"
+        android:orientation="vertical">
+        </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_below="@+id/rl_blank"
+        android:id="@+id/rl_title">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView11"
+        android:textSize="20dp"
+        android:textColor="@color/Gray"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true">
+    </TextView>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2.5"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:id="@+id/rl_description"
+        android:layout_below="@+id/rl_title"
+        android:orientation="vertical">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/splash_msg"
+        android:id="@+id/textView12"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="#7A7A7A"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp" />
+</RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:id="@+id/rl_poweredBy"
+        android:layout_below="@+id/rl_description"
+        android:orientation="vertical">
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_practitioner"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:foregroundGravity="center"
+        android:orientation="vertical" >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:background="@drawable/ic_spotify"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_marginTop="15dp" />
+        <LinearLayout
+            android:id="@+id/layout_login"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="6dp"
+                android:text="POWERED BY"
+                android:layout_marginLeft="24dp"
+                android:textColor="@color/colorWhite"
+                android:id="@+id/textView13"
+                />
+        </LinearLayout>
+
+    </FrameLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.5"
+        android:id="@+id/rl_blank1"
+        android:layout_below="@+id/rl_poweredBy"
+        android:orientation="vertical">
+    </RelativeLayout>
+</LinearLayout>

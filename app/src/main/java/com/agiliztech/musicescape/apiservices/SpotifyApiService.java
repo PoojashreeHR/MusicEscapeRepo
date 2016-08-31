@@ -35,6 +35,7 @@ public class SpotifyApiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
+        final SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
         handler = new DBHandler(getBaseContext());
 
         new Thread() {
@@ -64,7 +65,7 @@ public class SpotifyApiService extends Service {
                         SpotifyMain main = call.execute().body();
                         if (main != null) {
                             if (main.getTracks().getItems().size() > 0) {
-                                Log.e(" PRINTING ", " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
+                                Log.e(TAG, " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
                                 String spotifyId = main.getTracks().getItems().get(0).getId();
                                 Log.e(TAG, " IF SPOTIFY ID FOUND THEN STORE IN DB  : " + spotifyId);
                                 handler.updateSongWithSpotifyID(spotifyId, name);
