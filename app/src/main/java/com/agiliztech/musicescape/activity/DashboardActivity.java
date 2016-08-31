@@ -1,26 +1,33 @@
 package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.view.PieChart;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 public class DashboardActivity extends AppCompatActivity {
 
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
-
+    String dashboard;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        dashboard =  getIntent().getStringExtra("dashboard");
 
+        ImageView imageView = (ImageView) findViewById(R.id.imageView);
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
         menu_draw = (ImageView) findViewById(R.id.menu_draw);
         menu_draw.setOnClickListener(new View.OnClickListener() {
@@ -45,10 +52,6 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         menu_activeSettings = (ImageView) findViewById(R.id.menu_activeSettings);
         menu_settings = (ImageView) findViewById(R.id.menu_settings);
         menu_settings.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +75,7 @@ public class DashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
 
         Resources res = getResources();
@@ -102,6 +106,20 @@ public class DashboardActivity extends AppCompatActivity {
 
 
     }
-
-
+    public void  run()
+    {
+        new Timer().schedule(new TimerTask(){
+            public void run() {
+                startActivity(new Intent(DashboardActivity.this, DashboardActivity.class));
+                finish();
+            }
+        }, 4000);
+    }
+    @Override
+    public void onResume()
+    {    super.onResume();
+     //   settings.edit().putBoolean("is_first_time", false).commit();
+        getSharedPreferences("MyPreference", MODE_PRIVATE).edit()
+                .putBoolean("is_first_time", false).commit();
+    }
 }

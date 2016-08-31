@@ -26,7 +26,7 @@ public class SlidingImage extends AppCompatActivity {
             R.drawable.tutorial_img_7,
             R.drawable.tutorial_img_8 };
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
-    String appInfo;
+    String appInfo,splashScreen,dashboard;
     String isClicked = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,8 @@ public class SlidingImage extends AppCompatActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
 
         appInfo =  getIntent().getStringExtra("moodMapping");
-        final String  splashScreen =  getIntent().getStringExtra("splash");
+        splashScreen =  getIntent().getStringExtra("splash");
+        dashboard =  getIntent().getStringExtra("dashboard");
 
         init();
        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -51,7 +52,7 @@ public class SlidingImage extends AppCompatActivity {
                         startActivity(reg);
                         //start next Activity
                     }
-                } else {
+                } else if (splashScreen == isClicked) {
                     if (position == 0) {
                         Intent reg = new Intent(SlidingImage.this, MoodMappingActivity.class);
                         startActivity(reg);
@@ -84,11 +85,17 @@ public class SlidingImage extends AppCompatActivity {
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
         }
-        else{
+        else if (splashScreen == isClicked){
             ImagesArray.add(R.drawable.tutorial_img_1);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
-           run();
+          run();
         }
+        else if (dashboard == isClicked){
+            ImagesArray.add(R.drawable.tutorial_img_4);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            run1();
+        }
+
     }
 
     public void  run()
@@ -100,4 +107,15 @@ public class SlidingImage extends AppCompatActivity {
         }
     }, 3000);
     }
+
+    public void  run1()
+    {
+        new Timer().schedule(new TimerTask(){
+            public void run() {
+                startActivity(new Intent(SlidingImage.this, DashboardActivity.class));
+                finish();
+            }
+        }, 3000);
+    }
+
 }

@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.agiliztech.musicescape.models.SongsModel;
-import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.models.apimodels.Song;
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
@@ -47,6 +46,7 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String KEY_BATCH_ID = "batch_id";          // batch id returns from server
     private static final String KEY_SERVER_SONG_ID = "server_song_id";  // server sends their id for songs
     private static final String KEY_SPOTIFY_ID = "spotify_id";          // after hitting spotify api, will get spotify id
+    private static final String KEY_API_STATUS = "analysing_status";
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -67,7 +67,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 + KEY_VALENCE + " TEXT,"
                 + KEY_BATCH_ID + " TEXT,"
                 + KEY_SERVER_SONG_ID + " INTEGER,"
-                + KEY_SPOTIFY_ID + " TEXT"
+                + KEY_SPOTIFY_ID + " TEXT,"
+                + KEY_API_STATUS + " TEXT"
                 + ")";
         db.execSQL(CREATE_SONG_TABLE);
     }
@@ -96,6 +97,7 @@ public class DBHandler extends SQLiteOpenHelper {
             values.put(KEY_BATCH_ID, "");
             values.put(KEY_SERVER_SONG_ID, "");
             values.put(KEY_SPOTIFY_ID, "");
+            values.put(KEY_API_STATUS, "analysing");
             db.insert(TABLE_SONGS, null, values);
             Log.e("Inserted Songs ", " " + i);
         }
@@ -136,7 +138,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<String> songName = new ArrayList<>();
         String query = "select * from " + TABLE_SONGS + " where " +
                 KEY_STATUS + " = \'" + pending + "\' OR " + KEY_STATUS + "=\'identify_error\' OR " +
-                KEY_STATUS + "=\'identify_failed\'";
+                KEY_STATUS + "=\'identify_failed\'";// OR " + KEY_STATUS + "=\'identified\'" ;
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -199,6 +201,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 model.setTitle(cursor.getString(2));
                 model.setArtist(cursor.getString(3));
                 model.setAlbumName(cursor.getString(4));
+                model.setSongMood(cursor.getString(6));
                 // Adding contact to list
                 getSongList.add(model);
             } while (cursor.moveToNext());
@@ -209,7 +212,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //update status="{spotify_id}"
     public void updateSongWithSpotifyID(String spotifyId, String songName) {
-        if(songName.contains("\'")){
+        if (songName.contains("\'")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_SPOTIFY_ID, spotifyId);
@@ -217,7 +220,7 @@ public class DBHandler extends SQLiteOpenHelper {
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
             Log.e("UPDATED ", "SPOTIFY ID " + x);
             db.close();
-        }else if(songName.contains("\"")){
+        } else if (songName.contains("\"")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_SPOTIFY_ID, spotifyId);
@@ -225,7 +228,7 @@ public class DBHandler extends SQLiteOpenHelper {
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY ID " + x);
             db.close();
-        }else{
+        } else {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_SPOTIFY_ID, spotifyId);
@@ -240,21 +243,21 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //update status="identify_error" if some error occured while getting the spotify_id
     public void updateSongStatusForSpotifyError(String songName) {
-        if(songName.contains("\'")){
+        if (songName.contains("\'")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_STATUS, "identify_error");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
             Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
             db.close();
-        }else if(songName.contains("\"")){
+        } else if (songName.contains("\"")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_STATUS, "identify_error");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
             db.close();
-        }else{
+        } else {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_STATUS, "identify_error");
@@ -266,13 +269,26 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
+    public void updateSongWithAnalysingStatus(ArrayList<SpotifyInfo> spotifyInfos) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (int i = 0; i < spotifyInfos.size(); i++) {
+            String query = "select * from " + TABLE_SONGS + " where " +
+                    KEY_SERVER_SONG_ID + "=\'" + spotifyInfos.get(i).getId() + "\'";
+            ContentValues cv = new ContentValues();
+            cv.put(KEY_API_STATUS, "again_analysing");
+            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "\'" + spotifyInfos.get(i).getId() + "\'", null);
+        }
+        db.close();
+
+    }
+
     // get the songs id which is sent by the server
     public ArrayList<SpotifyInfo> getSongsWithServerIdAndSpotifyId() {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ArrayList<SpotifyInfo> spotifyInfos = new ArrayList<>();
         String query = "select * from " + TABLE_SONGS + " where " +
-                KEY_SPOTIFY_ID + " != \'" + "" + "\'";
+                KEY_SPOTIFY_ID + " != \'" + "" + "\' AND " + KEY_API_STATUS + "=\'analysing\'";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
@@ -285,16 +301,17 @@ public class DBHandler extends SQLiteOpenHelper {
         return spotifyInfos;
     }
 
-    public void updateSongsWithEnergyAndValence(ArrayList<SongInfo> model){
+    public void updateSongsWithEnergyAndValence(ArrayList<SongInfo> model) {
         SQLiteDatabase db = this.getWritableDatabase();
         //ArrayList<SongInfo> info = model;
 
-        for(int i=0;i<model.size();i++){
+        for (int i = 0; i < model.size(); i++) {
             ContentValues contentValues = new ContentValues();
-            contentValues.put(KEY_ENERGY,model.get(i).getEnergy());
-            contentValues.put(KEY_VALENCE,model.get(i).getValence());
-            contentValues.put(KEY_SONG_MOOD,model.get(i).getMood());
-            contentValues.put(KEY_STATUS,model.get(i).getEchonestAnalysisStatus());
+            contentValues.put(KEY_ENERGY, model.get(i).getEnergy());
+            contentValues.put(KEY_VALENCE, model.get(i).getValence());
+            contentValues.put(KEY_SONG_MOOD, model.get(i).getMood());
+            contentValues.put(KEY_STATUS, model.get(i).getEchonestAnalysisStatus());
+            contentValues.put(KEY_API_STATUS, "analysed");
             int x = db.update(TABLE_SONGS, contentValues, KEY_SERVER_SONG_ID + "=\'" + model.get(i).getId() + "\'", null);
             //Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + KEY_SERVER_SONG_ID);
 
@@ -302,11 +319,54 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getRowCount(){
+    public int getRowCount() {
         SQLiteDatabase db = this.getWritableDatabase();
-        long count = DatabaseUtils.queryNumEntries(db,TABLE_SONGS, KEY_STATUS + "=\'identified\'",null);
-        Log.e("COUNT PRINTING " ," COUNT(*) : " +  count);
-        return (int)count;
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'identified\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
     }
 
+    public int getMoodCount(String mood) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_SONG_MOOD + "=\'" + mood + "\'", null);
+        return (int) count;
+    }
+
+
+    public ArrayList<SongsModel> getSongsListBasedOnMoods(String mood) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ArrayList<SongsModel> model = new ArrayList<>();
+        String query = "select * from " + TABLE_SONGS + " where " +
+                KEY_SONG_MOOD + "= \'" + mood + "\'";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                SongsModel info = new SongsModel();
+                info.setId(Integer.parseInt(cursor.getString(1)));
+                info.setTitle(cursor.getString(2));
+                info.setArtist(cursor.getString(3));
+                info.setAlbumName(cursor.getString(4));
+                model.add(info);
+            } while (cursor.moveToNext());
+        }
+        return model;
+    }
+
+    public ArrayList<SpotifyInfo> getSongsWithServerIdAndSpotifyIdWithLimit() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ArrayList<SpotifyInfo> spotifyInfos = new ArrayList<>();
+        String query = "select * from " + TABLE_SONGS + " where " +
+                KEY_SPOTIFY_ID + " != \'" + "" + "\' AND " + KEY_API_STATUS + "=\'\"\"\'";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                SpotifyInfo spotifyInfo = new SpotifyInfo();
+                spotifyInfo.setId(Integer.parseInt(cursor.getString(11)));
+                spotifyInfo.setSpotifyId(cursor.getString(12));
+                spotifyInfos.add(spotifyInfo);
+            } while (cursor.moveToNext());
+        }
+        return spotifyInfos;
+    }
 }

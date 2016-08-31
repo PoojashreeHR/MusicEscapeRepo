@@ -2,6 +2,7 @@ package com.agiliztech.musicescape.utils;
 
 import android.content.Context;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * Created by Asif on 12-08-2016.
@@ -25,7 +26,10 @@ public class UtilityClass {
 
     public static String getDeviceId(Context context) {
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        return telephonyManager.getDeviceId();
+        String deviceId =  telephonyManager.getDeviceId();
+        Log.e("DEVICE ID","" + deviceId);
+        return deviceId;
+
     }
 
 }
