@@ -15,4 +15,5 @@ public class Global {
     public static final String JOURNEY_SESSION_TBL_NAME = "TblJourneySession";
     public static ArrayList<Song> currentSongList;
     public static boolean isJourney;
+    public static String INTROSCREENSSHOWN = "introScreensShown";
 }
