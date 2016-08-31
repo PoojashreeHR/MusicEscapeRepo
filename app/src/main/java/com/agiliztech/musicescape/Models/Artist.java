@@ -14,6 +14,11 @@ public class Artist {
     private Album albums;
     private List<Song> songs;
 
+    public Artist(String artistId, String thisArtist) {
+        this.artistID = Integer.parseInt(artistId);
+        this.artistName = thisArtist;
+    }
+
     public String getArtistIDEN() {
         return artistIDEN;
     }

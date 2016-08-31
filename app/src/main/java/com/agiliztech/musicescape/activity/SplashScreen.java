@@ -23,7 +23,8 @@ public class SplashScreen extends AppCompatActivity {
                 "fonts/MontserratRegular.ttf");
         TextView content = (TextView) findViewById(R.id.textView10);
         content.setTypeface(tf);
-        proceedWithAppLaunch();
+        TextView contents = (TextView) findViewById(R.id.privacyInfo);
+        contents.setTypeface(tf);
         Button startedButton = (Button) findViewById(R.id.getStarted);
         startedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,7 +37,7 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        RelativeLayout splashScreen = (RelativeLayout) findViewById(R.id.splashScreen);
+        RelativeLayout splashScreen = (RelativeLayout) findViewById(R.id.rl_privacy);
         splashScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,27 +47,5 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-    }
-
-      /*  getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
-                .putBoolean("isFirstRun", false).commit();
-*/
-
-    public void proceedWithAppLaunch() {
-        Boolean isFirstRun = getSharedPreferences("PREFERENCE", MODE_PRIVATE)
-                .getBoolean("isFirstRun", true);
-
-        if (isFirstRun) {
-            //show start activity
-            // isStoragePermissionGranted();
-            startActivity(new Intent(SplashScreen.this, SplashScreen.class));
-            Toast.makeText(SplashScreen.this, "First Run", Toast.LENGTH_LONG)
-                    .show();
-        } else {
-            startActivity(new Intent(SplashScreen.this, MainSplashScreen.class));
-            finish();
-            Toast.makeText(SplashScreen.this, "Second Run", Toast.LENGTH_LONG)
-                    .show();
-        }
     }
 }

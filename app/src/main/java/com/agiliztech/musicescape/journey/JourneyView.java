@@ -625,4 +625,13 @@ public class JourneyView extends View {
         invalidate();
     }
 
+    public List<PointF> journeyAsValenceAndEnergyPoints(){
+        List<PointF> vePoints = new ArrayList<PointF>();
+        for(Integer i : journeyPoints){
+            Dot d = points.get(i);
+            vePoints.add(d.getEVPoint());
+        }
+        return vePoints;
+    }
+
 }

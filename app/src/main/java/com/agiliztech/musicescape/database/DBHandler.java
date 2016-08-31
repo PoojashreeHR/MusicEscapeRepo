@@ -8,10 +8,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
-import com.agiliztech.musicescape.models.apimodels.Song;
+
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
+import com.agiliztech.musicescape.utils.SongsManager;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +39,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     // Songs Table Columns names
     private static final String KEY_ID = "id";  //primary key
-    private static final String KEY_CLIENT_ID = "song_id"; // int (device Song id)
-    private static final String KEY_SONG_TITLE = "song_title";  // Song Name
+    private static final String KEY_CLIENT_ID = "song_id"; // int (device SongRequest id)
+    private static final String KEY_SONG_TITLE = "song_title";  // SongRequest Name
     private static final String KEY_ARTIST_NAME = "artist_name";    // Artist Name
     private static final String KEY_ALBUM_NAME = "album_name";      // Album Name
     private static final String KEY_STATUS = "status";  //"scan"(first time song added),"scan_error"(if Error occurs)
@@ -80,20 +85,20 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     // Adding Device songs to db
-    public void addDeviceSongsToDB(List<SongsModel> songsModel) {
+    public void addDeviceSongsToDB(List<com.agiliztech.musicescape.models.Song> songsModel) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
 
         for (int i = 0; i < songsModel.size(); i++) {
-            values.put(KEY_CLIENT_ID, songsModel.get(i).getId());
-            values.put(KEY_SONG_TITLE, songsModel.get(i).getTitle());
-            values.put(KEY_ARTIST_NAME, songsModel.get(i).getArtist());
-            values.put(KEY_ALBUM_NAME, songsModel.get(i).getAlbumName());
+            values.put(KEY_CLIENT_ID, songsModel.get(i).getpID());
+            values.put(KEY_SONG_TITLE, songsModel.get(i).getSongName());
+            values.put(KEY_ARTIST_NAME, songsModel.get(i).getArtist().getArtistName());
+            values.put(KEY_ALBUM_NAME, songsModel.get(i).getAlbum().getAlbumTitle());
             values.put(KEY_STATUS, "scan");
             values.put(KEY_SONG_MOOD, "");
-            values.put(KEY_META_DATA, "");
-            values.put(KEY_ENERGY, "");
-            values.put(KEY_VALENCE, "");
+            values.put(KEY_META_DATA, new Gson().toJson(songsModel.get(i)));
+            values.put(KEY_ENERGY, songsModel.get(i).getEnergy());
+            values.put(KEY_VALENCE, songsModel.get(i).getValance());
             values.put(KEY_BATCH_ID, "");
             values.put(KEY_SERVER_SONG_ID, "");
             values.put(KEY_SPOTIFY_ID, "");
@@ -120,6 +125,23 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_SERVER_SONG_ID, serverSongId);
         if (spotifyId != null) {
             values.put(KEY_SPOTIFY_ID, spotifyId);
+        }
+        int x = db.update(TABLE_SONGS, values, KEY_CLIENT_ID + "=" + id, null);
+        Log.e("UPDATED ", "UPDATED ROW " + x);
+        db.close();
+        /*} else {
+          *//*  db.rawQuery("UPDATE " + TABLE_SONGS + " SET " + KEY_BATCH_ID + "=\'" + batch +
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_BATCH_ID, batch);
+        values.put(KEY_STATUS, echo);
+        values.put(KEY_SERVER_SONG_ID, serverSongId);
+        if (spotifyId != null) {
+            values.put(KEY_SPOTIFY_ID, spotifyId);
+        }
+        SongRequest oldSong = getSongObject(id);
+        if(oldSong != null){
+            values.put(KEY_META_DATA, new Gson().toJson(oldSong));
         }
         int x = db.update(TABLE_SONGS, values, KEY_CLIENT_ID + "=" + id, null);
         Log.e("UPDATED ", "UPDATED ROW " + x);
@@ -153,8 +175,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     //getting the list of songs with status="scan" and status="scan_error"
-    public ArrayList<Song> getSongsBasedOnWhereParam(String whereParam1, String whereParam2) {
-        ArrayList<Song> getSongList = new ArrayList<>();
+    public ArrayList<SongRequest> getSongsBasedOnWhereParam(String whereParam1, String whereParam2) {
+        ArrayList<SongRequest> getSongList = new ArrayList<>();
         String scan = whereParam1;
         String scan_error = whereParam2;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -162,7 +184,8 @@ public class DBHandler extends SQLiteOpenHelper {
                 KEY_STATUS + " = \'" + scan + "\'" + " or " + KEY_STATUS + "=\'" + scan_error + "\'", null);
         if (findEntry.moveToFirst()) {
             do {
-                Song model = new Song();
+
+                SongRequest model = new SongRequest();
                 model.setSongName(findEntry.getString(2));
                 model.setArtistName(findEntry.getString(3));
                 model.setClientId(Integer.valueOf(findEntry.getString(1)));
@@ -185,8 +208,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
     // Getting All Songs FROM DB
-    public ArrayList<SongsModel> getAllSongsFromDB() {
-        ArrayList<SongsModel> getSongList = new ArrayList<>();
+    public ArrayList<Song> getAllSongsFromDB() {
+        ArrayList<Song> getSongList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_SONGS;
 
@@ -196,12 +219,8 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                SongsModel model = new SongsModel();
-                model.setId(Integer.parseInt(cursor.getString(1)));
-                model.setTitle(cursor.getString(2));
-                model.setArtist(cursor.getString(3));
-                model.setAlbumName(cursor.getString(4));
-                model.setSongMood(cursor.getString(6));
+                String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
+                Song model = new Gson().fromJson(jsonStr, Song.class);
                 // Adding contact to list
                 getSongList.add(model);
             } while (cursor.moveToNext());
@@ -275,6 +294,10 @@ public class DBHandler extends SQLiteOpenHelper {
             String query = "select * from " + TABLE_SONGS + " where " +
                     KEY_SERVER_SONG_ID + "=\'" + spotifyInfos.get(i).getId() + "\'";
             ContentValues cv = new ContentValues();
+
+
+
+
             cv.put(KEY_API_STATUS, "again_analysing");
             db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
@@ -311,6 +334,13 @@ public class DBHandler extends SQLiteOpenHelper {
             contentValues.put(KEY_VALENCE, model.get(i).getValence());
             contentValues.put(KEY_SONG_MOOD, model.get(i).getMood());
             contentValues.put(KEY_STATUS, model.get(i).getEchonestAnalysisStatus());
+            Song oldSong = getSongObject(model.get(i).getId());
+            if(oldSong != null){
+                oldSong.setEnergy((float) model.get(i).getEnergy());
+                oldSong.setValance((float) model.get(i).getValence());
+                oldSong.setMood(SongsManager.getMoodForText(model.get(i).getMood()));
+                contentValues.put(KEY_META_DATA, new Gson().toJson(oldSong));
+            }
             contentValues.put(KEY_API_STATUS, "analysed");
             int x = db.update(TABLE_SONGS, contentValues, KEY_SERVER_SONG_ID + "=\'" + model.get(i).getId() + "\'", null);
             //Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + KEY_SERVER_SONG_ID);
@@ -333,23 +363,23 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
 
-    public ArrayList<SongsModel> getSongsListBasedOnMoods(String mood) {
+    public ArrayList<Song> getSongsListBasedOnMoods(String mood) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ArrayList<SongsModel> model = new ArrayList<>();
+        ArrayList<Song> models = new ArrayList<>();
         String query = "select * from " + TABLE_SONGS + " where " +
                 KEY_SONG_MOOD + "= \'" + mood + "\'";
         Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
-                SongsModel info = new SongsModel();
-                info.setId(Integer.parseInt(cursor.getString(1)));
-                info.setTitle(cursor.getString(2));
-                info.setArtist(cursor.getString(3));
-                info.setAlbumName(cursor.getString(4));
-                model.add(info);
+                String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
+                Song model = new Gson().fromJson(jsonStr, Song.class);
+                if(model.getMood() == null){
+                    model.setMood(SongsManager.getMoodForText(mood));
+                }
+                models.add(model);
             } while (cursor.moveToNext());
         }
-        return model;
+        return models;
     }
 
     public ArrayList<SpotifyInfo> getSongsWithServerIdAndSpotifyIdWithLimit() {
@@ -358,7 +388,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ArrayList<SpotifyInfo> spotifyInfos = new ArrayList<>();
         String query = "select * from " + TABLE_SONGS + " where " +
                 KEY_SPOTIFY_ID + " != \'" + "" + "\' AND " + KEY_API_STATUS + "=\'\"\"\'";
-        Cursor cursor = db.rawQuery(query, null);
+          Cursor cursor = db.rawQuery(query, null);
         if (cursor.moveToFirst()) {
             do {
                 SpotifyInfo spotifyInfo = new SpotifyInfo();
@@ -368,5 +398,72 @@ public class DBHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return spotifyInfos;
+    }
+
+
+
+    public Song getSongObject(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "select * from " + TABLE_SONGS + " where " +
+                KEY_SERVER_SONG_ID + "= \'" + id + "\'";
+        Cursor cursor = db.rawQuery(query, null);
+        Song model = null;
+        if (cursor.moveToFirst()) {
+            do {
+                String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
+                 model = new Gson().fromJson(jsonStr, Song.class);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return model;
+    }
+
+
+    public Song getSongObjectFromServerid(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "select * from " + TABLE_SONGS + " where " +
+                KEY_SERVER_SONG_ID + "= \'" + id + "\'";
+        Cursor cursor = db.rawQuery(query, null);
+        Song model = null;
+        if (cursor.moveToFirst()) {
+            do {
+                String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
+                model = new Gson().fromJson(jsonStr, Song.class);
+
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return model;
+    }
+
+    public void updateSongObj(Song song){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(KEY_META_DATA, new Gson().toJson(song));
+        int x = db.update(TABLE_SONGS, contentValues, KEY_SERVER_SONG_ID + "=\'" + song.getpID() + "\'", null);
+        db.close();
+
+    }
+
+
+
+    public List<Song> getSongItemInSongbasedOnMood(SongMoodCategory mood, List<Song> playList) {
+        String moodName = SongsManager.textForMood(SongsManager.getIntValue(mood));
+        if(moodName != null){
+            moodName = moodName.toLowerCase();
+            moodName = moodName.trim();
+            List<Song> moodSongs = getSongsListBasedOnMoods(moodName);
+
+            boolean removed = moodSongs.removeAll(playList);
+            if(removed){
+                return moodSongs;
+            }
+            else{
+                return null;
+            }
+        }
+
+        return null;
     }
 }

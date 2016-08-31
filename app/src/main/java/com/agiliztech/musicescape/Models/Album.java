@@ -12,6 +12,11 @@ public class Album {
     private Artist artists;
     private List<Song> songs;
 
+    public Album(String albumId, String albumName) {
+        this.albumID = Integer.parseInt(albumId);
+        this.albumTitle = albumName;
+    }
+
     public String getAlbumTitle() {
         return albumTitle;
     }

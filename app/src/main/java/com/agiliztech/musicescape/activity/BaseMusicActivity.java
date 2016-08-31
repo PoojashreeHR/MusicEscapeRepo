@@ -17,8 +17,10 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.musicservices.MusicService;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -33,7 +35,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     protected boolean musicBound = false;
     protected ImageButton ibPlayPause;
     SongsManager songsManager = new SongsManager(this);
-    protected ArrayList<SongsModel> songList;
+    protected ArrayList<Song> songList;
     protected Intent playIntent;
     public boolean paused = false, playbackPaused = false;
 
@@ -47,7 +49,8 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
 
-    public ArrayList<SongsModel> getSongsFromCurPlaylist() {
+    public ArrayList<Song> getSongsFromCurPlaylist()
+    {
         return songsManager.getSongList();
     }
 
@@ -81,25 +84,25 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     }
 
     public void sortSongsAlphabetically() {
-        Collections.sort(songList, new Comparator<SongsModel>() {
-            public int compare(SongsModel a, SongsModel b) {
-                return a.getTitle().compareToIgnoreCase(b.getTitle());
+        Collections.sort(songList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getSongName().compareToIgnoreCase(b.getSongName());
             }
         });
     }
 
     public void sortSongsArtistwise() {
-        Collections.sort(songList, new Comparator<SongsModel>() {
-            public int compare(SongsModel a, SongsModel b) {
-                return a.getArtist().compareToIgnoreCase(b.getArtist());
+        Collections.sort(songList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getArtist().getArtistName().compareToIgnoreCase(b.getArtist().getArtistName());
             }
         });
     }
 
     public void sortSongsAlbumwise() {
-        Collections.sort(songList, new Comparator<SongsModel>() {
-            public int compare(SongsModel a, SongsModel b) {
-                return a.getAlbumName().compareToIgnoreCase(b.getAlbumName());
+        Collections.sort(songList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getAlbum().getAlbumTitle().compareToIgnoreCase(b.getAlbum().getAlbumTitle());
             }
         });
     }
@@ -165,6 +168,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
                 //musicSrv = MainApplication.getInstance();
                 //pass list
                 musicSrv.setList(songList);
+                Global.currentSongList = songList;
                 musicBound = true;
                 onMusicServiceConnected();
 
