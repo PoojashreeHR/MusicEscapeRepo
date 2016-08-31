@@ -23,6 +23,8 @@ public class SplashScreen extends AppCompatActivity {
                 "fonts/MontserratRegular.ttf");
         TextView content = (TextView) findViewById(R.id.textView10);
         content.setTypeface(tf);
+        TextView contents = (TextView) findViewById(R.id.privacyInfo);
+        contents.setTypeface(tf);
         Button startedButton = (Button) findViewById(R.id.getStarted);
         startedButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -35,7 +37,7 @@ public class SplashScreen extends AppCompatActivity {
             }
         });
 
-        RelativeLayout splashScreen = (RelativeLayout) findViewById(R.id.splashScreen);
+        RelativeLayout splashScreen = (RelativeLayout) findViewById(R.id.rl_privacy);
         splashScreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
