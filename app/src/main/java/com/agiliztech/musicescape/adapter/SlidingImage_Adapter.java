@@ -2,9 +2,14 @@ package com.agiliztech.musicescape.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +19,7 @@ import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.activity.AppInfoActivity;
 import com.agiliztech.musicescape.activity.SlidingImage;
 import com.agiliztech.musicescape.models.AppInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -25,7 +31,7 @@ public class SlidingImage_Adapter extends PagerAdapter {
     private ArrayList<Integer> IMAGES;
     private LayoutInflater inflater;
     private Context context;
-
+    ImageView imageView;
 
     public SlidingImage_Adapter(Context context, ArrayList<Integer> IMAGES) {
         this.context = context;
@@ -40,27 +46,43 @@ public class SlidingImage_Adapter extends PagerAdapter {
 
     @Override
     public int getCount() {
-        return IMAGES.size();
+        return IMAGES.size()+1;
     }
 
     @Override
     public Object instantiateItem(ViewGroup view, int position) {
         View imageLayout = inflater.inflate(R.layout.sliding_image_layout, view, false);
 
-
         assert imageLayout != null;
-        final ImageView imageView = (ImageView) imageLayout
+        imageView = (ImageView) imageLayout
                 .findViewById(R.id.image);
-        imageView.setImageResource(IMAGES.get(position));
-        view.addView(imageLayout, 0);
 
-        /*if(position == IMAGES.size())
-        {
-            Intent intent = new Intent(context,AppInfoActivity.class);
-            context.startActivity(intent);
-        }*/
+        if(position < getCount()-1) {
+
+            imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
+            view.addView(imageLayout, 0);
+        }
+       // imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
+      //  view.addView(imageLayout, 0);
+
         return imageLayout;
 }
+    private static Bitmap decodeResource(Resources res, int id) {
+        Bitmap bitmap = null;
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        for (options.inSampleSize = 1; options.inSampleSize <= 32; options.inSampleSize++) {
+            try {
+                bitmap = BitmapFactory.decodeResource(res, id, options);
+                Log.d("", "Decoded successfully for sampleSize " + options.inSampleSize);
+                break;
+            } catch (OutOfMemoryError outOfMemoryError) {
+                // If an OutOfMemoryError occurred, we continue with for loop and next inSampleSize value
+                Log.e("", "outOfMemoryError while reading file for sampleSize " + options.inSampleSize
+                        + " retrying with higher value");
+            }
+        }
+        return bitmap;
+    }
 
     @Override
     public boolean isViewFromObject(View view, Object object) {

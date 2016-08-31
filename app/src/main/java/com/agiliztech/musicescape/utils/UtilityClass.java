@@ -4,6 +4,9 @@ import android.util.Log;
 
 import com.agiliztech.musicescape.models.Journey;
 import com.google.gson.Gson;
+import android.content.Context;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 
 /**
  * Created by Asif on 12-08-2016.
@@ -26,6 +29,14 @@ public class UtilityClass {
 
         percentage = (((double)currentSeconds)/totalSeconds)*100;
         return percentage.intValue();
+    }
+
+    public static String getDeviceId(Context context) {
+        TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        String deviceId =  telephonyManager.getDeviceId();
+        Log.e("DEVICE ID","" + deviceId);
+        return deviceId;
+
     }
 
     public static Gson getJsonConvertor() {

@@ -3,10 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:custom="http://schemas.android.com/apk/res-auto"
     android:background="#262626"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
     tools:context="com.agiliztech.musicescape.activity.DashboardActivity">
-
 
     <com.agiliztech.musicescape.view.PieChart
 
@@ -61,8 +60,17 @@
                 android:layout_width="153dp"
                 android:layout_height="130dp"
                 android:layout_marginLeft="1dp"
+                android:visibility="visible"
                 android:layout_marginTop="73dp"
                 android:src="@drawable/m_history_inactive" />
+            <ImageView
+                android:id="@+id/menu_activehistory"
+                android:layout_width="153dp"
+                android:layout_height="130dp"
+                android:layout_marginLeft="1dp"
+                android:layout_marginTop="73dp"
+                android:visibility="gone"
+                android:src="@drawable/m_history_active" />
 
             <ImageView
                 android:id="@+id/menu_library"

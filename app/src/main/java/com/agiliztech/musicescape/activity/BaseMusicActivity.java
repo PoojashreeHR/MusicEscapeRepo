@@ -4,8 +4,10 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -52,6 +54,9 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
         return songsManager.getSongList();
     }
 
+    SlidingUpPanelLayout anotherBaseLayout;
+    FrameLayout baseLayout, contentFrame;
+    FrameLayout anotherContentFrame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +110,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
     @Override
     public void setContentView(int layoutResID) {
         // TODO Auto-generated method stub
-        FrameLayout baseLayout, contentFrame;
-        SlidingUpPanelLayout anotherBaseLayout;
-        FrameLayout anotherContentFrame;
+
 
         baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null); // Your base layout here
         contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
@@ -124,6 +127,32 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
 
     private void initMPElements() {
         initViews();
+    }
+    SlidingUpPanelLayout slider;
+    FrameLayout frameLayout;
+    @Override
+    protected void onResume() {
+        super.onResume();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        boolean previouslyScanned = prefs.getBoolean(getString(R.string.pref_previously_started), false);
+        if (!previouslyScanned) {
+            SharedPreferences.Editor edit = prefs.edit();
+           /* edit.putBoolean(getString(R.string.pref_previously_started), Boolean.TRUE);
+            edit.commit();
+            anotherBaseLayout.setVisibility(View.GONE);
+            anotherContentFrame.setVisibility(View.GONE);*/
+            slider = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
+            //frameLayout = (FrameLayout) slider.findViewById(R.id.content_slider);
+            //frameLayout.setVisibility(View.GONE);
+            //slider.setVisibility(View.GONE);
+            //anotherContentFrame.setVisibility(View.GONE);
+        } else {
+/*
+            anotherBaseLayout.setVisibility(View.VISIBLE);
+            anotherContentFrame.setVisibility(View.VISIBLE);
+            contentFrame.setVisibility(View.VISIBLE);
+*/
+        }
     }
 
     @Override
@@ -153,7 +182,7 @@ public class BaseMusicActivity extends AppCompatActivity implements MediaControl
         if (playIntent == null) {
             playIntent = new Intent(getApplicationContext(), MusicService.class);
             getApplicationContext().bindService(playIntent, musicConnection, Context.BIND_AUTO_CREATE);
-            startService(playIntent);
+            //startService(playIntent);
         }
     }
 

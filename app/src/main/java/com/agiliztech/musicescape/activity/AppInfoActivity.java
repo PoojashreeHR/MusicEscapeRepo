@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,10 +17,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.agiliztech.musicescape.PrivacyActivity;
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.AppInfoAdapter;
 import com.agiliztech.musicescape.models.AppInfo;
+import com.agiliztech.musicescape.utils.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +41,8 @@ public class AppInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_info);
 
         recyclerView = (RecyclerView) findViewById(R.id.appInfoRecyclerView);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
          tf = Typeface.createFromAsset(getAssets(),
-                "fonts/montserratRegular.ttf");
+                "fonts/MontserratRegular.ttf");
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
         appInfo.setTypeface(tf);
         relative = (RelativeLayout) findViewById(R.id.relativeLayout2);
@@ -55,13 +50,17 @@ public class AppInfoActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
-
+                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
+                startActivity(intent);
             }
         });
         mAdapter = new AppInfoAdapter(itemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
+       /* RecyclerView.ItemDecoration itemDecoration = new
+                DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST);
+        recyclerView.addItemDecoration(itemDecoration);*/
+        recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
 
@@ -69,18 +68,24 @@ public class AppInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View view, int position) {
 
+                AppInfo item = itemList.get(position);
                 switch(position){
                     case 0:
+                        view.setBackgroundColor(Color.WHITE);
                         String url = "http://www.youngandwellcrc.org.au";
                         Intent i = new Intent(Intent.ACTION_VIEW);
                         i.setData(Uri.parse(url));
                         startActivity(i);
                         break;
                     case 1:
-                        startActivity(new Intent(AppInfoActivity.this, PrivacyActivity.class));
+                        Intent privacy = new Intent(getApplicationContext(),PrivacyActivity.class);
+                        privacy.putExtra("appInfo","AppInfo");
+                        startActivity(privacy);
                         break;
                     case 2:
-//                        startActivity(new Intent(AppInfoActivity.this, SlidingImage.class));
+                        Intent tutorial = new Intent(getApplicationContext(),SlidingImage.class);
+                        tutorial.putExtra("fullSlide","FullImgSliding");
+                        startActivity(tutorial);
                         break;
                     case 3:
 

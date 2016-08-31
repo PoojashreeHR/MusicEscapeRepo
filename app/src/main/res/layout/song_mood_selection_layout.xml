@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/exited"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="EXITED"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/exited"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/happy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="HAPPY"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/happy"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+        <TextView
+            android:id="@+id/chilled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="CHILLED"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/chilled"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/peacefull"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="PEACEFULL"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/peacefull"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/bored"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="BORED"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/Bored"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/depressed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="DEPRESSED"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/depressed"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/stressed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="STRESSED"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/stressed"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/aggressive"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="AGGRESSIVE"
+            android:paddingLeft="10dp"
+            android:onClick="onClick"
+            android:paddingTop="5dp"
+            android:textColor="@color/Aggressive"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/noMood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="NO MOODS"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/Gray"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/allMood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:text="ALL MOODS"
+            android:onClick="onClick"
+            android:paddingLeft="10dp"
+            android:paddingTop="5dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+    </ScrollView>

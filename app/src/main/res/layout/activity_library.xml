@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:weightSum="10"
     android:background="@color/colorPrimary"
     android:orientation="vertical"
     android:paddingLeft="18dp"
     android:paddingRight="18dp"
     android:paddingTop="12dp"
+    android:weightSum="10"
     android:layout_width="wrap_content"
     android:layout_height="match_parent">
 
 
     <RelativeLayout
         android:background="@color/colorPrimary"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_weight="0"
         android:orientation="horizontal">
         <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -55,21 +55,21 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true" />
 
-
     </RelativeLayout>
     <View
         android:id="@+id/feedback_view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@+id/toolbar"
-
+android:layout_marginTop="5dp"
         android:alpha="0.9"
         android:background="#262626"
         />
     <RelativeLayout
         android:background="@color/colorPrimary"
         android:layout_marginTop="10dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="9"
         android:layout_width="match_parent"
         android:orientation="horizontal">
 
@@ -110,8 +110,7 @@
                 android:layout_gravity="center"
                 android:background="@drawable/library_arrow_inactive"
                 android:layout_alignParentTop="true"
-                android:layout_toRightOf="@+id/textView9"
-                android:layout_toEndOf="@+id/textView9">
+                android:layout_toRightOf="@+id/textView9">
             </ImageButton>
 
             <TextView
@@ -141,6 +140,7 @@
                 android:layout_alignParentEnd="true" />
         </RelativeLayout>
 
+
         <LinearLayout
             android:orientation="vertical"
             android:id="@+id/viewContainer"
@@ -153,6 +153,14 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true">
 
+            <ScrollView
+                android:layout_width="150dp"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
             <TextView
                 android:id="@+id/exited"
                 android:layout_width="match_parent"
@@ -281,6 +289,8 @@
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
                 android:gravity="center_horizontal" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
 
         <LinearLayout
@@ -291,6 +301,7 @@
             android:visibility="invisible"
             android:background="@color/colorPrimary"
             android:layout_gravity="right|top"
+            android:paddingRight="10dp"
             android:layout_below="@+id/relativeLayout"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true">
@@ -307,7 +318,7 @@
                 android:paddingTop="5dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="left" />
 
 
             <TextView
@@ -316,12 +327,12 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:text="ARTIST"
+                android:paddingLeft="5dp"
                 android:onClick="onClick"
-                android:paddingLeft="10dp"
-                android:paddingTop="5dp"
+                android:paddingTop="10dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="left" />
 
             <TextView
                 android:id="@+id/sortAlbum"
@@ -329,12 +340,12 @@
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:text="ALBUM"
-                android:onClick="onClick"
                 android:paddingLeft="10dp"
+                android:onClick="onClick"
                 android:paddingTop="5dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="left" />
             </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

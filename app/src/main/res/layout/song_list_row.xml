@@ -11,7 +11,7 @@
         android:id="@+id/mood_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/rv_notfound_bottom_journey_active" />
+        android:src="@drawable/active_mood_dots" />
 
     <LinearLayout
         android:layout_width="match_parent"

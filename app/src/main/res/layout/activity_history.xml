@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:paddingLeft="18dp"
+    android:paddingRight="18dp"
+    android:paddingTop="12dp"
+    android:weightSum="10"
+    tools:context="com.agiliztech.musicescape.activity.HistoryActivity">
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/toolbar"
+        android:orientation="horizontal">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:id="@+id/view">
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="HISTORY"
+            android:textColor="#6E6E6E"
+            android:id="@+id/history"
+            android:gravity="center"
+            android:layout_alignBottom="@+id/view"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton2"
+            android:background="@drawable/menuiconmanager"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+
+    <View
+        android:id="@+id/feedback_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/toolbar"
+        android:alpha="0.9"
+        android:background="#262626"
+        />
+</LinearLayout>

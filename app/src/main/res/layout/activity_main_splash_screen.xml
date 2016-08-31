@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    tools:context=".activity.MainSplashScreen">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/textView11"
+        android:textSize="20dp"
+        android:textColor="@color/Gray"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="161dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/splash_msg"
+        android:id="@+id/textView12"
+        android:textSize="20sp"
+        android:textColor="@color/Gray"
+        android:layout_below="@+id/textView11"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp" />
+
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="80dp"
+        android:id="@+id/imageView3"
+        android:background="@drawable/spotifi_logo_green"
+        android:layout_alignTop="@+id/textView13"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Powered By"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:id="@+id/textView13"
+        android:layout_marginBottom="121dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/textView12"
+        android:layout_alignStart="@+id/textView12" />
+</RelativeLayout>

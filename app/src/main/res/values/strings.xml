@@ -4,6 +4,7 @@
     <string name="title_activity_app_info">   APP INFORMATION</string>
     <string name="title_activity_faq">FAQ</string>
     <string name="title_activity_privacy">PrivacyActivity</string>
+    <string name="splashScreen"> Music eScape was developed with young people by the Queensland University of Technology as part of the Young and Well Cooperative Research Centre\n\n We respect your privacy and are committed to maintaining it.\n\n By continuing, you agree to music eScape\'s terms and conditions.</string>
     <string name="privacy_statements">
        Music eScape was developed with young people aged 16-25 by the Queensland University of Technology (QUT) as part of a continuing research project in the Young and Well Cooperative Research Centre (Young and Well CRC) which is part of Young People, Technology and Wellbeing CRC Ltd. We are a not-for-profit organisation with objectives that include pursuing world class research and carrying out education for the benefit of Australians, especially young people. We focus on using technologies to promote mental health and wellbeing of young people. We respect your privacy and are committed to maintaining it.\n\n
         This Privacy Policy outlines how the Young and Well CRC collects and uses information online, and the safeguards we recommend to ensure a fun and safe experience. The applicable laws, being the Privacy Act 1988 (Cth) as recently reformed (2014 March), and State and Territory privacy laws, establish Privacy Principles which have been adopted by us.\n\n
@@ -22,4 +23,9 @@
         Primary responsibility for investigating and responding to the complaint will rest with the head of the organisational unit, with advice from the Privacy Officer as required. QUT’s main objective in responding to privacy complaints is to conciliate an outcome which is acceptable to the complainant and which addresses any broader or systemic privacy issues which may arise. If a complainant does not agree with the University\'s response, an internal review process is available or a complainant may refer the matter for independent mediation by the Office of the Information Commissioner.\n\n
          By using this app you acknowledge that this app is released for the purpose of research only.  This version is not released for commercial purposes and cannot be on-sold or distributed without the express written consent of Young and Well CRC Ltd. You as the user of the app acknowledge that you remain solely responsible for obtaining licensed content. You warrant that you will not use this app to create any infringing copies, support, encourage or induce copyright infringement. You indemnify and release the producer and authors of the app from any claim of intellectual property infringement arising from your music collection or your use of this app. If you are a copyright holder and have concerns regarding potential copyright infringement, please contact Young and Well CRC Ltd.\n\n
 </string>
+    <string name="dialog_msg">We\'ve finished tagging\n your library.\n\n Now all your songs will\n appear in playlist\n and mood journey</string>
+    <string name="pref_previously_started">1</string>
+    <string name="splash_msg">Takes you on a journey through\n emotions using your own music</string>
+    <string name="start">START</string>
+    <string name="pause">PAUSE</string>
 </resources>

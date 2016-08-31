@@ -7,6 +7,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.spotifymodels.SpotifyMain;
 import com.agiliztech.musicescape.rest.SpotifyApiClient;
 import com.agiliztech.musicescape.rest.SpotifyApiInterface;
@@ -23,6 +24,8 @@ import retrofit2.Call;
  */
 public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
+    DBHandler handler;
+    private String TAG = "SpotifyApiService.java";
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -32,71 +35,108 @@ public class SpotifyApiService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
-
+        handler = new DBHandler(getBaseContext());
         new Thread() {
             @Override
             public void run() {
-                DBHandler handler = new DBHandler(getBaseContext());
+                int sentRows = 0;
+                int sizeOfLoop = 0;
                 for (int i = 0; i < songNamesList.size(); i++) {
                     String name = songNamesList.get(i);
-                    if (name.contains("-")) {
+                    //if (name.contains("-")) {
+                    sizeOfLoop = i;
+                    String originalName = getOriginalSongName(name);
+                    Map<String, String> data = new HashMap<>();
+                    data.put("query", originalName);
+                    data.put("offset", "0");
+                    data.put("limit", "1");
+                    data.put("type", "track");
 
-                        String originalName = getOriginalSongName(name);
-                        Map<String, String> data = new HashMap<>();
-                        data.put("query", originalName);
-                        data.put("offset", "0");
-                        data.put("limit", "1");
-                        data.put("type", "track");
+                    SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
+                    Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
+                    try {
+                        Log.e(TAG, " SENDING QUERY TO SPOTIFY API : " + data.toString());
+                        SpotifyMain main = call.execute().body();
+                        if (main != null) {
+                            if (main.getTracks().getItems().size() > 0) {
+                                Log.e(" PRINTING ", " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
+                                String spotifyId = main.getTracks().getItems().get(0).getId();
+                                Log.e(TAG, " IF SPOTIFY ID FOUND THEN STORE IN DB  : " + spotifyId);
+                                handler.updateSongWithSpotifyID(spotifyId, name);
+                                int identifiedCount = handler.getRowCount();
 
-                        SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
-                        Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
-                        try {
-                            SpotifyMain main = call.execute().body();
-                            if (main != null) {
-                                if (main.getTracks().getItems().size() > 0) {
-                                    Log.e(" PRINTING ", " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
-                                    String spotifyId = main.getTracks().getItems().get(0).getId();
-
-                                    handler.updateSongWithSpotifyID(spotifyId, name);
-                                } else {
-                                    handler.updateSongStatusForSpotifyError(name);
-                                    Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
+                                if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) {
+                                    Log.e(TAG, " PRINTING if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) : " + i);
+                                    sendToAnalyseAPI();
+                                    break;
+                                } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size())) {
+                                    //globalRowCounter = globalRowCounter + 1;
+                                    if (sizeOfLoop != songNamesList.size()) {
+                                        sendToAnalyseAPI();
+                                        Log.e(TAG, " PRINTING identifiedCount - sentRows >= 100 || (identifiedCount -sentRows <100 && sizeOfLoop==songNamesList.size())");
+                                        Log.e(TAG, " PRINTING sizeOfLoop != songNamesList.size()" + i);
+                                    } else if (sizeOfLoop == songNamesList.size()) {
+                                        Log.e(TAG, " PRINTING sizeOfLoop == songNamesList.size()" + i);
+                                        sendToAnalyseAPI();
+                                    }
                                 }
+                            } else {
+                                handler.updateSongStatusForSpotifyError(name);
+                                //Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
+                                Log.e(TAG, " IF SPOTIFY ID NOT FOUND THEN STORE IN DB  : ORIGINAL NAME : " + name + "\n NEW NAME : " + originalName);
                             }
-                        } catch (IOException e) {
-                            e.printStackTrace();
                         }
-
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-
                 }
+                // }
                 Intent sendingIntent = new Intent(SERVICE_EVENT);
                 LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
-                stopSelf();
+                //stopSelf();
             }
         }.start();
-
-
         return START_STICKY;
     }
 
+    public void sendToAnalyseAPI() {
+
+        ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
+        handler.updateSongWithAnalysingStatus(spotifyInfos);
+        // Send TO ANALYSE
+        Intent sendingIntent = new Intent(SERVICE_EVENT);
+        LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
+
+    }
+
+
     private String getOriginalSongName(String name) {
-        String[] constantArray = new String[]{ "male", "female", "remix" };
+        String[] constantArray = new String[]{"male", "female", "remix"};
         String newName = name;
-        String[] arrayName = new String[0];
+        String[] arrayName = new String[]{name};
+        boolean nameChanged = false;
         if (Character.isDigit(newName.charAt(0))) {
             newName = newName.replaceAll("\\d", "");
+            nameChanged = true;
         }
         if (newName.contains("-")) {
             arrayName = newName.split("-");
+            nameChanged = true;
         }
         if (arrayName[0].contains("(")) {
             arrayName = arrayName[0].split("\\(");
+            nameChanged = true;
         }
         if (arrayName[0].contains("[")) {
             arrayName = arrayName[0].split("\\[");
+            nameChanged = true;
         }
-        return arrayName[0];
+        if (nameChanged) {
+            return arrayName[0];
+        } else {
+            return newName;
+        }
+        // return arrayName[0];
     }
 
 

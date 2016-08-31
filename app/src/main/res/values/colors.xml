@@ -25,7 +25,7 @@
     <color name="bluegrass">#ff96c9b5</color>
     <color name="turquoise">#ff86b9b5</color>
     <color name="slate">#ff76a9b5</color>
-    <color name="black">#000</color>
+    <color name="black">#313131</color>
 
     <!-- Switch Colors-->
     <color name="disable_foreground_grey">#42221f1f</color>

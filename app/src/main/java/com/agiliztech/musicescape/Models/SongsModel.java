@@ -13,6 +13,7 @@ public class SongsModel implements Parcelable
     String artist;
     private String filepath;
     String albumName;
+    String songMood;
 
     public SongsModel(){}
     public SongsModel(long id, String title, String artist, String filepath, String albumName) {
@@ -29,6 +30,7 @@ public class SongsModel implements Parcelable
         artist = in.readString();
         filepath = in.readString();
         albumName = in.readString();
+        songMood = in.readString();
     }
 
     public static final Creator<SongsModel> CREATOR = new Creator<SongsModel>() {
@@ -42,6 +44,14 @@ public class SongsModel implements Parcelable
             return new SongsModel[size];
         }
     };
+
+    public String getSongMood() {
+        return songMood;
+    }
+
+    public void setSongMood(String songMood) {
+        this.songMood = songMood;
+    }
 
     public long getId() {
         return id;
@@ -103,5 +113,6 @@ public class SongsModel implements Parcelable
         dest.writeString(artist);
         dest.writeString(filepath);
         dest.writeString(albumName);
+        dest.writeString(songMood);
     }
 }

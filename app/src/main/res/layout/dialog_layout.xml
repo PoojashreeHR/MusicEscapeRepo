@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/DarkGray">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dialog_msg"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/text_dialog"
+        android:textColor="@color/colorWhite"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/scan_completed"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DISMISS"
+        android:textSize="20sp"
+        android:id="@+id/dismiss_dialog"
+        android:gravity="center_vertical|center_horizontal"
+        android:textColor="@color/DarkGray"
+        android:layout_below="@+id/text_dialog"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="SCAN COMPLETED"
+        android:id="@+id/scan_completed"
+        android:textColor="@color/colorWhite"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
