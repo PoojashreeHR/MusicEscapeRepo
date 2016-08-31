@@ -107,8 +107,8 @@ public class DrawingViewActivity extends BaseMusicActivity {
             return;
         }
         else{
-            int totalDuration = JourneyService.getInstance(this).getCurrentSession().getTotalDuration();
-            int totalSongDuration = JourneyService.getInstance(this).getCurrentSession().getTotalPlaylistDuration();
+            int totalDuration = JourneyService.getInstance(this).getCurrentSession().totalDuration();
+            int totalSongDuration = JourneyService.getInstance(this).getCurrentSession().totalSongsDuration();
 
             if(Global.isJourney && totalDuration >= totalSongDuration/2){
                 showMJView();
@@ -163,7 +163,8 @@ public class DrawingViewActivity extends BaseMusicActivity {
     }
 
     private void showMJView() {
-        journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
+        //journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
+        //show current and target mood here
     }
 
     @Override

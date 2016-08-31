@@ -32,6 +32,7 @@ import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySong;
+import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Artist;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
@@ -655,6 +656,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     }
                 }
             });
+
+
+            SongMoodCategory mood = model.getMood();
+            if(mood == null){
+                mood = SongMoodCategory.scAllSongs;
+            }
+            holder.rv_song_name.setTextColor(SongsManager.colorForMood(mood));
 
             holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
                 @Override

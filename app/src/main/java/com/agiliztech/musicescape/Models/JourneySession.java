@@ -166,7 +166,7 @@ public class JourneySession {
     public void setFinished(Date finished) {
         this.finished = finished;
     }
-
+//EXTENSIONS
     public void addSongObj(JourneySong songObj) {
         if(songs == null){
             songs = new ArrayList<>();
@@ -186,5 +186,26 @@ public class JourneySession {
             trackNos.add(song.getTrackNo());
         }
         return trackNos;
+    }
+
+    public int totalSongsDuration() {
+        int totalDuration = 0;
+        if(songs != null) {
+            for (JourneySong song : songs) {
+                totalDuration += song.getSong().getPlaybackDuration();
+            }
+        }
+        return totalDuration;
+    }
+
+
+    public int totalDuration() {
+        int totalDuration = 0;
+        if(songs != null) {
+            for (JourneySong song : songs) {
+                totalDuration += song.getSong().getPlaybackDuration() * song.getPlayedCount();
+            }
+        }
+        return totalDuration;
     }
 }
