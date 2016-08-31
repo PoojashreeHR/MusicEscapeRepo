@@ -9,7 +9,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.models.Album;
+import com.agiliztech.musicescape.models.Artist;
 import com.agiliztech.musicescape.models.SongsModel;
+import com.agiliztech.musicescape.models.Song;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +49,7 @@ public class SongsManager {
     }
 
     Context context;
-    private ArrayList<SongsModel> songList = new ArrayList<SongsModel>();
+    private ArrayList<Song> songList = new ArrayList<>();
     SongsManager songsManager;
 
     public SongsManager(Context context){
@@ -54,7 +57,7 @@ public class SongsManager {
     }
 
 
-    public ArrayList<SongsModel> getSongList()
+    public ArrayList<Song> getSongList()
     {
         //query external audio
 
@@ -72,10 +75,20 @@ public class SongsManager {
                     (android.provider.MediaStore.Audio.Media._ID);
             int artistColumn = musicCursor.getColumnIndex
                     (android.provider.MediaStore.Audio.Media.ARTIST);
+            int artistIDColumn = musicCursor.getColumnIndex(
+                    MediaStore.Audio.Media.ARTIST_ID
+            );
             int isMusicColumn = musicCursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC);
             int dataCol = musicCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
             int albumColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);
+            int albumIDColumn = musicCursor.getColumnIndex(
+                    MediaStore.Audio.Media.ALBUM_ID
+            );
+
+            int durationColumn = musicCursor.getColumnIndex(
+                    MediaStore.Audio.Media.DURATION
+            );
 
             //add songs to list
             int i=0;
@@ -86,8 +99,19 @@ public class SongsManager {
                 int isMusic = musicCursor.getInt(isMusicColumn);
                 String filePath = musicCursor.getString(dataCol);
                 String albumName = musicCursor.getString(albumColumn);
+
+                String albumId = musicCursor.getString(albumIDColumn);
+                String artistId = musicCursor.getString(artistIDColumn);
+                String duration = musicCursor.getString(durationColumn);
+
+                Album album = new Album(albumId, albumName);
+                Artist artist = new Artist(artistId, thisArtist);
+
+                Song s = new Song(thisId, thisTitle, artist, album);
+                s.setPlaybackDuration(Integer.parseInt(duration));
+
                 if(isMusic > 0 ) {
-                    songList.add(new SongsModel(thisId, thisTitle, thisArtist,filePath,albumName));
+                    songList.add(s);
                     Log.e("Song Name", ": " + thisTitle + "\n Artist: " + thisArtist
                     +"\n Album Name :" + albumName + "\n ID = " + thisId);
                 }
@@ -97,7 +121,9 @@ public class SongsManager {
             Log.e("PRINTING I " , "" + i );
 
         }
-        musicCursor.close();
+        if(musicCursor != null && !musicCursor.isClosed()) {
+            musicCursor.close();
+        }
         return songList;
     }
 
@@ -115,5 +141,74 @@ public class SongsManager {
         allColors.put(SongMoodCategory.scPeaceful, kPeacefulColor);
         allColors.put(SongMoodCategory.scStressed, kStressedColor);
         return allColors.get(mood);
+    }
+
+    public static String textForMood(int moodIndex) {
+        String[] allTexts = new String[] {"Excited","Happy"
+        ,"Chilled","Peaceful","Bored", "Depressed"
+                ,"Stressed", "Aggressive", "Not Found", "All Moods"
+        };
+        return allTexts[moodIndex];
+    }
+
+    public static SongMoodCategory getMoodForText(String mood) {
+        String[] allTexts = new String[] {"Excited","Happy"
+                ,"Chilled","Peaceful","Bored", "Depressed"
+                ,"Stressed", "Aggressive", "Not Found", "All Moods"
+        };
+
+        int moodIndex = 8;
+
+        for(int i=0; i<allTexts.length; i++){
+            if(allTexts[i].equalsIgnoreCase(mood)){
+                moodIndex = i;
+                break;
+            }
+        }
+
+        switch (moodIndex){
+            case 0:
+                return SongMoodCategory.scExcited;
+            case 1:
+                return SongMoodCategory.scHappy;
+            case 2:
+                return SongMoodCategory.scChilled;
+            case 3:
+                return SongMoodCategory.scPeaceful;
+            case 4:
+                return SongMoodCategory.scBored;
+            case 5 :
+                return SongMoodCategory.scDepressed;
+            case 6:
+                return SongMoodCategory.scStressed;
+            case 7:
+                return SongMoodCategory.scAggressive;
+            case 8:
+                return SongMoodCategory.scMoodNotFound;
+        }
+
+        return SongMoodCategory.scMoodNotFound;
+    }
+
+    public static int getIntValue(SongMoodCategory moodCategory) {
+        switch (moodCategory){
+            case scExcited:
+                return 0;
+            case scHappy:
+                return 1;
+            case scChilled:
+                return 2;
+            case scPeaceful:
+                return 3;
+            case scBored:
+                return 4;
+            case scDepressed:
+                return 5;
+            case scStressed:
+                return 6;
+            case scAggressive:
+                return 7;
+        }
+        return 8;
     }
 }

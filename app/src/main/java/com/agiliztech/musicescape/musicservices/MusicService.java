@@ -19,7 +19,9 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
+import com.agiliztech.musicescape.utils.Global;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -34,7 +36,7 @@ public class MusicService extends Service implements
     //media player
     private MediaPlayer player;
     //song list
-    private ArrayList<SongsModel> songs;
+    private ArrayList<Song> songs;
     //current position
     private int songPosn;
     //binder
@@ -84,8 +86,9 @@ public class MusicService extends Service implements
     }
 
     //pass song list
-    public void setList(ArrayList<SongsModel> theSongs) {
+    public void setList(ArrayList<Song> theSongs) {
         songs = theSongs;
+        Global.currentSongList = songs;
     }
 
     //binder
@@ -109,7 +112,7 @@ public class MusicService extends Service implements
         return false;
     }
 
-    SongsModel playSong;
+    Song playSong;
     //play a song
     public void playSong() {
         //play
@@ -117,10 +120,10 @@ public class MusicService extends Service implements
         //get song
         playSong = songs.get(songPosn);
         //get title
-        songTitle = playSong.getTitle();
-        songDetail = playSong.getArtist();
+        songTitle = playSong.getSongName();
+        songDetail = playSong.getArtist().getArtistName();
         //get id
-        long currSong = playSong.getId();
+        long currSong = playSong.getpID();
         //set uri
         Uri trackUri = ContentUris.withAppendedId(
                 android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
