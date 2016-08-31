@@ -1,5 +1,9 @@
 package com.agiliztech.musicescape.rest;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+
 import java.io.IOException;
 
 import okhttp3.Headers;
@@ -39,6 +43,7 @@ public class SpotifyApiClient {
                 Request request = requestBuilder.build();
                 Response response = chain.proceed(request);
                 Headers allHeaders = response.headers();
+                Log.e("RESPONSE HEADER "," DATA : "+ new Gson().toJson(allHeaders));
                 String headerValue = allHeaders.get("headerName");
                 // Log.e("HEADER DISPLAYING ", headerValue);
                 return chain.proceed(request);

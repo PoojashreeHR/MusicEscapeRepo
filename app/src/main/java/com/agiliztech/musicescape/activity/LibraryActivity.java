@@ -79,7 +79,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         songButton = (ImageButton) findViewById(R.id.arrow1);
         mViewGroup.setOnClickListener(this);
 
-        SongAdapter(dbSongList, "");
+        SongAdapter(dbSongList, "allmood");
 
         final ImageButton songScan = (ImageButton) findViewById(R.id.library1);
         songScan.setOnClickListener(new View.OnClickListener() {

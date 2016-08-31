@@ -36,11 +36,16 @@ public class SpotifyApiService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
         handler = new DBHandler(getBaseContext());
+
         new Thread() {
             @Override
             public void run() {
                 int sentRows = 0;
                 int sizeOfLoop = 0;
+               /* Intent pendingIntent = new Intent(SERVICE_EVENT);
+                LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(pendingIntent);*/
+                SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
+
                 for (int i = 0; i < songNamesList.size(); i++) {
                     String name = songNamesList.get(i);
                     //if (name.contains("-")) {
@@ -52,7 +57,7 @@ public class SpotifyApiService extends Service {
                     data.put("limit", "1");
                     data.put("type", "track");
 
-                    SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
+
                     Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
                     try {
                         Log.e(TAG, " SENDING QUERY TO SPOTIFY API : " + data.toString());
@@ -65,11 +70,11 @@ public class SpotifyApiService extends Service {
                                 handler.updateSongWithSpotifyID(spotifyId, name);
                                 int identifiedCount = handler.getRowCount();
 
-                                if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) {
+                                if (identifiedCount < 100 && sizeOfLoop == songNamesList.size() - 1) {
                                     Log.e(TAG, " PRINTING if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) : " + i);
                                     sendToAnalyseAPI();
                                     break;
-                                } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size())) {
+                                } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size() - 1)) {
                                     //globalRowCounter = globalRowCounter + 1;
                                     if (sizeOfLoop != songNamesList.size()) {
                                         sendToAnalyseAPI();
@@ -91,12 +96,17 @@ public class SpotifyApiService extends Service {
                     }
                 }
                 // }
-                Intent sendingIntent = new Intent(SERVICE_EVENT);
-                LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
-                //stopSelf();
+
+                broadcastEvent();
+                stopSelf();
             }
         }.start();
         return START_STICKY;
+    }
+
+    private void broadcastEvent() {
+        Intent sendingIntent = new Intent(SERVICE_EVENT);
+        LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
     }
 
     public void sendToAnalyseAPI() {

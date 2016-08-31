@@ -36,6 +36,12 @@ public class SongRetagMain implements Parcelable{
         }
     };
 
+
+    public SongRetagMain(String deviceId, ArrayList<SongRetagInfo> retagList) {
+        this.deviceId = deviceId;
+        this.retagList = retagList;
+    }
+
     public String getDeviceId() {
         return deviceId;
     }

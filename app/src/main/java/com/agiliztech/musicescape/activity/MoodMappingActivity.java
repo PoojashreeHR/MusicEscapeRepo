@@ -1,6 +1,5 @@
 package com.agiliztech.musicescape.activity;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,26 +7,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
@@ -55,6 +45,7 @@ import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
 import com.agiliztech.musicescape.utils.UtilityClass;
+import com.agiliztech.musicescape.view.CustomDrawableForSeekBar;
 import com.google.gson.Gson;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
@@ -67,7 +58,7 @@ import retrofit2.Response;
 public class MoodMappingActivity extends BaseMusicActivity implements
         View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
 
-    private Paint p;
+
     SharedPreferences sp;
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
@@ -146,7 +137,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.e("ON RECIEVE CALLED ", " ON RECEIVED ");
-
+            Log.e("BROADCAST SPOTIFY ",""+intent.getStringExtra("spotify_data"));
             ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
             SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
             new ScanAndAnalyseAsync().execute(spotifyModelMain);
@@ -227,7 +218,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 startActivity(intent);
             }
         });
-        ImageView dashboardButton, infoButton;
+
         dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -245,10 +236,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 startActivity(intent);
             }
         });
-        p = new Paint();
         ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
         if (list.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(list, this,MoodMappingActivity.this);
+            mAdapter = new RecyclerViewAdapter(list, this, MoodMappingActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -307,10 +297,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
+
         super.onPause();
         paused = true;
 
@@ -318,6 +305,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     protected void onResume() {
+        super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter(MusicService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mServiceBroadcast,
@@ -326,7 +314,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 new IntentFilter(SpotifyApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
-        super.onResume();
+
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false).commit();
         if (sp != null) {
@@ -382,6 +370,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     protected void onStop() {
         //controller.hide();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
         if (sp != null) {
             if (playbackPaused) {
                 SharedPreferences.Editor editor = sp.edit();
@@ -496,7 +488,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     public void displayAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-       // String text = "SCAN COMPLETED";
+        // String text = "SCAN COMPLETED";
         builder.setTitle("Scan Completed")
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
@@ -544,6 +536,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         //updateProgressBar();
         ibPlayPause.setVisibility(View.GONE);
         btn_pause.setVisibility(View.VISIBLE);
+
+        //Pass color as the song mood color
+        changeSeekbarColor(play_music_seek_bar,getResources().getColor(R.color.happy));
        /* if (playbackPaused) {
             //setController();
             playbackPaused = false;
@@ -553,6 +548,28 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }*/
     }
 
+    public void changeSeekbarColor(SeekBar s, int colorp) {
+        CustomDrawableForSeekBar drawableForSeekBar =
+                new CustomDrawableForSeekBar(0, 0, 0, 25, colorp, 0);
+
+
+        if (Build.VERSION.SDK_INT > 16) {
+            s.setBackground(drawableForSeekBar);
+        }
+        if (Build.VERSION.SDK_INT < 16) {
+            s.setBackgroundDrawable(drawableForSeekBar);
+        }
+
+        /*Drawable drawable = getResources().getDrawable(R.drawable.progress_drawable_demo);
+        s.setProgressDrawable(drawable);
+*/
+
+       /* GradientDrawable drawable = (GradientDrawable)s.getBackground();
+        drawable.setStroke(20, getResources().getColor(R.color.happy)); // set stroke width and stroke color
+*/
+    }
+
+
     @Override
     public void onBackPressed() {
         if (slidingUpPanelLayout != null &&
@@ -560,7 +577,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         || slidingUpPanelLayout.getPanelState() == SlidingUpPanelLayout.PanelState.ANCHORED)) {
             slidingUpPanelLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
         } else {
-          //  super.onBackPressed();
+            //  super.onBackPressed();
             finish();
         }
     }
@@ -755,7 +772,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
             ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
             if (list.size() > 0) {
-                mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this,MoodMappingActivity.this);
+                mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this, MoodMappingActivity.this);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
                 mRecyclerView.setLayoutManager(mLayoutManager);
                 mRecyclerView.setItemAnimator(new DefaultItemAnimator());
