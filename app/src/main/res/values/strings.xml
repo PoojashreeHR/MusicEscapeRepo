@@ -25,7 +25,7 @@
 </string>
     <string name="dialog_msg">We\'ve finished tagging\n your library.\n\n Now all your songs will\n appear in playlist\n and mood journey</string>
     <string name="pref_previously_started">1</string>
-    <string name="splash_msg">Takes you on a journey through\n emotions using your own music</string>
+    <string name="splash_msg">Takes you on a journey through emotions using your own music</string>
     <string name="start">START</string>
     <string name="pause">PAUSE</string>
 </resources>

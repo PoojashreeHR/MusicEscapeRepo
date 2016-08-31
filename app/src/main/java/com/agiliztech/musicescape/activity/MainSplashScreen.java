@@ -2,6 +2,7 @@ package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,12 +14,19 @@ import android.widget.TextView;
 import com.agiliztech.musicescape.R;
 
 public class MainSplashScreen extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 500;
+    private static int SPLASH_TIME_OUT = 3000;
     TextView mTextView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_splash_screen);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(),
+                "fonts/MontserratRegular.ttf");
+        TextView content = (TextView) findViewById(R.id.textView13);
+        content.setTypeface(tf);
+        TextView contents = (TextView) findViewById(R.id.textView12);
+        contents.setTypeface(tf);
         SpannableStringBuilder builder = new SpannableStringBuilder();
 
         mTextView = (TextView) findViewById(R.id.textView11);
