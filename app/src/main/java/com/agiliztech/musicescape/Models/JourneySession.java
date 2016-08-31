@@ -179,4 +179,12 @@ public class JourneySession {
             songs.remove(songObj);
         }
     }
+
+    public List<Integer> trackNumbers() {
+        List<Integer> trackNos = new ArrayList<>();
+        for (JourneySong song : songs) {
+            trackNos.add(song.getTrackNo());
+        }
+        return trackNos;
+    }
 }

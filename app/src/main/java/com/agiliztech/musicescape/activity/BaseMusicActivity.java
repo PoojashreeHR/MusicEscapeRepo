@@ -30,6 +30,9 @@ import android.widget.TextView;
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySong;
+import com.agiliztech.musicescape.models.Artist;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.musicservices.MusicService;
@@ -76,8 +79,21 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
     public ArrayList<Song> getSongsFromCurPlaylist()
     {
-        DBHandler dbHandler = new DBHandler(this);
-        return dbHandler.getAllSongsFromDB();
+        if(Global.isJourney){
+            List<JourneySong> jSongs = JourneyService.getInstance(this).getCurrentSession().getSongs();
+            ArrayList<Song> currentSongs = new ArrayList<>();
+            for(int i=0; i< jSongs.size(); i++){
+                if(jSongs.get(i).getSong() != null) {
+                    currentSongs.add(jSongs.get(i).getSong());
+                }
+            }
+           // Collections.reverse(currentSongs);
+            return currentSongs;
+        }
+        else {
+            DBHandler dbHandler = new DBHandler(this);
+            return dbHandler.getAllSongsFromDB();
+        }
     }
 
     SlidingUpPanelLayout anotherBaseLayout;
@@ -123,7 +139,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(mAdapter);
-            if(musicSrv != null){
+            if(musicSrv != null ){
                 musicSrv.setList(songList);
             }
             mAdapter.notifyDataSetChanged();
@@ -221,6 +237,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 tv_songname.setText(musicSrv.getSongName());
                 tv_song_detail.setText(musicSrv.getSongDetail());
                 updateMusicPlayerByMood();
+                setUpPlaylist();
                 Log.e("Music service ", " is  Not null");
             }
             ibPlayPause.setVisibility(View.GONE);
@@ -582,7 +599,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             viewBinderHelper.bind(holder.rv_ll, String.valueOf(model.getpID()));
 
             holder.rv_song_name.setText(model.getSongName());
-            holder.rv_song_detail.setText(model.getArtist().getArtistName());
+            holder.rv_song_detail.setText(handleUnknownArtist(model.getArtist()));
             holder.rv_ll.setTag(pos);
             holder.rv_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -678,6 +695,17 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 }
             });
 
+        }
+
+        private String handleUnknownArtist(Artist artist) {
+            if(artist == null)
+                return "Unknown";
+            if(artist.getArtistName() == null){
+                return "Unknown";
+            }
+            else{
+                return artist.getArtistName();
+            }
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {

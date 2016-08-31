@@ -34,6 +34,7 @@ public class JourneyView extends View {
     private static final String CACHE_STR = "cache";
     private int xm,ym, em=1, vm =1;
     private Paint circlePaint;
+    private int nullColor = 2;
 
 
     public enum DrawingMode{
@@ -213,36 +214,45 @@ public class JourneyView extends View {
 
         int idx = 0;
 
-        for(Dot dot : points){
-            Integer dotIndex =  this.journeyPoints.indexOf(idx);
-            boolean journeyDot = moreThanOneDot && (dotIndex != -1 && lastJourneyDotIndex !=  -1);
+        for (Dot dot : points) {
+            Integer dotIndex = this.journeyPoints.indexOf(idx);
+            boolean journeyDot = moreThanOneDot && (dotIndex != -1 && lastJourneyDotIndex != -1);
             boolean currentDot = (dotIndex == currentSongIndex);
             boolean firstJourneyDot = journeyDot && (dotIndex == 0);
             boolean lastJourneyDot = journeyDot && (dotIndex == lastJourneyDotIndex);
 
-            if(mode != null && mode == DrawingMode.DMJOURNEY && journeyDot){
+            boolean skipThis = false;
+            if (mode != null && mode == DrawingMode.DMJOURNEY) {
+                if (journeyDot) {
 
-                boolean trackDot = journeyDot && (trackDots.indexOf(dotIndex) != -1);
-                if(!trackDot){
-                    circlePaint.setColor(Color.rgb(170,170,170));
-                    canvas.drawCircle(dot.getXYPoint().x, dot.getXYPoint().y, dot.getRadius(), circlePaint);
+                    boolean trackDot = (trackDots.indexOf(dotIndex) != -1);
+                    if (!trackDot) {
+                        circlePaint.setColor(Color.rgb(170, 170, 170));
+                        canvas.drawCircle(dot.getXYPoint().x, dot.getXYPoint().y, (float) (dot.getRadius() * 0.5), circlePaint);
+                        //return;
+                        skipThis = true;
+                    }
                 }
             }
 
-            int color = colorForDot(dot,journeyDot,currentDot);
+            if (!skipThis) {
+                int color = colorForDot(dot, journeyDot, currentDot);
+                boolean skipSecond = false;
+                if (color == nullColor) {
+                    skipSecond = true;
+                }
+                if (!skipSecond) {
+                    circlePaint.setColor(color);
+                    canvas.drawCircle(dot.getXYPoint().x, dot.getXYPoint().y, dot.getRadius(), circlePaint);
 
-            if(color == Integer.MAX_VALUE)
-                return;
 
-            circlePaint.setColor(color);
-            canvas.drawCircle(dot.getXYPoint().x, dot.getXYPoint().y, dot.getRadius(), circlePaint);
+                    if ((mode == DrawingMode.DMMENU || mode == DrawingMode.DMJOURNEY) && firstJourneyDot) {
+                        drawFirstDotAtPoint(canvas, dot.getXYPoint(), dot.getRadius());
+                    } else if ((mode == DrawingMode.DMMENU || mode == DrawingMode.DMJOURNEY) && lastJourneyDot) {
+                        drawLastDotAtPoint(canvas, dot.getXYPoint(), dot.getRadius(), color);
+                    }
+                }
 
-
-            if((mode == DrawingMode.DMMENU || mode == DrawingMode.DMJOURNEY) && firstJourneyDot){
-                drawFirstDotAtPoint(canvas,dot.getXYPoint(), dot.getRadius());
-            }
-            else if((mode == DrawingMode.DMMENU || mode == DrawingMode.DMJOURNEY) && lastJourneyDot){
-                drawLastDotAtPoint(canvas,dot.getXYPoint(), dot.getRadius(), color);
             }
 
             idx++;
@@ -263,7 +273,7 @@ public class JourneyView extends View {
 
 
     private int colorForDot(Dot dot, boolean journeyDot, boolean currentSong) {
-        int color = Integer.MAX_VALUE;
+        int color = nullColor;
         if(mode == DrawingMode.DMDRAWING && isActualTouch(dot)){
             color = Color.rgb(255,255,255);
         }
@@ -276,13 +286,13 @@ public class JourneyView extends View {
         } else if(mode == DrawingMode.DMDRAWING && journeyDot) {
             color = Color.rgb(255,255,255);
         } else if(mode == DrawingMode.DMJOURNEY && !journeyDot) {
-            return Integer.MAX_VALUE;
+            return nullColor;
         } else if(mode == DrawingMode.DMMENU && !journeyDot) {
-            return Integer.MAX_VALUE; // No need to draw this point!
+            return nullColor; // No need to draw this point!
         } else if(dot.getMood() == SongMoodCategory.scMoodNotFound) {
             color = Color.rgb(38,38,38);
         }
-        return color == Integer.MAX_VALUE ? SongsManager.colorForMood(dot.getMood()) : color;
+        return (color == nullColor) ? SongsManager.colorForMood(dot.getMood()) : color;
     }
 
     private boolean isActualTouch(Dot dot) {

@@ -137,7 +137,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
         newJourney.setJourneyEVArray(vePoints);
         newJourney.setTrackCount(filterNullArray.size());
 
-        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, journeySongs);
+        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray);
         JourneyService.getInstance(this).setCurrentSession(session);
 
         drawViewToPlaylist();
@@ -149,16 +149,21 @@ public class DrawingViewActivity extends BaseMusicActivity {
                 musicSrv.pausePlayer();
             }
             musicSrv.playCurrentSession();
+            Global.isJourney = true;
+            playSelectedSong(0);
+            setUpPlaylist();
+           // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
         }
-//        Intent nextIntent = new Intent(this, PlaylistJourneyActivity.class);
-//        nextIntent.putExtra("fromMenu",false);
-//        nextIntent.putExtra("currentMood", SongsManager.getIntValue(currentMood));
-//        nextIntent.putExtra("targetMood", SongsManager.getIntValue(targetMood));
-//        startActivity(nextIntent);
+        Intent nextIntent = new Intent(this, PlaylistJourneyActivity.class);
+        nextIntent.putExtra("fromMenu",false);
+        nextIntent.putExtra("currentMood", SongsManager.getIntValue(currentMood));
+        nextIntent.putExtra("targetMood", SongsManager.getIntValue(targetMood));
+        startActivity(nextIntent);
+        finish();
     }
 
     private void showMJView() {
-
+        journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
     }
 
     @Override

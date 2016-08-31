@@ -115,15 +115,15 @@ public class JourneyService {
             if (songItem != null) {
                 playListArray.add(songItem);
             } else {
-                playListArray.add(new Song());
+                playListArray.add(null);
             }
         }
-        return null;
+        return playListArray;
     }
 
     private Song findSongBasedOnEV(PointF ev, List<Song> playListArray) {
-        float e = ev.x;
-        float v = ev.y;
+        float e = ev.y;
+        float v = ev.x;
 
         SongMoodCategory mood = SongsService.getInstance(mContext).checkMoodForEnergyAndValence(e, v);
         List<Song> shortListedArray = null;
@@ -160,7 +160,9 @@ public class JourneyService {
 
     private List<Song> filterSongByMoodNotinPlaylist(SongMoodCategory mood, List<Song> playList) {
         DBHandler dbHandler = new DBHandler(mContext);
-        return dbHandler.getSongItemInSongbasedOnMood(mood, playList);
+        List<Song> songs = dbHandler.getSongItemInSongbasedOnMood(mood, playList);
+        dbHandler.close();
+        return songs;
     }
 
     private void createFocusJourney() {
@@ -944,7 +946,7 @@ public class JourneyService {
     }
 
     public List<Song> createPlaylistFromJourney(List<PointF> journeyArray){
-        List<Song> playListArray = new ArrayList<>();
+        List<Song> playListArray = returnEVArrayFromJourney(journeyArray);
 
         String key = "limit_journey";
         SharedPreferences sharedpreferences = mContext.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
@@ -1140,7 +1142,7 @@ public class JourneyService {
             session = createJourneySessionFromSongs(songsArray);
         }
 
-        session.setName(j.getName().length() > 0 ? j.getName() : "NEW PLAYLIST");
+        session.setName((j.getName() == null || j.getName().length() > 0 )? j.getName() : "NEW PLAYLIST");
         session.setJourney(j);
         session.setFavourite(0);
         session.setSessionSyncStatus(0);
