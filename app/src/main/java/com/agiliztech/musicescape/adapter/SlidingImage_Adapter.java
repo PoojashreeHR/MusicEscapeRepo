@@ -57,8 +57,8 @@ public class SlidingImage_Adapter extends PagerAdapter {
         imageView = (ImageView) imageLayout
                 .findViewById(R.id.image);
 
-        if(position < getCount()-1) {
-
+        if(position < getCount()-1)
+        {
             imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
             view.addView(imageLayout, 0);
         }

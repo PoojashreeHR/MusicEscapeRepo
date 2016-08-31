@@ -388,6 +388,11 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         }
 
     }
-
+    public void onResume()
+    {    super.onResume();
+        //   settings.edit().putBoolean("is_first_time", false).commit();
+        getSharedPreferences("MyPreference", MODE_PRIVATE).edit()
+                .putBoolean("first_time_library", false).commit();
+    }
 
 }

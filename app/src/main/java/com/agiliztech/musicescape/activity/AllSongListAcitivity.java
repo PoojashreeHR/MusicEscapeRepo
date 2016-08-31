@@ -53,6 +53,8 @@ public class AllSongListAcitivity extends MoodMappingActivity implements Recycle
     protected void onPause() {
         super.onPause();
         overridePendingTransition(R.anim.slide_in_down, R.anim.slide_out_down);
+        getSharedPreferences("MyPreference", MODE_PRIVATE).edit()
+                .putBoolean("playlist_first_run", false).commit();
     }
 
     @Override

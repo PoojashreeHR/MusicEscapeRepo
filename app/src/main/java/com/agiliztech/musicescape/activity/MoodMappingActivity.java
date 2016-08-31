@@ -223,10 +223,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                library.setFocusableInTouchMode(false);
-                library.setFocusable(false);
-                Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
-                startActivity(intent);
+                if (settings.getBoolean("first_time_library", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("library","Library");
+                    startActivity(intent);
+                }
+             else {
+                    Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         ImageView dashboardButton, infoButton;
@@ -257,15 +263,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         });
         p = new Paint();
-        ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
-        if (list.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(list, this,MoodMappingActivity.this);
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-            mRecyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
 
+        ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
+            if (list.size() > 0) {
+                mAdapter = new RecyclerViewAdapter(list, this, MoodMappingActivity.this);
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+                mRecyclerView.setLayoutManager(mLayoutManager);
+                mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                mRecyclerView.setAdapter(mAdapter);
+                mAdapter.notifyDataSetChanged();
         }
         play_music_seek_bar.setOnSeekBarChangeListener(this);
         slidingUpPanelLayout.setScrollableView(mRecyclerView);
@@ -577,21 +583,40 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     public  void alertDialog()
     {   LayoutInflater factory = LayoutInflater.from(this);
-        final View deleteDialogView = factory.inflate(R.layout.dialog_layout, null);
-        final AlertDialog deleteDialog = new AlertDialog.Builder(this).create();
-        deleteDialog.setView(deleteDialogView);
-        TextView scan_msg = (TextView) deleteDialogView.findViewById(R.id.scan_completed);
-        TextView text_dialog = (TextView) deleteDialogView.findViewById(R.id.text_dialog);
+        final View alertDialogView = factory.inflate(R.layout.dialog_layout, null);
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setView(alertDialogView);
+        TextView scan_msg = (TextView) alertDialogView.findViewById(R.id.scan_completed);
+        TextView text_dialog = (TextView) alertDialogView.findViewById(R.id.text_dialog);
         scan_msg.setTypeface(tf);
         text_dialog.setTypeface(tf);
-        deleteDialogView.findViewById(R.id.dismiss_dialog).setOnClickListener(new View.OnClickListener() {
+        alertDialogView.findViewById(R.id.dismiss_dialog).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 //your business logic
-                deleteDialog.dismiss();
+                alertDialog.dismiss();
             }
-        }); deleteDialog.show();
+        }); alertDialog.show();
+    }
+
+    public  void networkAlertDialog()
+    {   LayoutInflater factory = LayoutInflater.from(this);
+        final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
+        final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
+        networkDialog.setView(networkDialogView);
+        TextView scan_msg = (TextView) networkDialogView.findViewById(R.id.nt_dialog_title);
+        TextView text_dialog = (TextView) networkDialogView.findViewById(R.id.nt_text_dialog);
+        scan_msg.setTypeface(tf);
+        text_dialog.setTypeface(tf);
+        networkDialogView.findViewById(R.id.nt_dismiss_dialog).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //your business logic
+                networkDialog.dismiss();
+            }
+        }); networkDialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {

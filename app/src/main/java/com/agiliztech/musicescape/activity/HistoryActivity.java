@@ -25,4 +25,12 @@ public class HistoryActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onResume()
+    {    super.onResume();
+        //   settings.edit().putBoolean("is_first_time", false).commit();
+        getSharedPreferences("DashboardPreference", MODE_PRIVATE).edit()
+                .putBoolean("history", false).commit();
+    }
 }

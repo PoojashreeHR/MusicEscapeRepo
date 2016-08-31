@@ -71,4 +71,11 @@ public class DrawingViewActivity extends AppCompatActivity {
         journey.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
         journey.setMode(JourneyView.DrawingMode.DMDRAWING);
     }
+    @Override
+    public void onResume()
+    {    super.onResume();
+        //   settings.edit().putBoolean("is_first_time", false).commit();
+        getSharedPreferences("DashboardPreference", MODE_PRIVATE).edit()
+                .putBoolean("draw", false).commit();
+    }
 }

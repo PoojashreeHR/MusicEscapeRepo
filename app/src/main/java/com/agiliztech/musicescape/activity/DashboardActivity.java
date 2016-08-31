@@ -18,6 +18,7 @@ import java.util.TimerTask;
 
 public class DashboardActivity extends AppCompatActivity {
 
+    SharedPreferences dashboardPreference;
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
     String dashboard;
@@ -25,18 +26,24 @@ public class DashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
-        dashboard =  getIntent().getStringExtra("dashboard");
+        dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 
-        ImageView imageView = (ImageView) findViewById(R.id.imageView);
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
         menu_draw = (ImageView) findViewById(R.id.menu_draw);
         menu_draw.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 menu_activedraw.setVisibility(View.VISIBLE);
-                Intent intent = new Intent(DashboardActivity.this,DrawingViewActivity.class);
-                startActivity(intent);
-                finish();
+                if (dashboardPreference.getBoolean("draw", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("draw","Draw");
+                    startActivity(intent);
+                }else {
+                    Intent intent = new Intent(DashboardActivity.this, DrawingViewActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
 
@@ -46,9 +53,16 @@ public class DashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 menu_activehistory.setVisibility(View.VISIBLE);
+                if (dashboardPreference.getBoolean("history", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("history","History");
+                    startActivity(intent);
+                }else{
                 Intent intent = new Intent(DashboardActivity.this,HistoryActivity.class);
                 startActivity(intent);
                 finish();
+                }
             }
         });
 
