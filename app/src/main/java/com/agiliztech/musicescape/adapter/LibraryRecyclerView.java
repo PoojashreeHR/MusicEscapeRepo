@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewInterface;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.SongsManager;
 
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by Pooja on 18-08-2016.
  */
 public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerView.MyViewHolder> implements FastScrollRecyclerViewInterface {
-    List<SongsModel> songList;
+    List<Song> songList;
     private HashMap<String, Integer> mMapIndex;
     String mood;
 
@@ -43,7 +44,7 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
 
         }
     }
-    public LibraryRecyclerView(List<SongsModel> songList, HashMap<String, Integer> mapIndex,String mood) {
+    public LibraryRecyclerView(List<Song> songList, HashMap<String, Integer> mapIndex, String mood) {
         this.songList = songList;
         mMapIndex = mapIndex;
         this.mood = mood;
@@ -61,9 +62,9 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final int pos = position;
 
-        SongsModel model = songList.get(position);
+        Song model = songList.get(position);
         //holder.mTextView.setText(model.getArtist());
-        holder.title.setText(model.getTitle());
+        holder.title.setText(model.getSongName());
         if(mood.contains("depressed")) {
             holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scDepressed));
         }else if(mood.contains("happy")) {
@@ -83,25 +84,26 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
         }else if(mood.contains("nomood")) {
             holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scMoodNotFound));
         }else if(mood.contains("allmood")) {
-            if(model.getSongMood().contains("depressed")) {
+            String moodText = SongsManager.textForMood(SongsManager.getIntValue(model.getMood()));
+            if(moodText.contains("depressed")) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scDepressed));
-            }else if((model.getSongMood().contains("happy"))) {
+            }else if((moodText.contains("happy"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scHappy));
-            }else if((model.getSongMood().contains("chilled"))) {
+            }else if((moodText.contains("chilled"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scChilled));
-            }else if((model.getSongMood().contains("peaceful"))) {
+            }else if((moodText.contains("peaceful"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scPeaceful));
-            }else if((model.getSongMood().contains("bored"))) {
+            }else if((moodText.contains("bored"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scBored));
-            }else if((model.getSongMood().contains("stressed"))) {
+            }else if((moodText.contains("stressed"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scStressed));
-            }else if((model.getSongMood().contains("aggressive"))) {
+            }else if((moodText.contains("aggressive"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scAggressive));
-            }else if((model.getSongMood().contains("excited"))) {
+            }else if((moodText.contains("excited"))) {
                 holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scExcited));
             }
         }
-        holder.artist.setText(model.getArtist());
+        holder.artist.setText(model.getArtist().getArtistName());
         holder.songlistLayout.setTag(pos);
 
     }

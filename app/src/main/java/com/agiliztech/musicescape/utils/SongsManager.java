@@ -112,7 +112,7 @@ public class SongsManager {
 
                 if(isMusic > 0 ) {
                     songList.add(s);
-                    Log.e("Song Name", ": " + thisTitle + "\n Artist: " + thisArtist
+                    Log.e("SongRequest Name", ": " + thisTitle + "\n Artist: " + thisArtist
                     +"\n Album Name :" + albumName + "\n ID = " + thisId);
                 }
                 i++;

@@ -1,6 +1,5 @@
 package com.agiliztech.musicescape.activity;
 
-import android.Manifest;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,26 +7,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
-import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ActivityCompat;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +26,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
@@ -48,7 +37,7 @@ import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
-import com.agiliztech.musicescape.models.apimodels.Song;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
@@ -257,7 +246,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         });
         p = new Paint();
-        ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
+        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
         if (list.size() > 0) {
             mAdapter = new RecyclerViewAdapter(list, this,MoodMappingActivity.this);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -474,8 +463,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     testButton.setText(getResources().getString(R.string.pause));
                     isPlaying = true;
 
-                    ArrayList<SongsModel> originalList = new ArrayList<>(songList);
-                    ArrayList<SongsModel> listFromDB = dbHandler.getAllSongsFromDB();
+                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = new ArrayList<>(songList);
+                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
 
                     if (listFromDB.size() > 0) {
                         if (originalList.containsAll(listFromDB)) {
@@ -600,7 +589,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         protected String doInBackground(DBHandler... params) {
             String batchId = "";
             String deviceId = UtilityClass.getDeviceId(MoodMappingActivity.this);
-            ArrayList<Song> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
+            ArrayList<SongRequest> listWithScanAndScanError = params[0].getSongsBasedOnWhereParam("scan", "scan_error");
             if (listWithScanAndScanError.size() > 0) {
                 final DeviceIdModel model = new DeviceIdModel(deviceId, listWithScanAndScanError);
                 Log.e(TAG, " SENDING DeviceIdModel Object (SCAN API) : " + new Gson().toJson(model));
@@ -722,16 +711,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         @Override
         protected Void doInBackground(DBHandler... params) {
-            ArrayList<SongsModel> songs = new ArrayList<>(songList);
+            ArrayList<com.agiliztech.musicescape.models.Song> songs = new ArrayList<>(songList);
             //songs = songList;
-            ArrayList<SongsModel> dbList = params[0].getAllSongsFromDB();
+            ArrayList<com.agiliztech.musicescape.models.Song> dbList = params[0].getAllSongsFromDB();
 
             if (songs.equals(dbList)) {
                 Log.e("EQUAL ", " BOTH LISTS ARE EQUAL IN CONTENT");
             } else {
                 Log.e("NOT EQUAL ", " BOTH LISTS ARE NOT EQUAL IN CONTENT");
                 if (dbList.size() > 0) {
-                    //If New Song added
+                    //If New SongRequest added
                     if ((songs.size() > dbList.size())) {
                         songs.removeAll(dbList);
                         for (int i = 0; i < songs.size(); i++) {
@@ -782,7 +771,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             isPlaying = false;
             //displayAlertDialog();
 
-            ArrayList<SongsModel> list = dbHandler.getAllSongsFromDB();
+            ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
             if (list.size() > 0) {
                 mAdapter = new RecyclerViewAdapter(list, MoodMappingActivity.this,MoodMappingActivity.this);
                 RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -801,15 +790,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             slidingUpPanelLayout.setScrollableView(mRecyclerView);
         }
 
-        public void storeSongsINDB(DBHandler dbHandler, ArrayList<SongsModel> models) {
+        public void storeSongsINDB(DBHandler dbHandler, ArrayList<com.agiliztech.musicescape.models.Song> models) {
 
             if (models.size() > 0) {
                 dbHandler.addDeviceSongsToDB(models);
             }
         }
 
-        public void removeSongFromDB(DBHandler dbHandler, SongsModel model) {
-            dbHandler.removeDeviceSongsFromDB(model.getId());
+        public void removeSongFromDB(DBHandler dbHandler, com.agiliztech.musicescape.models.Song model) {
+            dbHandler.removeDeviceSongsFromDB(model.getpID());
         }
     }
 }
