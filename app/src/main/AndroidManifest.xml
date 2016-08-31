@@ -29,7 +29,8 @@
         <service android:name=".musicservices.MusicService" />
         <service android:name=".apiservices.ApiService" />
         <service android:name=".apiservices.SpotifyApiService" />
-        <service android:name=".apiservices.AnalyseApiService"/>
+        <service android:name=".apiservices.AnalyseApiService" />
+
         <activity android:name=".activity.BaseMusicActivity" />
         <activity android:name=".activity.AllSongListAcitivity" />
         <activity android:name=".activity.LibraryActivity" />
@@ -43,18 +44,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.agiliztech.musicescape.activity.MoodMappingActivity" />
         </activity>
-        <activity android:name=".activity.SettingsActivity"></activity>
+        <activity android:name=".activity.SettingsActivity" />
         <activity
             android:name=".activity.FaqActivity"
             android:label="@string/title_activity_faq"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.SlidingImage" />
         <activity
-            android:name=".PrivacyActivity"
+            android:name=".activity.PrivacyActivity"
             android:label="@string/title_activity_privacy"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.DrawingViewActivity" />
-        <activity android:name=".activity.MoodMappingActivity"></activity>
+        <activity android:name=".activity.MoodMappingActivity" />
+        <activity android:name=".activity.MainSplashScreen"></activity>
     </application>
 
 </manifest>

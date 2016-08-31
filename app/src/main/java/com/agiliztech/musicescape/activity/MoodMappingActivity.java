@@ -23,6 +23,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -61,6 +62,8 @@ import retrofit2.Response;
 public class MoodMappingActivity extends BaseMusicActivity implements
         View.OnClickListener, SeekBar.OnSeekBarChangeListener, RecyclerViewAdapter.IClickListener {
 
+
+    Typeface tf;
     SharedPreferences sp;
     RecyclerView mRecyclerView;
     RecyclerViewAdapter mAdapter;
@@ -155,17 +158,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         }
     };
-
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
 
-        //musicSrv.initMediaPlayer();
+        settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
-        Typeface tf = Typeface.createFromAsset(getAssets(),
+        tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
         tv.setTypeface(tf);
@@ -191,9 +194,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
+                if (settings.getBoolean("is_first_time", true))
+                {
+                    Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
+                    intent.putExtra("dashboard","Dashboard");
+                    startActivity(intent);
+                }
+                else
+                {
                 Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                startActivity(intent);
+                startActivity(intent);}
             }
         });
 
@@ -241,8 +253,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         }
     };
-
-
     private void setController() {
 
     }
@@ -523,7 +533,27 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         } else {
           //  super.onBackPressed();
             finish();
+
         }
+    }
+
+    public  void alertDialog()
+    {   LayoutInflater factory = LayoutInflater.from(this);
+        final View deleteDialogView = factory.inflate(R.layout.dialog_layout, null);
+        final AlertDialog deleteDialog = new AlertDialog.Builder(this).create();
+        deleteDialog.setView(deleteDialogView);
+        TextView scan_msg = (TextView) deleteDialogView.findViewById(R.id.scan_completed);
+        TextView text_dialog = (TextView) deleteDialogView.findViewById(R.id.text_dialog);
+        scan_msg.setTypeface(tf);
+        text_dialog.setTypeface(tf);
+        deleteDialogView.findViewById(R.id.dismiss_dialog).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                //your business logic
+                deleteDialog.dismiss();
+            }
+        }); deleteDialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {
