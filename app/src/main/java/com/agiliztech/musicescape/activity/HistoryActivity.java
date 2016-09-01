@@ -82,7 +82,6 @@ public class HistoryActivity extends AppCompatActivity {
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
             holder.journeyView.setEnabled(false);
 
-
         }
 
         @Override
