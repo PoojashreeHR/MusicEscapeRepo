@@ -40,6 +40,16 @@
             android:src="@mipmap/pause_not_found"
             android:visibility="gone" />
     </FrameLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/toSwipe"
+    android:orientation="vertical"
+    android:layout_centerVertical="true"
+    android:layout_toEndOf="@id/play_frame_layout"
+    android:layout_toLeftOf="@+id/repeat_frame_layout"
+    android:layout_toRightOf="@id/play_frame_layout"
+    android:layout_toStartOf="@+id/repeat_frame_layout">
 
     <TextView
         android:id="@+id/tv_songname"
@@ -77,7 +87,7 @@
         android:text=""
         android:textColor="@android:color/white"
         android:textSize="15sp" />
-
+</LinearLayout>
     <FrameLayout
 
         android:id="@+id/repeat_frame_layout"

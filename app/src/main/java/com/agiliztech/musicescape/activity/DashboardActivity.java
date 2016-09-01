@@ -40,7 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
                     intent.putExtra("draw","Draw");
                     startActivity(intent);
                 }else {
-                    Intent intent = new Intent(DashboardActivity.this, DrawingViewActivity.class);
+                    Intent intent = new Intent(DashboardActivity.this, SelectingMoodActivity.class);
                     startActivity(intent);
                     finish();
                 }

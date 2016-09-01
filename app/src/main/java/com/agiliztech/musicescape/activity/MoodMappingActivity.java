@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +29,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
@@ -179,6 +182,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
 
+
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
@@ -258,6 +262,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
                 startActivity(intent);
+               // checkInternetConnection();
             }
         });
 //        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
@@ -411,7 +416,22 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 break;
         }
     }
-
+public void checkInternetConnection()
+{
+    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    android.net.NetworkInfo wifi = cm
+            .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    android.net.NetworkInfo datac = cm
+            .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+    if ((wifi != null & datac != null)
+            && (wifi.isConnected() | datac.isConnected())) {
+        //connection is avlilable
+        Toast.makeText(getApplicationContext(),"Network is available",Toast.LENGTH_LONG).show();
+    }else{
+        //no connection
+        networkAlertDialog();
+    }
+}
     public void displayAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // String text = "SCAN COMPLETED";
