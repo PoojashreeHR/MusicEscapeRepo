@@ -144,6 +144,30 @@ public class SongsManager {
         return allColors.get(mood);
     }
 
+    public static SongMoodCategory getMoodFromIndex(int moodIndex){
+        switch (moodIndex){
+            case 0:
+                return SongMoodCategory.scExcited;
+            case 1:
+                return SongMoodCategory.scHappy;
+            case 2:
+                return SongMoodCategory.scChilled;
+            case 3:
+                return SongMoodCategory.scPeaceful;
+            case 4:
+                return SongMoodCategory.scBored;
+            case 5 :
+                return SongMoodCategory.scDepressed;
+            case 6:
+                return SongMoodCategory.scStressed;
+            case 7:
+                return SongMoodCategory.scAggressive;
+            case 8:
+                return SongMoodCategory.scMoodNotFound;
+        }
+        return SongMoodCategory.scMoodNotFound;
+    }
+
     public static String textForMood(int moodIndex) {
         String[] allTexts = new String[] {"Excited","Happy"
         ,"Chilled","Peaceful","Bored", "Depressed"

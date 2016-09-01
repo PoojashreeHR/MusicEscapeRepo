@@ -1129,7 +1129,7 @@ public class JourneyService {
         return session;
     }
 
-    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray){
+    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray, SongMoodCategory current, SongMoodCategory target){
         List<Song>  songs = null;
         JourneySession session = null;
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
@@ -1148,6 +1148,8 @@ public class JourneyService {
         session.setSessionSyncStatus(0);
         session.setStarted(new Date());
         session.setJourneyID(UUID.randomUUID().toString());
+        session.setCurrentMood(current);
+        session.setTargetMood(target);
 
         journeySessionDBHelper.addJourneySession(session);
         journeySessionDBHelper.close();
