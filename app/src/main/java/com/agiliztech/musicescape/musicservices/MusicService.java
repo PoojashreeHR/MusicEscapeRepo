@@ -22,13 +22,11 @@ import com.agiliztech.musicescape.journey.JourneySong;
 import com.agiliztech.musicescape.models.Artist;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
-import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -101,7 +99,7 @@ public class MusicService extends Service implements
         List<JourneySong> journeySongList = session.getSongs();
 
         ArrayList<Song> songList = new ArrayList<>();
-        for(int i=0; i< journeySongList.size(); i++){
+        for (int i = 0; i < journeySongList.size(); i++) {
             songList.add(journeySongList.get(i).getSong());
         }
 
@@ -133,7 +131,7 @@ public class MusicService extends Service implements
 
     Song playSong;
 
-    public Song getCurrentPlayed(){
+    public Song getCurrentPlayed() {
         return playSong;
     }
 
@@ -164,19 +162,17 @@ public class MusicService extends Service implements
         }
         try {
             player.prepareAsync();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
 
     private String handleNullArtist(Artist artist) {
-        if(artist == null)
+        if (artist == null)
             return "Unknown";
-        if(artist.getArtistName() == null){
+        if (artist.getArtistName() == null) {
             return "Unknown";
-        }
-        else{
+        } else {
             return artist.getArtistName();
         }
     }
@@ -266,7 +262,7 @@ public class MusicService extends Service implements
     }
 
     public int getDur() {
-        if(player == null)
+        if (player == null)
             return 0;
         return player.getDuration();
     }
@@ -312,7 +308,7 @@ public class MusicService extends Service implements
 
     }
 
-    public void killService(){
+    public void killService() {
         stopForeground(true);
         stopSelf();
     }

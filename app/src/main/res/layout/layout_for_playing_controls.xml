@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/play_pause_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -19,27 +20,36 @@
         android:id="@+id/play_frame_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/play_music_seek_bar"
-        android:layout_marginLeft="10dp">
+        android:layout_below="@id/play_music_seek_bar">
 
         <ImageButton
             android:id="@+id/btn_play_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:src="@mipmap/play_not_found" />
+            android:src="@drawable/ic_current_notfound_play" />
 
         <ImageButton
             android:id="@+id/btn_pause"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
 
             android:layout_marginTop="10dp"
             android:background="@null"
-            android:src="@mipmap/pause_not_found"
-            android:visibility="gone" />
+            android:src="@drawable/ic_current_notfound_pause2x"
+            android:visibility="visible" />
     </FrameLayout>
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/toSwipe"
+    android:orientation="vertical"
+    android:layout_centerVertical="true"
+    android:layout_toEndOf="@id/play_frame_layout"
+    android:layout_toLeftOf="@+id/repeat_frame_layout"
+    android:layout_toRightOf="@id/play_frame_layout"
+    android:layout_toStartOf="@+id/repeat_frame_layout">
 
     <TextView
         android:id="@+id/tv_songname"
@@ -77,7 +87,7 @@
         android:text=""
         android:textColor="@android:color/white"
         android:textSize="15sp" />
-
+</LinearLayout>
     <FrameLayout
 
         android:id="@+id/repeat_frame_layout"
@@ -90,19 +100,19 @@
 
         <ImageButton
             android:id="@+id/loop_not_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:background="@null"
-            android:src="@mipmap/loop_not_select" />
+            android:src="@drawable/ic_loopall_inactive" />
 
         <ImageButton
             android:id="@+id/loop_selected"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:background="@null"
             android:layout_marginTop="5dp"
-            android:src="@mipmap/loop_is_on"
+            android:src="@drawable/ic_loopall_active"
             android:visibility="gone" />
     </FrameLayout>
 </RelativeLayout>

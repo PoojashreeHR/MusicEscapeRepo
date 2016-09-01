@@ -7,8 +7,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -27,6 +28,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
@@ -34,12 +36,12 @@ import com.agiliztech.musicescape.apiservices.AnalyseApiService;
 import com.agiliztech.musicescape.apiservices.ApiService;
 import com.agiliztech.musicescape.apiservices.SpotifyApiService;
 import com.agiliztech.musicescape.database.DBHandler;
-import com.agiliztech.musicescape.models.SongsModel;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
-import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
@@ -88,21 +90,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private final String TAG = "MoodMappingActivity";
     DBHandler dbHandler;
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String curSongJson = intent.getStringExtra("currentSong");
-//            SongsModel songsModel = new Gson().fromJson(curSongJson, SongsModel.class);
-//            tv_songname.setText(songsModel.getTitle());
-//            tv_song_detail.setText(songsModel.getArtist());
-//
-//            SharedPreferences.Editor editor = sp.edit();
-//            editor.putString("song_name", songsModel.getTitle());
-//            editor.putString("song_detail", songsModel.getArtist());
-//            editor.apply();
-        }
-    };
 
     private BroadcastReceiver mServiceBroadcast = new BroadcastReceiver() {
         @Override
@@ -179,15 +167,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
 
+
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
-//        if(dbHandler.getRowCount() <= 0){
-//            hideMusicPlayer();
-//        }
-//        else{
-//            hideMusicPlayer();
-//        }
         tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView tv = (TextView) findViewById(R.id.moodMapping);
@@ -221,13 +204,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (settings.getBoolean("first_time_library", true))
-                {
+                if (settings.getBoolean("first_time_library", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
-                    intent.putExtra("library","Library");
+                    intent.putExtra("library", "Library");
                     startActivity(intent);
-                }
-             else {
+                } else {
                     Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
                     startActivity(intent);
                 }
@@ -237,18 +218,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (settings.getBoolean("is_first_time", true))
-                {
+            public void onClick(View v) {
+                if (settings.getBoolean("is_first_time", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
-                    intent.putExtra("dashboard","Dashboard");
+                    intent.putExtra("dashboard", "Dashboard");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     startActivity(intent);
                 }
-                else
-                {
-                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                startActivity(intent);}
             }
         });
 
@@ -258,6 +236,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
                 startActivity(intent);
+               // checkInternetConnection();
             }
         });
 //        ArrayList<com.agiliztech.musicescape.models.Song> list = dbHandler.getAllSongsFromDB();
@@ -280,6 +259,21 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 //    private void updateProgressBar() {
 //        handler.postDelayed(mUpdateTimeTask, 100);
 //    }
+
+//    private Runnable mUpdateTimeTask = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//            if (musicSrv != null) {
+//                long totalDuration = musicSrv.getDur();
+//                long currDuration = musicSrv.getPosn();
+//
+//                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
+//                play_music_seek_bar.setProgress(progress);
+//                handler.postDelayed(this, 100);
+//            }
+//        }
+//    };
 
 //    private Runnable mUpdateTimeTask = new Runnable() {
 //        @Override
@@ -319,7 +313,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
@@ -331,8 +325,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter(MusicService.SERVICE_EVENT));
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mServiceBroadcast,
                 new IntentFilter(ApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mSpotifyServiceBroadCast,
@@ -347,10 +340,22 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     protected void onStop() {
         //controller.hide();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
+        if (sp != null) {
+            if (playbackPaused) {
+                if(musicSrv != null) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("playbackpaused", "" + playbackPaused);
+                    editor.putString("song_id_sp", musicSrv.getSongId());
+                    editor.putString("song_position", "" + musicSrv.getPosn());
+                    editor.putString("song_name_sp", musicSrv.getSongName());
+                    editor.apply();
+                }
+            }
+        }
 
         super.onStop();
     }
@@ -411,7 +416,22 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 break;
         }
     }
-
+public void checkInternetConnection()
+{
+    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    android.net.NetworkInfo wifi = cm
+            .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    android.net.NetworkInfo datac = cm
+            .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+    if ((wifi != null & datac != null)
+            && (wifi.isConnected() | datac.isConnected())) {
+        //connection is avlilable
+        Toast.makeText(getApplicationContext(),"Network is available",Toast.LENGTH_LONG).show();
+    }else{
+        //no connection
+        networkAlertDialog();
+    }
+}
     public void displayAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // String text = "SCAN COMPLETED";
@@ -434,29 +454,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     }
 
 
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-        //handler.removeCallbacks(mUpdateTimeTask);
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-        //updateProgressBar();
-    }
-
-
-
-
-
-
-
 //    @Override
 //    public void onBackPressed() {
 //        if (slidingUpPanelLayout != null &&
@@ -470,8 +467,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 //        }
 //    }
 
-    public  void alertDialog()
-    {   LayoutInflater factory = LayoutInflater.from(this);
+    public void alertDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
         final View alertDialogView = factory.inflate(R.layout.dialog_layout, null);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setView(alertDialogView);
@@ -486,11 +483,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 //your business logic
                 alertDialog.dismiss();
             }
-        }); alertDialog.show();
+        });
+        alertDialog.show();
     }
 
-    public  void networkAlertDialog()
-    {   LayoutInflater factory = LayoutInflater.from(this);
+    public void networkAlertDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
         final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
         final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
         networkDialog.setView(networkDialogView);
@@ -505,7 +503,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 //your business logic
                 networkDialog.dismiss();
             }
-        }); networkDialog.show();
+        });
+        networkDialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {
@@ -709,7 +708,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             edit.apply();
             baseLayout.setVisibility(View.VISIBLE);
             contentFrame.setVisibility(View.VISIBLE);
-            play_music_seek_bar.setOnSeekBarChangeListener(MoodMappingActivity.this);
+
 
         }
 
