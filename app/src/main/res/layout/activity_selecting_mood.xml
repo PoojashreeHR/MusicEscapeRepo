@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/selection_layout"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:paddingTop="18dp"
+    tools:context="com.agiliztech.musicescape.activity.DrawingViewActivity">
+
+<RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="horizontal">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:id="@+id/view">
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="DRAW"
+            android:textColor="#6E6E6E"
+            android:id="@+id/draw"
+            android:gravity="center"
+            android:layout_alignBottom="@+id/view"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton2"
+            android:background="@drawable/menuiconmanager"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nextMood"
+            android:background="@drawable/playsongicon"
+            android:layout_alignParentTop="true"
+            android:layout_alignBottom="@+id/view"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:layout_weight="8.9">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="What is your current mood"
+        android:id="@+id/moodSelection"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
+
+    s<TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Exited"
+        android:textColor="@color/exited"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:onClick="onClick"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/exitedText" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Happy"
+        android:id="@+id/happyText"
+        android:textColor="@color/happy"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:onClick="onClick"
+        android:layout_marginBottom="20dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Chilled"
+        android:id="@+id/chilledText"
+        android:textColor="@color/chilled"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:onClick="onClick"
+        android:layout_marginBottom="20dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Peacefull"
+        android:id="@+id/peacefullText"
+        android:textColor="@color/peacefull"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:onClick="onClick"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Bored"
+        android:id="@+id/boredText"
+        android:textColor="@color/Bored"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Depressed"
+        android:id="@+id/depressedText"
+        android:textColor="@color/depressed"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Stressed"
+        android:id="@+id/stressedText"
+        android:textColor="@color/stressed"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Aggressive"
+        android:id="@+id/aggressiveText"
+        android:textColor="@color/Aggressive"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:textSize="20sp"
+        android:layout_marginBottom="20dp"/>
+    </LinearLayout>
+</LinearLayout>

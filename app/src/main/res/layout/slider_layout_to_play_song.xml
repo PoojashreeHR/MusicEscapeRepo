@@ -6,9 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     app:umanoPanelHeight="90dp"
-    app:umanoShadowHeight="80dp"
-
-    >
+    app:umanoShadowHeight="80dp">
 
     <FrameLayout
         android:id="@+id/content_slider"
@@ -21,9 +19,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
-        android:clickable="true"
         android:focusable="false"
+        android:clickable="false"
         android:orientation="vertical">
+        <!--android:clickable="true"-->
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,7 +30,6 @@
             android:orientation="horizontal">
 
             <include
-
                 layout="@layout/layout_for_playing_controls"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,9 +41,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_display_song_lists"
             android:layout_marginTop="20dp"
+            android:clickable="false"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 

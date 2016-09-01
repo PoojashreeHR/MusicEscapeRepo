@@ -20,6 +20,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -29,8 +30,11 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.adapter.OnSwipeTouchListener;
+import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySong;
@@ -54,7 +58,7 @@ import java.util.List;
 
 
 public class BaseMusicActivity extends AppCompatActivity implements
-        MediaController.MediaPlayerControl {
+         MediaController.MediaPlayerControl {
 
     protected static MusicService musicSrv;
     protected boolean musicBound = false;
@@ -69,7 +73,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected TextView tv_songname;
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
-
+    LinearLayout linearLayout;
     protected boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
@@ -107,8 +111,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
             editor.apply();
         }
     };
-
-
     public ArrayList<Song> getSongsFromCurPlaylist() {
         if (Global.isJourney) {
             List<JourneySong> jSongs = JourneyService.getInstance(this).getCurrentSession().getSongs();
@@ -153,6 +155,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
             }
         });
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
+        ibPlayPause.setOnClickListener(this);
+        linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
         ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -180,7 +184,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 }
             }
         });
-
+        linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
 
         play_music_seek_bar = (SeekBar) findViewById(R.id.play_music_seek_bar);
         play_music_seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -232,8 +236,45 @@ public class BaseMusicActivity extends AppCompatActivity implements
         dragView = (LinearLayout) findViewById(R.id.dragView);
         //sort alphabetically by title
         sortSongsAlphabetically();
-
+        linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
         setUpPlaylist();
+
+        linearLayout.setOnTouchListener(new View.OnTouchListener() {
+            int downX, upX;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    downX = (int) event.getX();
+                    Log.i("event.getX()", " downX " + downX);
+                    return true;
+                }
+
+                else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    upX = (int) event.getX();
+                    Log.i("event.getX()", " upX " + downX);
+                    if (upX - downX > 100) {
+                        // swipe right
+                       // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
+                        musicSrv.playPrev();
+                        tv_songname.setText(musicSrv.getSongName());
+                        tv_song_detail.setText(musicSrv.getSongDetail());
+                    }
+
+                    else if (downX - upX > -100) {
+                      //  Toast.makeText(getApplicationContext(),"Swiping Left",Toast.LENGTH_LONG).show();
+                        musicSrv.playNext();
+                        tv_songname.setText(musicSrv.getSongName());
+                        tv_song_detail.setText(musicSrv.getSongDetail());
+                        // swipe left
+                    }
+                    return true;
+
+                }
+                return false;
+            }
+
+        });
 
     }
 
@@ -686,7 +727,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     }
                 }
             });
-
             holder.rv_ll.setSwipeListener(new SwipeRevealLayout.SimpleSwipeListener() {
                 @Override
                 public void onClosed(SwipeRevealLayout view) {
