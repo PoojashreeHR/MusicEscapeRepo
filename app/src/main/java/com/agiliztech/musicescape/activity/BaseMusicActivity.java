@@ -155,7 +155,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             }
         });
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
-        ibPlayPause.setOnClickListener(this);
+       // ibPlayPause.setOnClickListener(this);
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
         ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
