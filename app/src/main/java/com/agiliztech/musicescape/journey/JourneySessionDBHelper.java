@@ -32,7 +32,7 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String COL_ID = "_id";
-        String createSQL = "CREATE TABLE "+Global.JOURNEY_TBL_NAME+"( "
+        String createSQL = "CREATE TABLE "+Global.JOURNEY_SESSION_TBL_NAME+"( "
                 +COL_ID+" INTEGER PRIMARY KEY AUTOINCREMENT, "
                 +COL_JOURNEY_ID+" TEXT, "
                 +COL_JOURNEY_STARTED+" TEXT, "
@@ -95,14 +95,13 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
 
     public List<JourneySession> getTopEightSessions(){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<JourneySession> journeys = null;
+        List<JourneySession> journeys   = new ArrayList<>();
         try{
             String query = "SELECT * FROM "+Global.JOURNEY_SESSION_TBL_NAME
                     +" ORDER BY date("+COL_JOURNEY_STARTED+") desc limit 8";
             Cursor cursor = db.rawQuery(query, null);
 
-            if (cursor .moveToFirst()) {
-                journeys = new ArrayList<>();
+            if (cursor.moveToFirst()) {
                 while (!cursor.isAfterLast()) {
                     String journeyStr = cursor.getString(cursor
                             .getColumnIndex(COL_JOURNEY_SESSION_OBJ));
