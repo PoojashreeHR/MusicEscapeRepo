@@ -78,6 +78,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     private RecyclerView mRecyclerView;
     private SharedPreferences sp;
 
+
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
         @Override
@@ -87,6 +88,19 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_songname.setText(song.getSongName());
             tv_song_detail.setText(song.getArtist().getArtistName());
             updateMusicPlayerByMood();
+            ArrayList<Song> songs = songList;
+            for(int i=0;i<songs.size();i++){
+                songs.get(i).setPlaying(false);
+                if(songs.get(i).getSongName().equals(song.getSongName())){
+                    mAdapter.updateActiveSongImage(song,i);
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
+            //mAdapter = new RecyclerViewAdapter(songList,BaseMusicActivity.this,true,song);
+           // mAdapter.updateActiveSongImage(song);
+            //mAdapter.updateActiveSongImage(song);
+            //mAdapter.notifyDataSetChanged();
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("song_name", song.getSongName());
             editor.putString("song_detail", song.getArtist().getArtistName());
@@ -184,9 +198,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onStopTrackingTouch(SeekBar seekBar) {
                 handler.removeCallbacks(mUpdateTimeTask);
                 int totalDuration = musicSrv.getDur();
-                Log.e("onStopTrackingTouch " , " TOTAL DURATION : " + totalDuration);
+                Log.e("onStopTrackingTouch ", " TOTAL DURATION : " + totalDuration);
                 int currPosition = UtilityClass.progressToTimer(seekBar.getProgress(), totalDuration);
-                Log.e("onStopTrackingTouch " , " CURRENT POSITION : " + currPosition);
+                Log.e("onStopTrackingTouch ", " CURRENT POSITION : " + currPosition);
                 musicSrv.seek(currPosition);
                 updateProgressBar();
             }
@@ -226,7 +240,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected void setUpPlaylist() {
         songList = getSongsFromCurPlaylist();
         if (songList.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(songList, this);
+            mAdapter = new RecyclerViewAdapter(songList, this,false,null);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -608,11 +622,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
         List<Song> listOfSongs;
         Context context;
-
-        public RecyclerViewAdapter(List<Song> listOfSongs, Context context) {
+        boolean isPlaying;
+        Song song;
+        public RecyclerViewAdapter(List<Song> listOfSongs, Context context,boolean isPlaying,Song song) {
             this.listOfSongs = listOfSongs;
-
             this.context = context;
+            this.isPlaying = isPlaying;
+            this.song = song;
         }
 
         @Override
@@ -694,17 +710,32 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     }
                 }
             });
+            if(isPlaying){
+
+            }
             SongMoodCategory mood = model.getMood();
             if (mood == null) {
                 mood = SongMoodCategory.scAllSongs;
             }
             holder.rv_song_name.setTextColor(SongsManager.colorForMood(mood));
             if (pos == 0) {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 0));
+                if(songList.get(pos).isPlaying()){
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 0,true));
+                }else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 0,false));
+                }
             } else if (pos == listOfSongs.size() - 1) {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789));
+                if(songList.get(pos).isPlaying()){
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789,true));
+                }else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789, false));
+                }
             } else {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 1));
+                if(songList.get(pos).isPlaying()){
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 1,true));
+                }else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 1, false));
+                }
             }
             holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -755,6 +786,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
             } else {
                 return artist.getArtistName();
             }
+        }
+
+        public void updateActiveSongImage(Song song,int position){
+            Song songs = song;
+            //SongMoodCategory moods = songs.getMood();
+            songs.setPlaying(true);
+            listOfSongs.set(position,songs);
+            notifyDataSetChanged();
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {
