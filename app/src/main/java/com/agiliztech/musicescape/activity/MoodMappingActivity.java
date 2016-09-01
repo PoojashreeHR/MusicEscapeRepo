@@ -87,20 +87,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private final String TAG = "MoodMappingActivity";
     DBHandler dbHandler;
 
-    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String curSongJson = intent.getStringExtra("currentSong");
-            Song song = new Gson().fromJson(curSongJson, Song.class);
-            tv_songname.setText(song.getSongName());
-            tv_song_detail.setText(song.getArtist().getArtistName());
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("song_name", song.getSongName());
-            editor.putString("song_detail", song.getArtist().getArtistName());
-            editor.apply();
-        }
-    };
 
     private BroadcastReceiver mServiceBroadcast = new BroadcastReceiver() {
         @Override
@@ -268,20 +255,20 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 //        handler.postDelayed(mUpdateTimeTask, 100);
 //    }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
-        @Override
-        public void run() {
-
-            if (musicSrv != null) {
-                long totalDuration = musicSrv.getDur();
-                long currDuration = musicSrv.getPosn();
-
-                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
-                play_music_seek_bar.setProgress(progress);
-                handler.postDelayed(this, 100);
-            }
-        }
-    };
+//    private Runnable mUpdateTimeTask = new Runnable() {
+//        @Override
+//        public void run() {
+//
+//            if (musicSrv != null) {
+//                long totalDuration = musicSrv.getDur();
+//                long currDuration = musicSrv.getPosn();
+//
+//                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
+//                play_music_seek_bar.setProgress(progress);
+//                handler.postDelayed(this, 100);
+//            }
+//        }
+//    };
 
 //    private Runnable mUpdateTimeTask = new Runnable() {
 //        @Override
@@ -321,7 +308,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     @Override
     protected void onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
@@ -333,8 +320,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
-                new IntentFilter(MusicService.SERVICE_EVENT));
+
         LocalBroadcastManager.getInstance(this).registerReceiver(mServiceBroadcast,
                 new IntentFilter(ApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mSpotifyServiceBroadCast,
@@ -349,7 +335,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     @Override
     protected void onStop() {
         //controller.hide();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
+
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
@@ -446,29 +432,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 }).setMessage("Message").show();
 
     }
-
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-        //handler.removeCallbacks(mUpdateTimeTask);
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-        //updateProgressBar();
-    }
-
-
-
-
-
 
 
 //    @Override
@@ -725,7 +688,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             edit.apply();
             baseLayout.setVisibility(View.VISIBLE);
             contentFrame.setVisibility(View.VISIBLE);
-            play_music_seek_bar.setOnSeekBarChangeListener(MoodMappingActivity.this);
+
 
         }
 

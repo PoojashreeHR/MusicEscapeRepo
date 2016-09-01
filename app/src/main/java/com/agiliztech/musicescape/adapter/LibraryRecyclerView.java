@@ -119,19 +119,19 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
             } else if (mood == SongMoodCategory.scDepressed) {
                 holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
             } else if (mood == SongMoodCategory.scExcited) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
             } else if (mood == SongMoodCategory.scHappy) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_happy_library_inactive));
             } else if (mood == SongMoodCategory.scChilled) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_chilled_library_inactive));
             } else if (mood == SongMoodCategory.scPeaceful) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_peaceful_library_inactive));
             } else if (mood == SongMoodCategory.scBored) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bored_library_inactive));
             } else if (mood == SongMoodCategory.scStressed) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_stressed_library_inactive));
             } else if (mood == SongMoodCategory.scAggressive) {
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_aggressive_library_inactive));
             }
             holder.title.setTextColor(SongsManager.colorForMood(mood));
         }
