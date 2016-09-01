@@ -29,7 +29,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
-public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener {
+public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener, LibraryRecyclerView.ILibraryClickListener {
     Spinner sp;
     BaseMusicActivity baseMusicActivity;
     private View mViewGroup;
@@ -80,7 +80,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         songButton = (ImageButton) findViewById(R.id.arrow1);
         mViewGroup.setOnClickListener(this);
 
-        SongAdapter(dbSongList, "allmood");
+        SongAdapter(dbSongList, "");
 
         final ImageButton songScan = (ImageButton) findViewById(R.id.library1);
         songScan.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +158,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
         // if (listOfSongs.size() > 0) {
         HashMap<String, Integer> mapIndex = calculateIndexesForName(listOfSongs);
-        libAdapter = new LibraryRecyclerView(listOfSongs, mapIndex, mood);
+        libAdapter = new LibraryRecyclerView(listOfSongs, mapIndex, mood,this,LibraryActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         FastScrollRecyclerViewItemDecoration decoration = new FastScrollRecyclerViewItemDecoration(this);
         recyclerView.addItemDecoration(decoration);
@@ -396,4 +396,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 .putBoolean("first_time_library", false).commit();
     }
 
+    @Override
+    public void songRetagInLibrary(int position) {
+        // Logic for Retag from Library
+    }
 }

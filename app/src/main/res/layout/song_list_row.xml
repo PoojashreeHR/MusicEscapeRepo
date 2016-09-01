@@ -1,42 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/songListLayout"
+
+<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_layout_library"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@android:color/black"
-    android:orientation="horizontal"
-    android:paddingBottom="20dp">
+    app:dragEdge="right"
+    app:mode="same_level"
 
-    <ImageView
-        android:id="@+id/mood_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/active_mood_dots" />
+    >
+    <FrameLayout
+        android:id="@+id/frm_left_swap"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        >
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/img_retag_new"
+            android:id="@+id/rv_swap_library"
+            />
 
-    <LinearLayout
+    </FrameLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/songListLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="15dp">
+        android:background="@android:color/black"
+        android:orientation="horizontal"
+        android:paddingBottom="20dp">
 
-        <TextView
-            android:id="@+id/song_title"
+        <ImageView
+            android:id="@+id/mood_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:maxLines="1"
+            android:layout_marginLeft="15dp"
+            android:orientation="vertical">
 
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/song_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="1"
 
-        <TextView
-            android:id="@+id/song_artist"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:maxLines="1"
-            android:textColor="@color/Gray"
-            android:textSize="20sp" />
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/song_artist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="1"
+                android:textColor="@color/Gray"
+                android:textSize="20sp" />
         </LinearLayout>
-</LinearLayout>
+    </LinearLayout>
 
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -34,12 +33,12 @@ import com.agiliztech.musicescape.apiservices.AnalyseApiService;
 import com.agiliztech.musicescape.apiservices.ApiService;
 import com.agiliztech.musicescape.apiservices.SpotifyApiService;
 import com.agiliztech.musicescape.database.DBHandler;
-import com.agiliztech.musicescape.models.SongsModel;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.apimodels.BatchIdResponseModel;
 import com.agiliztech.musicescape.models.apimodels.DeviceIdModel;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
-import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SongInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRequest;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
@@ -92,13 +91,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String curSongJson = intent.getStringExtra("currentSong");
-            SongsModel songsModel = new Gson().fromJson(curSongJson, SongsModel.class);
-            tv_songname.setText(songsModel.getTitle());
-            tv_song_detail.setText(songsModel.getArtist());
-
+            Song song = new Gson().fromJson(curSongJson, Song.class);
+            tv_songname.setText(song.getSongName());
+            tv_song_detail.setText(song.getArtist().getArtistName());
             SharedPreferences.Editor editor = sp.edit();
-            editor.putString("song_name", songsModel.getTitle());
-            editor.putString("song_detail", songsModel.getArtist());
+            editor.putString("song_name", song.getSongName());
+            editor.putString("song_detail", song.getArtist().getArtistName());
             editor.apply();
         }
     };
@@ -214,13 +212,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (settings.getBoolean("first_time_library", true))
-                {
+                if (settings.getBoolean("first_time_library", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
-                    intent.putExtra("library","Library");
+                    intent.putExtra("library", "Library");
                     startActivity(intent);
-                }
-             else {
+                } else {
                     Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
                     startActivity(intent);
                 }
@@ -230,18 +226,15 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton = (ImageView) findViewById(R.id.dashboardButton);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
-                if (settings.getBoolean("is_first_time", true))
-                {
+            public void onClick(View v) {
+                if (settings.getBoolean("is_first_time", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
-                    intent.putExtra("dashboard","Dashboard");
+                    intent.putExtra("dashboard", "Dashboard");
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     startActivity(intent);
                 }
-                else
-                {
-                Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
-                startActivity(intent);}
             }
         });
 
@@ -288,6 +281,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         }
     };
+
     private void setController() {
 
     }
@@ -394,12 +388,14 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
         if (sp != null) {
             if (playbackPaused) {
-                SharedPreferences.Editor editor = sp.edit();
-                editor.putString("playbackpaused", "" + playbackPaused);
-                editor.putString("song_id_sp", musicSrv.getSongId());
-                editor.putString("song_position", "" + musicSrv.getPosn());
-                editor.putString("song_name_sp", musicSrv.getSongName());
-                editor.apply();
+                if(musicSrv != null) {
+                    SharedPreferences.Editor editor = sp.edit();
+                    editor.putString("playbackpaused", "" + playbackPaused);
+                    editor.putString("song_id_sp", musicSrv.getSongId());
+                    editor.putString("song_position", "" + musicSrv.getPosn());
+                    editor.putString("song_name_sp", musicSrv.getSongName());
+                    editor.apply();
+                }
             }
         }
         super.onStop();
@@ -556,7 +552,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         btn_pause.setVisibility(View.VISIBLE);
 
         //Pass color as the song mood color
-        changeSeekbarColor(play_music_seek_bar,getResources().getColor(R.color.happy));
+        changeSeekbarColor(play_music_seek_bar, getResources().getColor(R.color.happy));
        /* if (playbackPaused) {
             //setController();
             playbackPaused = false;
@@ -601,8 +597,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     }
 
-    public  void alertDialog()
-    {   LayoutInflater factory = LayoutInflater.from(this);
+    public void alertDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
         final View alertDialogView = factory.inflate(R.layout.dialog_layout, null);
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setView(alertDialogView);
@@ -617,11 +613,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 //your business logic
                 alertDialog.dismiss();
             }
-        }); alertDialog.show();
+        });
+        alertDialog.show();
     }
 
-    public  void networkAlertDialog()
-    {   LayoutInflater factory = LayoutInflater.from(this);
+    public void networkAlertDialog() {
+        LayoutInflater factory = LayoutInflater.from(this);
         final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
         final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
         networkDialog.setView(networkDialogView);
@@ -636,7 +633,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 //your business logic
                 networkDialog.dismiss();
             }
-        }); networkDialog.show();
+        });
+        networkDialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {
