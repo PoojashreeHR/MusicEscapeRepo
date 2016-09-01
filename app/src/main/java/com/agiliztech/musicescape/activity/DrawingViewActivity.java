@@ -14,17 +14,25 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneyView;
 import com.agiliztech.musicescape.journey.Size;
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.models.Journey;
+import com.agiliztech.musicescape.models.JourneySession;
+import com.agiliztech.musicescape.models.Song;
+import com.agiliztech.musicescape.utils.Global;
+import com.agiliztech.musicescape.utils.SongsManager;
 
 import java.util.List;
 
-public class DrawingViewActivity extends AppCompatActivity {
+public class DrawingViewActivity extends BaseMusicActivity {
 
     private JourneyView journey;
     private FrameLayout overlay;
     private ImageView dashboardButton;
     private ImageButton playBtn;
+    private SongMoodCategory currentMood = SongMoodCategory.scMoodNotFound, targetMood = SongMoodCategory.scMoodNotFound;
 
 
     public int dpToPx(int dp560) {
@@ -56,6 +64,8 @@ public class DrawingViewActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        //hideMusicPlayer();
 
         journey = (JourneyView)findViewById(R.id.journey);
         overlay = (FrameLayout) findViewById(R.id.overlay);
@@ -92,8 +102,71 @@ public class DrawingViewActivity extends AppCompatActivity {
             Toast.makeText(DrawingViewActivity.this, "Please draw a journey !!!", Toast.LENGTH_SHORT).show();
             return;
         }
+        else if(vePoints.size() < 2){
+            Toast.makeText(DrawingViewActivity.this, getString(R.string.not_enough_draw_points), Toast.LENGTH_SHORT).show();
+            return;
+        }
+        else{
+            int totalDuration = JourneyService.getInstance(this).getCurrentSession().totalDuration();
+            int totalSongDuration = JourneyService.getInstance(this).getCurrentSession().totalSongsDuration();
+
+            if(Global.isJourney && totalDuration >= totalSongDuration/2){
+                showMJView();
+            }
+            else{
+                generatePlaylist();
+            }
+        }
 
     }
+
+    private void generatePlaylist() {
+        List<PointF> vePoints = journey.journeyAsValenceAndEnergyPoints();
+        List<Song> journeySongs = JourneyService.getInstance(this).createPlaylistFromJourney(vePoints);
+
+        List<Song> filterNullArray = JourneyService.getInstance(this).filterNullSongs(journeySongs);
+
+        if(filterNullArray.size() < 2){
+            Toast.makeText(DrawingViewActivity.this, getString(R.string.not_enough_draw_points), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Journey newJourney = new Journey();
+        newJourney.setGeneratedBy("User");
+        newJourney.setJourneyDotsArray(journey.getJourneyPoints());
+        newJourney.setJourneyEVArray(vePoints);
+        newJourney.setTrackCount(filterNullArray.size());
+
+        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray);
+        JourneyService.getInstance(this).setCurrentSession(session);
+
+        drawViewToPlaylist();
+    }
+
+    private void drawViewToPlaylist() {
+        if(musicSrv != null) {
+            if (musicSrv.isPng()) {
+                musicSrv.pausePlayer();
+            }
+            musicSrv.playCurrentSession();
+            Global.isJourney = true;
+            playSelectedSong(0);
+            setUpPlaylist();
+           // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
+        }
+        Intent nextIntent = new Intent(this, PlaylistJourneyActivity.class);
+        nextIntent.putExtra("fromMenu",false);
+        nextIntent.putExtra("currentMood", SongsManager.getIntValue(currentMood));
+        nextIntent.putExtra("targetMood", SongsManager.getIntValue(targetMood));
+        startActivity(nextIntent);
+        finish();
+    }
+
+    private void showMJView() {
+        //journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
+        //show current and target mood here
+    }
+
     @Override
     public void onResume()
     {    super.onResume();

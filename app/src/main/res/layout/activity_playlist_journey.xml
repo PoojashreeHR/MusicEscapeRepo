@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:paddingTop="18dp"
+    tools:context="com.agiliztech.musicescape.activity.DrawingViewActivity">
+
+
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:orientation="horizontal">
+        <android.support.v7.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:id="@+id/view">
+
+        </android.support.v7.widget.Toolbar>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="DRAW"
+            android:textColor="#6E6E6E"
+            android:id="@+id/title"
+            android:gravity="center"
+            android:layout_alignBottom="@+id/view"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageButton2"
+            android:background="@drawable/menuiconmanager"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:background="@color/colorPrimary"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:layout_width="match_parent"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:layout_below="@+id/toolbar"
+        android:orientation="horizontal">
+        <View
+            android:id="@+id/feedback_view"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+
+            android:alpha="0.9"
+            android:background="#262626"
+            />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8.9">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/overlay"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="35dp"
+            android:scaleType = "centerCrop"
+            android:background="@drawable/drawing_overlay"
+            >
+
+            <com.agiliztech.musicescape.journey.JourneyView
+                android:id="@+id/journey"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+
+        </FrameLayout>
+    </RelativeLayout>
+
+
+
+</LinearLayout>
+

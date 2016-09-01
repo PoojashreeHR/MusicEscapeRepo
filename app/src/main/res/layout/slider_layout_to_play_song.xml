@@ -20,7 +20,7 @@
         android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
+        android:background="@android:color/black"
         android:clickable="true"
         android:focusable="false"
         android:orientation="vertical">
@@ -42,9 +42,10 @@
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_display_song_lists"
+            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@android:color/black" />
+            />
 
     </LinearLayout>
 

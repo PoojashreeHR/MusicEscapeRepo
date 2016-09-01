@@ -456,12 +456,7 @@ public class DBHandler extends SQLiteOpenHelper {
             List<Song> moodSongs = getSongsListBasedOnMoods(moodName);
 
             boolean removed = moodSongs.removeAll(playList);
-            if(removed){
-                return moodSongs;
-            }
-            else{
-                return null;
-            }
+            return moodSongs;
         }
 
         return null;

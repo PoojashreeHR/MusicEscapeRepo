@@ -17,6 +17,10 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
+import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySong;
+import com.agiliztech.musicescape.models.Artist;
+import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
@@ -24,6 +28,8 @@ import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 public class MusicService extends Service implements
@@ -90,6 +96,20 @@ public class MusicService extends Service implements
         Global.currentSongList = songs;
     }
 
+    public void playCurrentSession() {
+        JourneySession session = JourneyService.getInstance(this).getCurrentSession();
+        List<JourneySong> journeySongList = session.getSongs();
+
+        ArrayList<Song> songList = new ArrayList<>();
+        for(int i=0; i< journeySongList.size(); i++){
+            songList.add(journeySongList.get(i).getSong());
+        }
+
+
+        //Collections.reverse(songList);
+        setList(songList);
+    }
+
     //binder
     public class MusicBinder extends Binder {
         public MusicService getService() {
@@ -112,6 +132,11 @@ public class MusicService extends Service implements
     }
 
     Song playSong;
+
+    public Song getCurrentPlayed(){
+        return playSong;
+    }
+
     //play a song
     public void playSong() {
         //play
@@ -120,7 +145,7 @@ public class MusicService extends Service implements
         playSong = songs.get(songPosn);
         //get title
         songTitle = playSong.getSongName();
-        songDetail = playSong.getArtist().getArtistName();
+        songDetail = handleNullArtist(playSong.getArtist());
         //get id
         long currSong = playSong.getpID();
         //set uri
@@ -137,7 +162,23 @@ public class MusicService extends Service implements
             Log.e("MUSIC SERVICE", "Error setting data source", e);
             tryInternalStorage(currSong);
         }
-        player.prepareAsync();
+        try {
+            player.prepareAsync();
+        }
+        catch (Exception e){
+
+        }
+    }
+
+    private String handleNullArtist(Artist artist) {
+        if(artist == null)
+            return "Unknown";
+        if(artist.getArtistName() == null){
+            return "Unknown";
+        }
+        else{
+            return artist.getArtistName();
+        }
     }
 
     private void tryInternalStorage(long songid) {
@@ -269,6 +310,11 @@ public class MusicService extends Service implements
         }
         playSong();
 
+    }
+
+    public void killService(){
+        stopForeground(true);
+        stopSelf();
     }
 
     @Override

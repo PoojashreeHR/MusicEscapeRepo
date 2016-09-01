@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_child"
+    android:scaleType="fitCenter"
+    android:adjustViewBounds="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
@@ -73,12 +75,12 @@
 <RelativeLayout
     android:layout_height="0dp"
     android:layout_width="match_parent"
-    android:layout_weight="1"
+    android:layout_weight="0.8"
     android:layout_below="@+id/feedback_view">
     <ImageView
         android:id="@+id/infoButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:background="@drawable/menu_info_icon_manager"
         android:foregroundGravity="center"
         android:layout_marginLeft="20dp"
@@ -119,6 +121,7 @@
             android:background="@drawable/exitedcolor"
             android:gravity="center"
             android:text=""
+            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <TextView
@@ -131,6 +134,7 @@
             android:background="@drawable/aggressivecolor"
             android:gravity="center"
             android:text=""
+            android:textStyle="bold"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/colorAccent" />
 
@@ -143,6 +147,7 @@
             android:layout_toStartOf="@+id/button"
             android:background="@drawable/depressedcolor"
             android:gravity="center"
+            android:textStyle="bold"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -154,6 +159,7 @@
             android:layout_toEndOf="@+id/button"
             android:layout_toRightOf="@+id/button"
             android:background="@drawable/happycolor"
+            android:textStyle="bold"
             android:gravity="center"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -167,6 +173,7 @@
             android:layout_toStartOf="@+id/tv_chilled"
             android:background="@drawable/peacefullmoodcolor"
             android:gravity="center"
+            android:textStyle="bold"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -179,6 +186,7 @@
             android:layout_toRightOf="@+id/button"
             android:background="@drawable/chilledmoodcolor"
             android:gravity="center"
+            android:textStyle="bold"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
@@ -191,6 +199,7 @@
             android:layout_below="@+id/button"
             android:background="@drawable/boredmoodcolor"
             android:gravity="center"
+            android:textStyle="bold"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/colorAccent" />
@@ -204,6 +213,7 @@
             android:layout_toStartOf="@+id/button"
             android:background="@drawable/stressedcolor"
             android:gravity="center"
+            android:textStyle="bold"
             android:text=""
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </RelativeLayout>

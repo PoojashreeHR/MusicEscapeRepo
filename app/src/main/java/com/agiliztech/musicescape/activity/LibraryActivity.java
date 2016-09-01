@@ -63,6 +63,12 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
         dbHandler = new DBHandler(this);
         dbSongList = dbHandler.getAllSongsFromDB();
+//        if(dbSongList.size() <= 0){
+//            hideMusicPlayer();
+//        }
+//        else{
+//            hideMusicPlayer();
+//        }
         dashboardButton = (ImageView) findViewById(R.id.imageButton2);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -96,7 +96,7 @@ public class MainSplashScreen extends Activity {
                     finish();
                 }
             }
-        },5000);
+        },3000);
     }
 
     @Override
@@ -115,9 +115,9 @@ public class MainSplashScreen extends Activity {
         }
 
         int phonePermissionCheck = ContextCompat.checkSelfPermission(this,
-                Manifest.permission.CALL_PHONE);
+                Manifest.permission.READ_PHONE_STATE);
         if(phonePermissionCheck != PackageManager.PERMISSION_GRANTED){
-            allPermissions[i] = Manifest.permission.CALL_PHONE;
+            allPermissions[i] = Manifest.permission.READ_PHONE_STATE;
             i++;
         }
 
