@@ -65,7 +65,14 @@ public class DrawingViewActivity extends BaseMusicActivity {
             }
         });
 
-        //hideMusicPlayer();
+        Intent i = getIntent();
+        int curIndex = i.getIntExtra("current",8);
+        int targetIndex = i.getIntExtra("target",8);
+
+         currentMood = SongsManager.getMoodFromIndex(curIndex);
+        targetMood = SongsManager.getMoodFromIndex(targetIndex);
+
+        hideMusicPlayer();
 
         journey = (JourneyView)findViewById(R.id.journey);
         overlay = (FrameLayout) findViewById(R.id.overlay);
@@ -137,7 +144,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
         newJourney.setJourneyEVArray(vePoints);
         newJourney.setTrackCount(filterNullArray.size());
 
-        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray);
+        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray, currentMood, targetMood);
         JourneyService.getInstance(this).setCurrentSession(session);
 
         drawViewToPlaylist();

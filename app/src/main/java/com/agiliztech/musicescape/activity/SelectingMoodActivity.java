@@ -14,8 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.utils.SongsManager;
 
 public class SelectingMoodActivity extends AppCompatActivity implements View.OnClickListener {
+
+    boolean firstMoodSelected, secondMoodSelected;
+    SongMoodCategory firstMood, secondMood;
+
     TextView selectingMood;
     String result;
     @Override
@@ -30,9 +36,7 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
         nextMood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectingMoodActivity.this, DrawingViewActivity.class);
-                startActivity(intent);
-                finish();
+
             }
         });
 
@@ -55,7 +59,24 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        selectingMood.setText("What is your Target mood");
-        Toast.makeText(getApplicationContext(),"You clicked a Text",Toast.LENGTH_LONG).show();
+
+        TextView tv = (TextView) v;
+        if(!firstMoodSelected){
+            selectingMood.setText("What is your Target mood");
+            firstMoodSelected =  true;
+            firstMood = SongsManager.getMoodForText(tv.getText().toString());
+        }
+        else if(!secondMoodSelected){
+            secondMoodSelected = true;
+            secondMood = SongsManager.getMoodForText(tv.getText().toString());
+
+
+            Intent intent = new Intent(SelectingMoodActivity.this, DrawingViewActivity.class);
+            intent.putExtra("current",SongsManager.getIntValue(firstMood));
+            intent.putExtra("target",SongsManager.getIntValue(secondMood));
+            startActivity(intent);
+            finish();
+        }
+        //Toast.makeText(getApplicationContext(),"You clicked a Text",Toast.LENGTH_LONG).show();
     }
 }
