@@ -89,7 +89,9 @@
         <activity
             android:name=".activity.HistoryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.PlaylistJourneyActivity" />
+        <activity android:name=".activity.PlaylistJourneyActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.SelectingMoodActivity"></activity>
     </application>
 

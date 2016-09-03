@@ -13,22 +13,29 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneyView;
+import com.agiliztech.musicescape.models.History;
 import com.agiliztech.musicescape.models.JourneySession;
+import com.agiliztech.musicescape.utils.SongsManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class HistoryActivity extends AppCompatActivity {
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
         ImageView dashboardButton = (ImageView) findViewById(R.id.imageButton2);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +70,7 @@ public class HistoryActivity extends AppCompatActivity {
     {
         private  List<JourneySession> sessions;
 
+
         public HistoryAdapter(List<JourneySession> journeySessionList) {
             this.sessions = journeySessionList;
         }
@@ -76,12 +84,44 @@ public class HistoryActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
-            final int pos = position;
+             int pos = position;
             JourneySession session = sessions.get(pos);
+            //for (int i = 0; i < sessions.size() ; i++) {
+                if (pos % 2 == 0) {
+                    holder.right_view.setVisibility(View.VISIBLE);
+                   // pos++;
+                }
+                else{
+                        holder.right_view.setVisibility(View.GONE);
+                   // pos--;
+                }
+            //}
             holder.journeyView.setMode(JourneyView.DrawingMode.DMMENU);
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
             holder.journeyView.setEnabled(false);
 
+
+            holder.tv_currentmood.setTextColor(SongsManager.colorForMood(session.getCurrentMood()));
+            holder.tv_targetmood.setTextColor(SongsManager.colorForMood(session.getTargetMood()));
+
+            holder.tv_currentmood.setText(SongsManager.textForMood(SongsManager.getIntValue(session.getCurrentMood())));
+            holder.tv_targetmood.setText(SongsManager.textForMood(SongsManager.getIntValue(session.getTargetMood())));
+
+
+            Date myDate= session.getStarted();
+            String formatedDate = "";
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
+                formatedDate = dateFormat.format(myDate);
+                holder.tv_playlistCreated.setText(formatedDate);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+
+
+
+
+           // holder.tv_playlistCreated.setText();
         }
 
         @Override
@@ -96,10 +136,17 @@ public class HistoryActivity extends AppCompatActivity {
          class HistoryViewHolder extends  RecyclerView.ViewHolder {
 
              JourneyView journeyView;
+              TextView tv_currentmood,tv_targetmood,tv_playlistCreated;
+             View right_view;
 
              public HistoryViewHolder(View itemView) {
                  super(itemView);
                  journeyView = (JourneyView) itemView.findViewById(R.id.journey);
+                 tv_currentmood = (TextView) itemView.findViewById(R.id.tv_currentmood);
+                 tv_targetmood = (TextView) itemView.findViewById(R.id.tv_targetmood);
+                 tv_playlistCreated = (TextView) itemView.findViewById(R.id.tv_playlistCreated);
+                 right_view = (View) itemView.findViewById(R.id.right_view);
+
              }
          }
     }
