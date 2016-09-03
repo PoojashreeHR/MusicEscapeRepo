@@ -161,12 +161,13 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     };
     SharedPreferences settings;
+    private ArrayList<Song> totalSongs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
-
+        totalSongs = new SongsManager(this).getSongList();
 
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -388,11 +389,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     testButton.setText(getResources().getString(R.string.pause));
                     isPlaying = true;
 
-                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = new ArrayList<>(songList);
+                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
                     ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
 
                     if (listFromDB.size() > 0) {
-                        if (originalList.containsAll(listFromDB)) {
+                        if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
                             Log.e("SAME ", " SAME");
                             testButton.setText(getResources().getString(R.string.start));
                             isPlaying = false;
