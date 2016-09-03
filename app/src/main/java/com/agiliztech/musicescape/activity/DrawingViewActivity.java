@@ -81,6 +81,29 @@ public class DrawingViewActivity extends BaseMusicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing_view);
 
+        journey = (JourneyView)findViewById(R.id.journey);
+        overlay = (FrameLayout) findViewById(R.id.overlay);
+        playBtn = (ImageButton) findViewById(R.id.play);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpToPx(320), dpToPx(445));
+        lparams.gravity = Gravity.CENTER;
+
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(dpToPx(280), dpToPx(400));
+        params.gravity = Gravity.CENTER;
+        journey.setLayoutParams(params);
+        journey.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
+        journey.setMode(JourneyView.DrawingMode.DMDRAWING);
+
+
+
+
+        playBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onPlayBtnClicked();
+            }
+        });
 
         dashboardButton = (ImageView) findViewById(R.id.imageButton2);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
@@ -96,41 +119,11 @@ public class DrawingViewActivity extends BaseMusicActivity {
         int curIndex = i.getIntExtra("current",8);
         int targetIndex = i.getIntExtra("target",8);
 
-         currentMood = SongsManager.getMoodFromIndex(curIndex);
+        currentMood = SongsManager.getMoodFromIndex(curIndex);
         targetMood = SongsManager.getMoodFromIndex(targetIndex);
 
         hideMusicPlayer();
 
-        journey = (JourneyView)findViewById(R.id.journey);
-        overlay = (FrameLayout) findViewById(R.id.overlay);
-        playBtn = (ImageButton) findViewById(R.id.play);
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpToPx(320), dpToPx(445));
-        lparams.gravity = Gravity.CENTER;
-       // overlay.setLayoutParams(lparams);
-
-
-
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(dpToPx(280), dpToPx(400));
-        //params.setMargins(adjust(40),0,adjust(40),0);
-     //   params.setMargins(adjust(40),adjust(40),adjust(40),adjust(40));
-        params.gravity = Gravity.CENTER;
-
-        journey.setLayoutParams(params);
-        //journey.setMode(JourneyView.DrawingMode.DMDRAWING);
-        journey.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
-        journey.setMode(JourneyView.DrawingMode.DMDRAWING);
-
-
-
-
-        playBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onPlayBtnClicked();
-            }
-        });
     }
 
     private void onPlayBtnClicked() {

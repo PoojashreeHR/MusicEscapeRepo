@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
  */
 public class SlidingImage_Adapter extends PagerAdapter {
 
+    private final int targetWidth, targetHeight;
     private ArrayList<Integer> IMAGES;
     private LayoutInflater inflater;
     private Context context;
@@ -37,6 +39,9 @@ public class SlidingImage_Adapter extends PagerAdapter {
         this.context = context;
         this.IMAGES = IMAGES;
         inflater = LayoutInflater.from(context);
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        targetWidth = displayMetrics.widthPixels;
+        targetHeight = displayMetrics.heightPixels;
     }
 
     @Override
@@ -61,6 +66,8 @@ public class SlidingImage_Adapter extends PagerAdapter {
         {
             Picasso.with(context)
                     .load(IMAGES.get(position))
+                    .resize(400,400)
+                  .centerInside()
                     .into(imageView);
             //imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
             view.addView(imageLayout, 0);

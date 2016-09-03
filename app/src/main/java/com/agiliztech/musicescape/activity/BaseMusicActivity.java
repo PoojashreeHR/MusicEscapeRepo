@@ -638,11 +638,18 @@ public class BaseMusicActivity extends AppCompatActivity implements
     }
 
     public void changeSeekbarColor(SeekBar s, int colorp) {
-        LayerDrawable layerDrawable = (LayerDrawable) s.getProgressDrawable();
-        Drawable background;// = (Drawable) layerDrawable.findDrawableByLayerId(android.R.id.background);
-        Bitmap backgroundBmp = BitmapFactory.decodeResource(getResources(), colorp);
-        background = new BitmapDrawable(getResources(), backgroundBmp);
-        layerDrawable.setDrawableByLayerId(android.R.id.background, background);
+        try {
+            LayerDrawable layerDrawable = (LayerDrawable) s.getProgressDrawable();
+            Drawable background;// = (Drawable) layerDrawable.findDrawableByLayerId(android.R.id.background);
+            Bitmap backgroundBmp = BitmapFactory.decodeResource(getResources(), colorp);
+            background = new BitmapDrawable(getResources(), backgroundBmp);
+            layerDrawable.setDrawableByLayerId(android.R.id.background, background);
+        }
+        catch (ClassCastException e){
+            Log.d("changeSeekbarColor", e.getMessage());
+            Log.d("changeSeekbarColor", "Using only basic color");
+        }
+
         s.getProgressDrawable().setColorFilter(colorp, PorterDuff.Mode.SRC_IN);
     }
 

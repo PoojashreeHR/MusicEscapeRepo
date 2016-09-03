@@ -44,7 +44,19 @@ public class SlidingImage extends AppCompatActivity {
         draw = getIntent().getStringExtra("draw");
         playlist = getIntent().getStringExtra("playlist");
 
-        init();
+        if(appInfo == null && splashScreen == null
+                &&dashboard == null && library == null
+                && history == null && draw == null
+                && playlist == null
+                ) {
+            for (int i = 0; i < IMAGES.length; i++)
+                ImagesArray.add(IMAGES[i]);
+            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+            NUM_PAGES = IMAGES.length;
+        }
+        else{
+            init();
+        }
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -54,10 +66,22 @@ public class SlidingImage extends AppCompatActivity {
                 if (appInfo == null) {
                     if (position == mPager.getAdapter().getCount() - 1) {
                         Intent reg = new
-                                Intent(SlidingImage.this, AppInfoActivity.class);
+                                Intent(SlidingImage.this, MoodMappingActivity.class);
                         startActivity(reg);
+                        finish();
                         //start next Activity
                     }
+                }
+                else {
+
+                        if (position == mPager.getAdapter().getCount() - 1) {
+                            Intent reg = new
+                                    Intent(SlidingImage.this, AppInfoActivity.class);
+                            //startActivity(reg);
+                            finish();
+                            //start next Activity
+                        }
+
                 }
             }
 

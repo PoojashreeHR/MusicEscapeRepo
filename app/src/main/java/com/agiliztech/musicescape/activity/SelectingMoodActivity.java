@@ -89,7 +89,7 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
             startActivity(intent);
             finish();
         }
-        uploadInfo(firstMood, secondMood);
+      //  uploadInfo(firstMood, secondMood);
 
         //Toast.makeText(getApplicationContext(),"You clicked a Text",Toast.LENGTH_LONG).show();
     }
