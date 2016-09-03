@@ -50,6 +50,7 @@ public class PlaylistJourneyActivity extends BaseMusicActivity {
         journeyView.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
 
         journeyView.setMode(JourneyView.DrawingMode.DMJOURNEY);
+        journeyView.setEnabled(false);
 
         title = (TextView) findViewById(R.id.title);
         title.setText(journeyService.getCurrentSession().getJourney().getName());
