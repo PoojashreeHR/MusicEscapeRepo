@@ -256,8 +256,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 //songScan.setBackgroundResource(R.drawable.menu_buttons_song_scan_active);
-                Toast.makeText(getApplicationContext(), "Button clicked!",
-                        Toast.LENGTH_SHORT).show();
                 songScan.setFocusableInTouchMode(false);
                 songScan.setFocusable(false);
                 finish();

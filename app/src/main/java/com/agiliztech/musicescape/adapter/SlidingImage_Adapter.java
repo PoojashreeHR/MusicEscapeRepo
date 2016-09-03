@@ -59,7 +59,10 @@ public class SlidingImage_Adapter extends PagerAdapter {
 
         if(position < getCount()-1)
         {
-            imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
+            Picasso.with(context)
+                    .load(IMAGES.get(position))
+                    .into(imageView);
+            //imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
             view.addView(imageLayout, 0);
         }
        // imageView.setImageBitmap(decodeResource(context.getResources(), IMAGES.get(position)));
