@@ -91,7 +91,8 @@ public class HistoryActivity extends BaseMusicActivity {
             holder.overlay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startPlaylistviewWithJourney(session);
+                    //startPlaylistviewWithJourney(session);
+                    saveSession(session);
                 }
             });
 
@@ -117,6 +118,12 @@ public class HistoryActivity extends BaseMusicActivity {
                  overlay = (FrameLayout) itemView.findViewById(R.id.overlay);
              }
          }
+    }
+
+    private void saveSession(JourneySession session) {
+        JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(this);
+        session.setFavourite(1);
+        journeySessionDBHelper.favJourneySession(session);
     }
 
     private void startPlaylistviewWithJourney(JourneySession session) {

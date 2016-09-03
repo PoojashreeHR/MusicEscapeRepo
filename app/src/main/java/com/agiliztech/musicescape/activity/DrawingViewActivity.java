@@ -186,6 +186,8 @@ public class DrawingViewActivity extends BaseMusicActivity {
             }
             musicSrv.playCurrentSession();
             Global.isJourney = true;
+            Global.isLibPlaylist = false;
+            Global.libPlaylistSongs = null;
             playSelectedSong(0);
             setUpPlaylist();
            // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);

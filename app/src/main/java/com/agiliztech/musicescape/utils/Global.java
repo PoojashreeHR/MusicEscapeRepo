@@ -17,4 +17,6 @@ public class Global {
     public static ArrayList<Song> currentSongList;
     public static boolean isJourney;
     public static String INTROSCREENSSHOWN = "introScreensShown";
+    public static boolean isLibPlaylist;
+    public static ArrayList<Song> libPlaylistSongs;
 }

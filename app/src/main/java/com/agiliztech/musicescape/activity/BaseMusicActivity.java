@@ -122,7 +122,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
             }
             // Collections.reverse(currentSongs);
             return currentSongs;
-        } else {
+        }
+
+        else if(Global.isLibPlaylist){
+            return Global.libPlaylistSongs;
+        }
+        else {
             DBHandler dbHandler = new DBHandler(this);
             return dbHandler.getAllSongsFromDB();
         }
