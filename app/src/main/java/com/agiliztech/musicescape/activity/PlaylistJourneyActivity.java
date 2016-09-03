@@ -1,10 +1,13 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ public class PlaylistJourneyActivity extends BaseMusicActivity {
     private JourneyView journeyView;
     private TextView title;
     private FrameLayout overlay;
+    private ImageView dashboardButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +33,16 @@ public class PlaylistJourneyActivity extends BaseMusicActivity {
 
         journeyView = (JourneyView) findViewById(R.id.journey);
         overlay = (FrameLayout) findViewById(R.id.overlay);
+
+        dashboardButton = (ImageView) findViewById(R.id.imageButton2);
+        dashboardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlaylistJourneyActivity.this,DashboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 
