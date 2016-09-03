@@ -8,13 +8,19 @@
     android:orientation="vertical"
     android:paddingBottom="5dp">
 
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorWhiteForThumbSeekbar"
+        />
     <SeekBar
-        android:layout_margin="0dp"
-        android:padding="0dp"
         android:id="@+id/play_music_seek_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null" />
+        android:background="@null"
+        android:thumb="@drawable/seekbar_thumb"
+        />
 
     <FrameLayout
         android:id="@+id/play_frame_layout"
@@ -107,12 +113,20 @@
             android:src="@drawable/ic_loopall_inactive" />
 
         <ImageButton
-            android:id="@+id/loop_selected"
+            android:id="@+id/loop_selected_single"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_loopall_active"
+            android:visibility="gone" />
+        <ImageButton
+            android:id="@+id/loop_selected_playlist"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@null"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/ic_loopsong_1_active"
             android:visibility="gone" />
     </FrameLayout>
 </RelativeLayout>
