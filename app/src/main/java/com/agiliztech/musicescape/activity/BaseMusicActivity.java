@@ -71,7 +71,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     public boolean paused = false, playbackPaused = false;
 
     protected ImageButton btn_pause;
-    protected ImageButton loop_not_selected, loop_selected_single, loop_selected_playlist;
+    protected ImageButton loop_not_selected, loop_selected_for_playlist, loop_selected_for_single_song;
     protected TextView tv_songname;
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
@@ -220,8 +220,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
         tv_songname.setSelected(true);
         tv_song_detail = (TextView) findViewById(R.id.tv_song_detail);
         loop_not_selected = (ImageButton) findViewById(R.id.loop_not_selected);
-        loop_selected_single = (ImageButton) findViewById(R.id.loop_selected_single);
-        loop_selected_playlist = (ImageButton) findViewById(R.id.loop_selected_playlist);
+        loop_selected_for_playlist = (ImageButton) findViewById(R.id.loop_selected_for_playlist);
+        loop_selected_for_single_song = (ImageButton) findViewById(R.id.loop_selected_for_single_song);
 
 
         loop_not_selected.setOnClickListener(new View.OnClickListener() {
@@ -229,31 +229,31 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (loop_not_selected.getVisibility() == View.VISIBLE) {
                     loop_not_selected.setVisibility(View.GONE);
-                    loop_selected_single.setVisibility(View.VISIBLE);
-                    loop_selected_playlist.setVisibility(View.GONE);
-                    musicSrv.setRepeatSingleSong(true);
+                    loop_selected_for_playlist.setVisibility(View.VISIBLE);
+                    loop_selected_for_single_song.setVisibility(View.GONE);
+                    musicSrv.setRepeatPlayList(true);
                 }
 
             }
         });
-        loop_selected_single.setOnClickListener(new View.OnClickListener() {
+        loop_selected_for_playlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (loop_selected_single.getVisibility() == View.VISIBLE) {
-                    loop_selected_playlist.setVisibility(View.VISIBLE);
-                    loop_selected_single.setVisibility(View.GONE);
+                if (loop_selected_for_playlist.getVisibility() == View.VISIBLE) {
+                    loop_selected_for_single_song.setVisibility(View.VISIBLE);
+                    loop_selected_for_playlist.setVisibility(View.GONE);
                     loop_not_selected.setVisibility(View.GONE);
-                    musicSrv.setRepeatPlayList(true);
+                    musicSrv.setRepeatSingleSong(true);
                 }
             }
         });
-        loop_selected_playlist.setOnClickListener(new View.OnClickListener() {
+        loop_selected_for_single_song.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (loop_selected_playlist.getVisibility() == View.VISIBLE) {
-                    loop_selected_playlist.setVisibility(View.GONE);
+                if (loop_selected_for_single_song.getVisibility() == View.VISIBLE) {
+                    loop_selected_for_single_song.setVisibility(View.GONE);
                     loop_not_selected.setVisibility(View.VISIBLE);
-                    loop_selected_single.setVisibility(View.GONE);
+                    loop_selected_for_playlist.setVisibility(View.GONE);
                     musicSrv.setNoRepeat(true);
                 }
 
@@ -585,9 +585,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
     private void onMusicServiceConnected() {
         if (loop_not_selected.getVisibility() == View.VISIBLE) {
             musicSrv.setNoRepeat(true);
-        } else if (loop_selected_single.getVisibility() == View.VISIBLE) {
+        } else if (loop_selected_for_playlist.getVisibility() == View.VISIBLE) {
             musicSrv.setRepeatSingleSong(true);
-        } else if (loop_selected_playlist.getVisibility() == View.VISIBLE) {
+        } else if (loop_selected_for_single_song.getVisibility() == View.VISIBLE) {
             musicSrv.setRepeatPlayList(true);
         }
         /*if (isSongPlaying) {

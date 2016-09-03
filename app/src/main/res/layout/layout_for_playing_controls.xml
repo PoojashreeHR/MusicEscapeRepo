@@ -113,7 +113,7 @@
             android:src="@drawable/ic_loopall_inactive" />
 
         <ImageButton
-            android:id="@+id/loop_selected_single"
+            android:id="@+id/loop_selected_for_playlist"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
@@ -121,7 +121,7 @@
             android:src="@drawable/ic_loopall_active"
             android:visibility="gone" />
         <ImageButton
-            android:id="@+id/loop_selected_playlist"
+            android:id="@+id/loop_selected_for_single_song"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@null"
