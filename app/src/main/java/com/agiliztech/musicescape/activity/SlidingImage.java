@@ -125,10 +125,10 @@ public class SlidingImage extends AppCompatActivity {
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
-                    startActivity(new Intent(SlidingImage.this, DrawingViewActivity.class));
+                    startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
                     finish();
                 }
-            }, 5000);
+            }, 3000);
         }
 
     }

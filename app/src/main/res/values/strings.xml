@@ -29,5 +29,5 @@
     <string name="splash_msg">Takes you on a journey through emotions using your own music</string>
     <string name="start">START</string>
     <string name="pause">PAUSE</string>
-    <string name="not_enough_draw_points">t looks like you haven\'t started drawing your mood journey or you don\'t have enough songs in your music library to create a mood journey.\\n\\n Try drawing again or adding more music to your library. \\n</string>
+    <string name="not_enough_draw_points">It looks like you haven\'t started drawing your mood journey or you don\'t have enough songs in your music library to create a mood journey.\\n\\n Try drawing again or adding more music to your library. \\n</string>
 </resources>
