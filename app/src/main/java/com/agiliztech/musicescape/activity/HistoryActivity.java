@@ -3,6 +3,8 @@ package com.agiliztech.musicescape.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v4.widget.CompoundButtonCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -132,6 +134,37 @@ public class HistoryActivity extends BaseMusicActivity {
                 exception.printStackTrace();
             }
 
+            holder.overlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Dialog dialogs = new Dialog(context);
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View layout = inflater.inflate(R.layout.dialog_savehistory, null);
+                    dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    Button btn_save = (Button) layout.findViewById(R.id.btn_save);
+                    btn_save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogs.dismiss();
+                        }
+                    });
+                    Button btn_cancel = (Button) layout.findViewById(R.id.btn_cancel);
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogs.dismiss();
+                        }
+                    });
+
+                    dialogs.setContentView(layout);
+                    dialogs.show();
+
+                /*dialogs.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,800);*/
+                }
+            });
+
         }
 
         @Override
@@ -161,35 +194,7 @@ public class HistoryActivity extends BaseMusicActivity {
                  right_view = (View) itemView.findViewById(R.id.right_view);
                  ll_saveHistory = (LinearLayout) itemView.findViewById(R.id.ll_saveHistory);
 
-                 overlay.setOnClickListener(new View.OnClickListener() {
-                     @Override
-                     public void onClick(View v) {
 
-                         final Dialog dialogs = new Dialog(context);
-                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                         View layout = inflater.inflate(R.layout.dialog_savehistory, null);
-                         dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                         Button btn_save = (Button) layout.findViewById(R.id.btn_save);
-                         btn_save.setOnClickListener(new View.OnClickListener() {
-                             @Override
-                             public void onClick(View v) {
-                                 dialogs.dismiss();
-                             }
-                         });
-                         Button btn_cancel = (Button) layout.findViewById(R.id.btn_cancel);
-                         btn_save.setOnClickListener(new View.OnClickListener() {
-                             @Override
-                             public void onClick(View v) {
-                                 dialogs.dismiss();
-                             }
-                         });
-
-                         dialogs.setContentView(layout);
-                         dialogs.show();
-
-                /*dialogs.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,800);*/
-                     }
-                 });
 
 
 
