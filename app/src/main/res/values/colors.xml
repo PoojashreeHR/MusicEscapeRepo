@@ -31,5 +31,5 @@
     <color name="disable_foreground_grey">#42221f1f</color>
     <color name="disable_thumb_grey">#1c000000</color>
     <color name="enable_thumb_yellow">#FDBE46</color>
-
+    <color name="colorWhiteForThumbSeekbar">#f2f0f0</color>
 </resources>
