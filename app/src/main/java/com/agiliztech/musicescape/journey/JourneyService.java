@@ -1178,6 +1178,7 @@ public class JourneyService {
                 songObj.setSkipped(0);
                 session.addSongObj(songObj);
             }
+            idx++;
         }
 
         return session;

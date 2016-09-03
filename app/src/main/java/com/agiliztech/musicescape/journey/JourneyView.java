@@ -285,9 +285,11 @@ public class JourneyView extends View {
             color = Color.rgb(170,170,170);
         } else if(mode == DrawingMode.DMDRAWING && journeyDot) {
             color = Color.rgb(255,255,255);
-        } else if(mode == DrawingMode.DMJOURNEY && !journeyDot) {
+        }
+        else if(mode == DrawingMode.DMJOURNEY && !journeyDot) {
             return nullColor;
-        } else if(mode == DrawingMode.DMMENU && !journeyDot) {
+        }
+        else if(mode == DrawingMode.DMMENU && !journeyDot) {
             return nullColor; // No need to draw this point!
         } else if(dot.getMood() == SongMoodCategory.scMoodNotFound) {
             color = Color.rgb(38,38,38);

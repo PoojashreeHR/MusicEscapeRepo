@@ -1,5 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -164,12 +165,13 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     };
     SharedPreferences settings;
+    private ArrayList<Song> totalSongs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_mood_mapping);
-
+        totalSongs = new SongsManager(this).getSongList();
 
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
@@ -420,12 +422,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 /*if (!isPlaying) {
                     //  mPlayer.start();
                     testButton.setText(getResources().getString(R.string.pause));
-                    mood_scanning.setVisibility(View.VISIBLE);
                     isPlaying = true;
-                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = new ArrayList<>(songList);
+
+                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
                     ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
                     if (listFromDB.size() > 0) {
-                        if (originalList.containsAll(listFromDB)) {
+                        if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
                             Log.e("SAME ", " SAME");
                             testButton.setText(getResources().getString(R.string.start));
                             isPlaying = false;
