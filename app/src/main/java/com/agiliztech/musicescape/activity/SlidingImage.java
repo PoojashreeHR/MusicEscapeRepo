@@ -51,7 +51,7 @@ public class SlidingImage extends AppCompatActivity {
             public void onPageSelected(int position) {
                 // TODO Auto-generated method stub
                 currentPage = position;
-                if (appInfo == isClicked) {
+                if (appInfo.equalsIgnoreCase(isClicked)) {
                     if (position == mPager.getAdapter().getCount() - 1) {
                         Intent reg = new
                                 Intent(SlidingImage.this, AppInfoActivity.class);
@@ -77,12 +77,12 @@ public class SlidingImage extends AppCompatActivity {
 
     private void init() {
 
-        if (appInfo != isClicked) {
+        if (appInfo.equals(isClicked)) {
             for (int i = 0; i < IMAGES.length; i++)
                 ImagesArray.add(IMAGES[i]);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
-        } else if (splashScreen != isClicked) {
+        } else if (splashScreen.equals(isClicked)) {
             ImagesArray.add(R.drawable.tutorial_img_1);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
@@ -91,7 +91,7 @@ public class SlidingImage extends AppCompatActivity {
                         finish();
                     }
             }, 3000);
-        } else if (library != isClicked) {
+        } else if (library.equals(isClicked)) {
             ImagesArray.add(R.drawable.tutorial_img);
             ImagesArray.add(R.drawable.tutorial_img_3);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
@@ -101,7 +101,7 @@ public class SlidingImage extends AppCompatActivity {
                     finish();
                 }
             }, 3000);
-        } else if (dashboard != isClicked) {
+        } else if (dashboard.equals(isClicked)) {
             ImagesArray.add(R.drawable.tutorial_img_4);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
@@ -110,7 +110,7 @@ public class SlidingImage extends AppCompatActivity {
                     finish();
                 }
             }, 3000);
-        } else if (history != isClicked) {
+        } else if (history.equals(isClicked)) {
             ImagesArray.add(R.drawable.tutorial_img_5);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
@@ -119,16 +119,18 @@ public class SlidingImage extends AppCompatActivity {
                     finish();
                 }
             }, 3000);
-        } else {
-            ImagesArray.add(R.drawable.tutorial_img_6);
-            ImagesArray.add(R.drawable.tutorial_img_7);
-            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
-            new Timer().schedule(new TimerTask() {
-                public void run() {
-                    startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
-                    finish();
-                }
-            }, 3000);
+        } else if(draw.equals(isClicked)){
+            startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
+            finish();
+//            ImagesArray.add(R.drawable.tutorial_img_6);
+//            ImagesArray.add(R.drawable.tutorial_img_7);
+//            mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
+//            new Timer().schedule(new TimerTask() {
+//                public void run() {
+//                    startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
+//                    finish();
+//                }
+//            }, 3000);
         }
 
     }

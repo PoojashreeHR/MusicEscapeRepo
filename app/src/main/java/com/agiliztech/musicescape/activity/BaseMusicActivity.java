@@ -365,7 +365,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
         // TODO Auto-generated method stub
 
 
-        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null); // Your base layout here
+        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music,null);
+        // Your base layout here
         contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
         getLayoutInflater().inflate(layoutResID, contentFrame, true);
 
