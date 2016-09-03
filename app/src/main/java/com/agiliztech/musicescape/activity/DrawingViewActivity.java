@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -79,6 +80,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawing_view);
+
 
         dashboardButton = (ImageView) findViewById(R.id.imageButton2);
         dashboardButton.setOnClickListener(new View.OnClickListener() {

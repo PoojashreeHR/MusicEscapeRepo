@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.journey.JourneyService;
@@ -23,8 +24,11 @@ import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneyView;
 import com.agiliztech.musicescape.journey.Size;
 import com.agiliztech.musicescape.models.JourneySession;
+import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.Global;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class HistoryActivity extends BaseMusicActivity {
@@ -33,7 +37,6 @@ public class HistoryActivity extends BaseMusicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
         ImageView dashboardButton = (ImageView) findViewById(R.id.imageButton2);
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +86,15 @@ public class HistoryActivity extends BaseMusicActivity {
         public void onBindViewHolder(HistoryViewHolder holder, int position) {
             final int pos = position;
             final JourneySession session = sessions.get(pos);
+            if (pos % 2 == 0) {
+                holder.right_view.setVisibility(View.VISIBLE);
+                // pos++;
+            }
+            else{
+                holder.right_view.setVisibility(View.GONE);
+                // pos--;
+            }
+
             holder.journeyView.setGaps(getGapsSize());
             holder.journeyView.setMode(JourneyView.DrawingMode.DMMENU);
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
@@ -95,6 +107,23 @@ public class HistoryActivity extends BaseMusicActivity {
                     saveSession(session);
                 }
             });
+
+            holder.tv_currentmood.setTextColor(SongsManager.colorForMood(session.getCurrentMood()));
+            holder.tv_targetmood.setTextColor(SongsManager.colorForMood(session.getTargetMood()));
+
+            holder.tv_currentmood.setText(SongsManager.textForMood(SongsManager.getIntValue(session.getCurrentMood())));
+            holder.tv_targetmood.setText(SongsManager.textForMood(SongsManager.getIntValue(session.getTargetMood())));
+
+
+            Date myDate= session.getStarted();
+            String formatedDate = "";
+            try {
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM");
+                formatedDate = dateFormat.format(myDate);
+                holder.tv_playlistCreated.setText(formatedDate);
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
 
         }
 
@@ -111,11 +140,18 @@ public class HistoryActivity extends BaseMusicActivity {
 
              FrameLayout overlay;
              JourneyView journeyView;
+              TextView tv_currentmood,tv_targetmood,tv_playlistCreated;
+             View right_view;
 
              public HistoryViewHolder(View itemView) {
                  super(itemView);
                  journeyView = (JourneyView) itemView.findViewById(R.id.journey);
                  overlay = (FrameLayout) itemView.findViewById(R.id.overlay);
+                 tv_currentmood = (TextView) itemView.findViewById(R.id.tv_currentmood);
+                 tv_targetmood = (TextView) itemView.findViewById(R.id.tv_targetmood);
+                 tv_playlistCreated = (TextView) itemView.findViewById(R.id.tv_playlistCreated);
+                 right_view = (View) itemView.findViewById(R.id.right_view);
+
              }
          }
     }

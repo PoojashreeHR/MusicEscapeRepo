@@ -90,10 +90,13 @@
         <activity
             android:name=".activity.HistoryActivity"
             android:screenOrientation="portrait" />
+
         <activity android:name=".activity.PlaylistJourneyActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
-        <activity android:name=".activity.SelectingMoodActivity"
-            android:screenOrientation="portrait"/>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".activity.SelectingMoodActivity"></activity>
     </application>
 
 </manifest>
