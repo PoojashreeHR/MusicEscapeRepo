@@ -245,9 +245,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("library", "Library");
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -260,9 +262,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("dashboard", "Dashboard");
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
