@@ -1,7 +1,9 @@
 package com.agiliztech.musicescape.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.PointF;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -34,6 +36,29 @@ public class DrawingViewActivity extends BaseMusicActivity {
     private ImageButton playBtn;
     private SongMoodCategory currentMood = SongMoodCategory.scMoodNotFound, targetMood = SongMoodCategory.scMoodNotFound;
 
+
+
+    class JourneyCreator extends AsyncTask<Void,Void,Void>{
+        private  ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(DrawingViewActivity.this, "", "Creating Journey...");
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            if(progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            drawViewToPlaylist();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            generatePlaylist();
+            return null;
+        }
+    }
 
     public int dpToPx(int dp560) {
 
@@ -95,6 +120,9 @@ public class DrawingViewActivity extends BaseMusicActivity {
         journey.setGaps(new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f));
         journey.setMode(JourneyView.DrawingMode.DMDRAWING);
 
+
+
+
         playBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +132,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
     }
 
     private void onPlayBtnClicked() {
+
         List<PointF> vePoints = journey.journeyAsValenceAndEnergyPoints();
         if(vePoints == null || vePoints.size() == 0){
             Toast.makeText(DrawingViewActivity.this, "Please draw a journey !!!", Toast.LENGTH_SHORT).show();
@@ -121,7 +150,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
                 showMJView();
             }
             else{
-                generatePlaylist();
+                new JourneyCreator().execute();
             }
         }
 
@@ -147,7 +176,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
         JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray, currentMood, targetMood);
         JourneyService.getInstance(this).setCurrentSession(session);
 
-        drawViewToPlaylist();
+       // drawViewToPlaylist();
     }
 
     private void drawViewToPlaylist() {
@@ -165,6 +194,8 @@ public class DrawingViewActivity extends BaseMusicActivity {
         nextIntent.putExtra("fromMenu",false);
         nextIntent.putExtra("currentMood", SongsManager.getIntValue(currentMood));
         nextIntent.putExtra("targetMood", SongsManager.getIntValue(targetMood));
+
+
         startActivity(nextIntent);
         finish();
     }

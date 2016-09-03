@@ -34,6 +34,9 @@ public class SpotifyApiService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if(intent == null){
+            return 0;
+        }
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
         final SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
         handler = new DBHandler(getBaseContext());
@@ -45,7 +48,7 @@ public class SpotifyApiService extends Service {
                 int sizeOfLoop = 0;
                /* Intent pendingIntent = new Intent(SERVICE_EVENT);
                 LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(pendingIntent);*/
-                SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
+
 
                 for (int i = 0; i < songNamesList.size(); i++) {
                     String name = songNamesList.get(i);
@@ -128,6 +131,10 @@ public class SpotifyApiService extends Service {
         boolean nameChanged = false;
         if (Character.isDigit(newName.charAt(0))) {
             newName = newName.replaceAll("\\d", "");
+            nameChanged = true;
+        }
+        if(newName.contains("_")){
+            arrayName = newName.split("_");
             nameChanged = true;
         }
         if (newName.contains("-")) {
