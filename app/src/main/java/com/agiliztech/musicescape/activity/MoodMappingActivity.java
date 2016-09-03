@@ -471,7 +471,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // String text = "SCAN COMPLETED";
         //mood_scanning.setVisibility(View.GONE);
-        builder.setTitle("Scan Completed")
+        builder.setMessage("Scan Completed. Do you want to do analyse now ?")
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -492,7 +492,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         testButton.setText(getResources().getString(R.string.start));
                         mood_scanning.setVisibility(View.GONE);
                     }
-                }).setMessage("Message").show();
+                }).show();
 
     }
 
