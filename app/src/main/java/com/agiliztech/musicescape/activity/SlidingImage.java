@@ -57,6 +57,10 @@ public class SlidingImage extends AppCompatActivity {
         else{
             init();
         }
+
+    }
+
+    private void init() {
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
@@ -74,13 +78,13 @@ public class SlidingImage extends AppCompatActivity {
                 }
                 else {
 
-                        if (position == mPager.getAdapter().getCount() - 1) {
-                            Intent reg = new
-                                    Intent(SlidingImage.this, AppInfoActivity.class);
-                            //startActivity(reg);
-                            finish();
-                            //start next Activity
-                        }
+                    if (position == mPager.getAdapter().getCount() - 1) {
+                        Intent reg = new
+                                Intent(SlidingImage.this, AppInfoActivity.class);
+                        //startActivity(reg);
+                        finish();
+                        //start next Activity
+                    }
 
                 }
             }
@@ -97,10 +101,6 @@ public class SlidingImage extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void init() {
-
         if (appInfo != null) {
             for (int i = 0; i < IMAGES.length; i++)
                 ImagesArray.add(IMAGES[i]);
