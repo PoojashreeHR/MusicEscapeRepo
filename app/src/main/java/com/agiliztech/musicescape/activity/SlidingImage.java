@@ -53,6 +53,28 @@ public class SlidingImage extends AppCompatActivity {
                 ImagesArray.add(IMAGES[i]);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
+            mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    if (position == mPager.getAdapter().getCount() - 1) {
+                        Intent reg = new
+                                Intent(SlidingImage.this, MoodMappingActivity.class);
+                        startActivity(reg);
+                        finish();
+                        //start next Activity
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
         }
         else{
             init();
