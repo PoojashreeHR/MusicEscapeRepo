@@ -80,6 +80,7 @@ public class MainSplashScreen extends Activity {
 
         final SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         final boolean introScreensShown = sharedPreferences.getBoolean(Global.INTROSCREENSSHOWN, false);
+        final boolean scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);
 
         new Timer().schedule(new TimerTask() {
             @Override
@@ -92,7 +93,12 @@ public class MainSplashScreen extends Activity {
                     finish();
                 }
                 else {
-                    startActivity(new Intent(MainSplashScreen.this, MoodMappingActivity.class));
+                    if(scannedOnce) {
+                        startActivity(new Intent(MainSplashScreen.this, NewDashboardActivity.class));
+                    }
+                    else{
+                        startActivity(new Intent(MainSplashScreen.this, MoodMappingActivity.class));
+                    }
                     finish();
                 }
             }

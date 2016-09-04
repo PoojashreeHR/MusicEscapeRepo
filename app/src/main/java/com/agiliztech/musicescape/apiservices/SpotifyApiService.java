@@ -27,6 +27,7 @@ public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
     DBHandler handler;
     private String TAG = "SpotifyApiService.java";
+    private int errorCount = 0;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -90,10 +91,12 @@ public class SpotifyApiService extends Service {
                                         } else if (sizeOfLoop == songNamesList.size()) {
                                             Log.e(TAG, " PRINTING sizeOfLoop == songNamesList.size()" + i);
                                             sendToAnalyseAPI();
+                                            break;
                                         }
                                     }
                                 } else {
                                     handler.updateSongStatusForSpotifyError(name);
+                                    errorCount++;
                                     //Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
                                     Log.e(TAG, " IF SPOTIFY ID NOT FOUND THEN STORE IN DB  : ORIGINAL NAME : " + name + "\n NEW NAME : " + originalName);
                                 }
@@ -108,8 +111,10 @@ public class SpotifyApiService extends Service {
                     }
                 }
                 // }
-
-                broadcastEvent();
+                if(errorCount == songNamesList.size()) {
+                    //rare case where all spotify calls are empty
+                    broadcastEvent();
+                }
                 stopSelf();
             }
         }.start();
@@ -124,7 +129,7 @@ public class SpotifyApiService extends Service {
     public void sendToAnalyseAPI() {
 
         ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
-        handler.updateSongWithAnalysingStatus(spotifyInfos);
+
         // Send TO ANALYSE
         Intent sendingIntent = new Intent(SERVICE_EVENT);
         LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);

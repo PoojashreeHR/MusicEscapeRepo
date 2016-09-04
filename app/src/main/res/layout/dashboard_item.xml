@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="162dp"
+    android:id="@+id/ll_saveHistory"
+    android:layout_height="270dp"
+    android:orientation="vertical">
+
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Exited"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/enable_thumb_yellow"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_gravity="top|center"
+        />
+
+    <FrameLayout
+        android:id="@+id/overlay"
+        android:layout_width="162dp"
+        android:layout_height="270dp"
+        android:scaleType="centerCrop"
+
+        >
+
+
+
+        <com.agiliztech.musicescape.journey.JourneyView
+            android:id="@+id/journey"
+            android:layout_width="126dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="top"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
+
+
+
+
+    </FrameLayout>
+</LinearLayout>

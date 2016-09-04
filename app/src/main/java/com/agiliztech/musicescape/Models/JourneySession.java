@@ -182,6 +182,9 @@ public class JourneySession {
 
     public List<Integer> trackNumbers() {
         List<Integer> trackNos = new ArrayList<>();
+        if(songs == null || songs.size() == 0){
+            return trackNos;
+        }
         for (JourneySong song : songs) {
             trackNos.add(song.getTrackNo());
         }

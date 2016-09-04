@@ -44,7 +44,7 @@ public class HistoryActivity extends BaseMusicActivity {
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HistoryActivity.this,DashboardActivity.class);
+                Intent intent = new Intent(HistoryActivity.this,NewDashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -103,13 +103,7 @@ public class HistoryActivity extends BaseMusicActivity {
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
             holder.journeyView.setEnabled(false);
 
-            holder.overlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //startPlaylistviewWithJourney(session);
-                    saveSession(session);
-                }
-            });
+
 
             holder.tv_currentmood.setTextColor(SongsManager.colorForMood(session.getCurrentMood()));
             holder.tv_targetmood.setTextColor(SongsManager.colorForMood(session.getTargetMood()));
@@ -141,6 +135,7 @@ public class HistoryActivity extends BaseMusicActivity {
                     btn_save.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            saveSession(session);
                             dialogs.dismiss();
                         }
                     });

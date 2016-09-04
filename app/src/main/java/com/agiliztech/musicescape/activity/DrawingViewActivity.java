@@ -109,7 +109,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DrawingViewActivity.this,DashboardActivity.class);
+                Intent intent = new Intent(DrawingViewActivity.this,NewDashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -158,7 +158,7 @@ public class DrawingViewActivity extends BaseMusicActivity {
         List<Song> filterNullArray = JourneyService.getInstance(this).filterNullSongs(journeySongs);
 
         if(filterNullArray.size() < 2){
-            Toast.makeText(DrawingViewActivity.this, getString(R.string.not_enough_draw_points), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(DrawingViewActivity.this, getString(R.string.not_enough_draw_points), Toast.LENGTH_SHORT).show();
             return;
         }
 

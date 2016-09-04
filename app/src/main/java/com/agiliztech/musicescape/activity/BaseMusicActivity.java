@@ -91,8 +91,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             String curSongJson = intent.getStringExtra("currentSong");
             Song song = new Gson().fromJson(curSongJson, Song.class);
-            tv_songname.setText(song.getSongName());
-            tv_song_detail.setText(song.getArtist().getArtistName());
+            if(song == null) {
+                return;
+            }
+                tv_songname.setText(song.getSongName());
+                tv_song_detail.setText(song.getArtist().getArtistName());
+
             updateMusicPlayerByMood();
             ArrayList<Song> songs = songList;
             for (int i = 0; i < songs.size(); i++) {
@@ -115,7 +119,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         if (Global.isJourney) {
             List<JourneySong> jSongs = JourneyService.getInstance(this).getCurrentSession().getSongs();
             ArrayList<Song> currentSongs = new ArrayList<>();
-            for (int i = 0; i < jSongs.size(); i++) {
+            for (int i = 0; jSongs!= null && i < jSongs.size(); i++) {
                 if (jSongs.get(i).getSong() != null) {
                     currentSongs.add(jSongs.get(i).getSong());
                 }

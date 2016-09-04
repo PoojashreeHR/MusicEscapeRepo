@@ -37,6 +37,7 @@ import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.google.gson.Gson;
@@ -126,6 +127,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 mood_scanning.setVisibility(View.GONE);
             } else {
                 ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
+                dbHandler.updateSongWithAnalysingStatus(spotifyInfos);
                 SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
                 new ScanAndAnalyseAsync().execute(spotifyModelMain);
                 Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
@@ -144,6 +146,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 ArrayList<SongInfo> info = new ArrayList<>();
                 for (int i = 0; i < model.getSongs().size(); i++) {
                     info.add(model.getSongs().get(i));
+                }
+                if(model.getSongs().size() > 0){
+                    updateScannedOnce();
                 }
                 dbHandler.updateSongsWithEnergyAndValence(info);
                 tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
@@ -164,8 +169,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         }
     };
+
+    private void updateScannedOnce() {
+        scannedOnce = true;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putBoolean(Global.isScannedOnce, scannedOnce)
+                .commit();
+
+    }
+
     SharedPreferences settings;
     private ArrayList<Song> totalSongs;
+    private boolean scannedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -241,6 +256,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(!scannedOnce){
+                    showNotScannedAlert();
+                    return;
+                }
+
                 if (settings.getBoolean("first_time_library", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("library", "Library");
@@ -258,13 +279,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!scannedOnce){
+                    showNotScannedAlert();
+                    return;
+                }
+
                 if (settings.getBoolean("is_first_time", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("dashboard", "Dashboard");
                     startActivity(intent);
                     finish();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), NewDashboardActivity.class);
                     startActivity(intent);
                     finish();
                 }
@@ -295,6 +321,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         //setup controller
         setController();
 
+    }
+
+    private void showNotScannedAlert() {
+        Toast.makeText(MoodMappingActivity.this, getString(R.string.no_songs), Toast.LENGTH_SHORT).show();
     }
 
 //    private void updateProgressBar() {
@@ -373,6 +403,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 new IntentFilter(SpotifyApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+         scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);
 
 
     }
