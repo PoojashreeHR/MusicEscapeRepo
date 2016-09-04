@@ -258,6 +258,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 //songScan.setBackgroundResource(R.drawable.menu_buttons_song_scan_active);
                 songScan.setFocusableInTouchMode(false);
                 songScan.setFocusable(false);
+                Intent intent = new Intent(LibraryActivity.this, MoodMappingActivity.class);
+                startActivity(intent);
                 finish();
             }
         });
