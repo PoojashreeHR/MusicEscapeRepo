@@ -1,5 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
+import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,7 +8,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -16,6 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -78,7 +82,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     private final String TAG = "MoodMappingActivity";
     DBHandler dbHandler;
-
+    final Context context = this;
 
     private BroadcastReceiver mServiceBroadcast = new BroadcastReceiver() {
         @Override
@@ -324,7 +328,28 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     }
 
     private void showNotScannedAlert() {
-        Toast.makeText(MoodMappingActivity.this, getString(R.string.no_songs), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(MoodMappingActivity.this, getString(R.string.no_songs), Toast.LENGTH_SHORT).show();
+
+        final Dialog dialogs = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_waitforscan, null);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button btn_dismissr = (Button) layout.findViewById(R.id.btn_dismissr);
+        btn_dismissr.setTypeface(tf);
+        TextView tv_scanCompletion = (TextView) layout.findViewById(R.id.tv_scanCompletion);
+        TextView tv_completion = (TextView) layout.findViewById(R.id.tv_completion);
+        tv_scanCompletion.setTypeface(tf);
+        tv_completion.setTypeface(tf);
+        btn_dismissr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogs.dismiss();
+            }
+        });
+        dialogs.setContentView(layout);
+        dialogs.show();
+
     }
 
 //    private void updateProgressBar() {

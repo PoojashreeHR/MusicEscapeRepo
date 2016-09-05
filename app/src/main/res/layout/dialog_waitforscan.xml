@@ -26,7 +26,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Looks like you havent\'t scanned\n enough songs yet.\n\n The app needs to first scan\n enough of your music library\n to create a mood journey."
+        android:text="Looks like you haven\'t scanned\n enough songs yet.\n\n The app needs to first scan\n enough of your music library\n to create a mood journey."
         android:textColor="#808080"
         android:textAppearance="?android:attr/textAppearanceMedium" />
     <Button
