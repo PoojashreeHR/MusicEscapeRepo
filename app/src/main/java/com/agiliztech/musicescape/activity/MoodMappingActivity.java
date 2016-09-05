@@ -543,7 +543,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
                             new CallScanApiInAsync().execute(dbHandler);
                         } else {
-                            Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
+                            networkAlertDialog();
                             testButton.setText(getResources().getString(R.string.start));
                         }
                     }
@@ -593,23 +594,25 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     }
 
     public void networkAlertDialog() {
-        LayoutInflater factory = LayoutInflater.from(this);
-        final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
-        final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
-        networkDialog.setView(networkDialogView);
-        TextView scan_msg = (TextView) networkDialogView.findViewById(R.id.nt_dialog_title);
-        TextView text_dialog = (TextView) networkDialogView.findViewById(R.id.nt_text_dialog);
-        scan_msg.setTypeface(tf);
-        text_dialog.setTypeface(tf);
-        networkDialogView.findViewById(R.id.nt_dismiss_dialog).setOnClickListener(new View.OnClickListener() {
-
+        final Dialog network_dialog = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.network_dialog_layout, null);
+        network_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        network_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button nt_dismiss_dialog = (Button) layout.findViewById(R.id.nt_dismiss_dialog);
+        nt_dismiss_dialog.setTypeface(tf);
+        TextView nt_dialog_title = (TextView) layout.findViewById(R.id.nt_dialog_title);
+        TextView nt_text_dialog = (TextView) layout.findViewById(R.id.nt_text_dialog);
+        nt_dialog_title.setTypeface(tf);
+        nt_text_dialog.setTypeface(tf);
+        nt_dismiss_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //your business logic
-                networkDialog.dismiss();
+                network_dialog.dismiss();
             }
         });
-        networkDialog.show();
+        network_dialog.setContentView(layout);
+        network_dialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {

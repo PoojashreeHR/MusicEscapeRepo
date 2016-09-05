@@ -2,17 +2,21 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/DarkGray">
+    android:background="@drawable/dialog_background"
+    android:paddingLeft="25dp"
+    android:paddingRight="25dp"
+    android:paddingTop="25dp"
+    android:paddingBottom="25dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/nt_dialog_msg"
-        android:textSize="20sp"
+
         android:layout_marginTop="20dp"
-        android:layout_marginBottom="10dp"
         android:id="@+id/nt_text_dialog"
-        android:textColor="@color/colorWhite"
+        android:textColor="#808080"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:gravity="center_horizontal"
         android:layout_below="@+id/nt_dialog_title"
         android:layout_centerHorizontal="true" />
@@ -21,21 +25,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="DISMISS"
-        android:textSize="20sp"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/button_background"
         android:id="@+id/nt_dismiss_dialog"
         android:gravity="center_vertical|center_horizontal"
-        android:textColor="@color/DarkGray"
+        android:textColor="#ffffff"
+        android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_below="@+id/nt_text_dialog"/>
 
     <TextView
-        android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
-        android:textSize="20sp"
+
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Oh No!!"
         android:id="@+id/nt_dialog_title"
-        android:textColor="@color/colorWhite"
+        android:textColor="#FFFFFF"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
