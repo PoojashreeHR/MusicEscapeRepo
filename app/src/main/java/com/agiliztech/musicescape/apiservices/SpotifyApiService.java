@@ -84,14 +84,14 @@ public class SpotifyApiService extends Service {
                                         break;
                                     } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size() - 1)) {
                                         //globalRowCounter = globalRowCounter + 1;
-                                        if (sizeOfLoop != songNamesList.size()) {
+                                        if (sizeOfLoop != songNamesList.size()-1) {
                                             sendToAnalyseAPI();
                                             Log.e(TAG, " PRINTING identifiedCount - sentRows >= 100 || (identifiedCount -sentRows <100 && sizeOfLoop==songNamesList.size())");
                                             Log.e(TAG, " PRINTING sizeOfLoop != songNamesList.size()" + i);
-                                        } else if (sizeOfLoop == songNamesList.size()) {
+                                        } else if (sizeOfLoop == songNamesList.size()-1) {
                                             Log.e(TAG, " PRINTING sizeOfLoop == songNamesList.size()" + i);
                                             sendToAnalyseAPI();
-                                            break;
+                                            //break;
                                         }
                                     }
                                 } else {
