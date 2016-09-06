@@ -85,7 +85,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         }
 
         public void updateSongMoodSelectedByUser(int position, int moodPosition, Song songs) {
-            songList.set(position, songs);
+            songList.get(position).setSongObj(songs);
             notifyDataSetChanged();
 
         }
@@ -195,9 +195,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             SongUiObj modelUi = songList.get(position);
 
             if(modelUi.isSong()){
-                Song model = modelUi.getSongObj();
+                final Song model = modelUi.getSongObj();
 
-                SongViewHolder holder = (SongViewHolder) myViewholder;
+               final  SongViewHolder holder = (SongViewHolder) myViewholder;
 
                 holder.title.setText(model.getSongName());
                 if (mood.contains("depressed")) {
@@ -258,7 +258,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                         if (holder.swipe_layout_library.isOpened()) {
                             holder.swipe_layout_library.close(true);
                         }
-                        songRetagInLibrary(pos, models);
+                        songRetagInLibrary(pos, model);
                     }
                 });
            /* holder.viewPager.setCurrentItem(list.get(position).ordinal());
