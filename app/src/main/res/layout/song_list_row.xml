@@ -1,66 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipe_layout_library"
+<!--<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/viewPager"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:overScrollMode="never">-->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/songListLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:dragEdge="right"
-    app:mode="same_level"
+    android:background="@android:color/black"
+    android:orientation="horizontal"
+    android:paddingBottom="20dp">
 
-    >
-    <FrameLayout
-        android:id="@+id/frm_left_swap"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        >
-        <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/img_retag_new"
-            android:id="@+id/rv_swap_library"
-            />
+    <ImageView
+        android:id="@+id/mood_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
-    </FrameLayout>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/songListLayout"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/black"
-        android:orientation="horizontal"
-        android:paddingBottom="20dp">
+        android:layout_marginLeft="15dp"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/mood_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/song_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:maxLines="1"
 
-            <TextView
-                android:id="@+id/song_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:maxLines="1"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
-                android:textColor="@android:color/white"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/song_artist"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:maxLines="1"
-                android:textColor="@color/Gray"
-                android:textSize="20sp" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/song_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:maxLines="1"
+            android:textColor="@color/Gray"
+            android:textSize="20sp" />
     </LinearLayout>
 
-</com.chauthai.swipereveallayout.SwipeRevealLayout>
+    <!--  <LinearLayout
+          android:id="@+id/secondaryContentFrameLayout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="horizontal">
+
+          <TextView
+              android:id="@+id/btn1"
+              android:layout_width="100dp"
+              android:layout_height="wrap_content"
+              android:text="HELLO PAGER"/>
+      </LinearLayout>
+-->
+</LinearLayout><!--
+    </android.support.v4.view.ViewPager>
+    -->

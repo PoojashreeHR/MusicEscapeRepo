@@ -24,11 +24,12 @@
          By using this app you acknowledge that this app is released for the purpose of research only.  This version is not released for commercial purposes and cannot be on-sold or distributed without the express written consent of Young and Well CRC Ltd. You as the user of the app acknowledge that you remain solely responsible for obtaining licensed content. You warrant that you will not use this app to create any infringing copies, support, encourage or induce copyright infringement. You indemnify and release the producer and authors of the app from any claim of intellectual property infringement arising from your music collection or your use of this app. If you are a copyright holder and have concerns regarding potential copyright infringement, please contact Young and Well CRC Ltd.\n\n
 </string>
     <string name="dialog_msg">We\'ve finished tagging\n your library.\n\n Now all your songs will\n appear in playlist\n and mood journey</string>
-    <string name="nt_dialog_msg">Looks like you\'re not on a network. \n\n Tospeed things up,and\n please enable your network</string>
+    <string name="nt_dialog_msg">Looks like you\'re not on a\n network. \n To speed things up,and\n please enable your network</string>
     <string name="pref_previously_started">1</string>
     <string name="no_songs">You haven\'t scanned yet. please scan first</string>
     <string name="splash_msg">Takes you on a journey through emotions using your own music</string>
     <string name="start">START</string>
     <string name="pause">PAUSE</string>
     <string name="not_enough_draw_points">It looks like you haven\'t started drawing your mood journey or you don\'t have enough songs in your music library to create a mood journey.\\n\\n Try drawing again or adding more music to your library. \\n</string>
+    <string name="scan_completed">We\'ve tagged mnop songs in \n your music library.\n\n That leaves qrst songs we \ncouldn\'t tag because\n the details are incomplete. \n\nWould you like to start a thorough scan?</string>
 </resources>
