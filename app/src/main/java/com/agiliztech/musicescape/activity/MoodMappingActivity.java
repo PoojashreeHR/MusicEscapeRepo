@@ -1,7 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -138,15 +137,23 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 displayNetworkDialog();
             } else {
                 ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
-               // if (spotifyInfos.size() > 0) {
-                dbHandler.updateSongWithAnalysingStatus(spotifyInfos);
+                if (spotifyInfos.size() > 0) {
+                    dbHandler.updateSongWithAnalysingStatus(spotifyInfos);
                     SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
-                new ScanAndAnalyseAsync().execute(spotifyModelMain);
-                Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
-                /*} else {
+                    new ScanAndAnalyseAsync().execute(spotifyModelMain);
+                    Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
+                } else {
+                    tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
+                    tv_excited.setText(dbHandler.getMoodCount("excited") + "");
+                    tv_happy.setText(dbHandler.getMoodCount("happy") + "");
+                    tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
+                    tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
+                    tv_bored.setText(dbHandler.getMoodCount("bored") + "");
+                    tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
+                    tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
                     testButton.setText("START");
                     mood_scanning.setVisibility(View.GONE);
-                }*/
+                }
             }
         }
     };
@@ -162,7 +169,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 for (int i = 0; i < model.getSongs().size(); i++) {
                     info.add(model.getSongs().get(i));
                 }
-                if(model.getSongs().size() > 0){
+                if (model.getSongs().size() > 0) {
                     updateScannedOnce();
                 }
                 dbHandler.updateSongsWithEnergyAndValence(info);
@@ -275,7 +282,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             @Override
             public void onClick(View v) {
 
-                if(!scannedOnce){
+                if (!scannedOnce) {
                     showNotScannedAlert();
                     return;
                 }
@@ -297,7 +304,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!scannedOnce){
+                if (!scannedOnce) {
                     showNotScannedAlert();
                     return;
                 }
@@ -603,7 +610,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             new CallScanApiInAsync().execute(dbHandler);
                         } else {
                             displayNetworkDialog();
-                            networkAlertDialog();
+                           // networkAlertDialog();
                             //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
                             testButton.setText(getResources().getString(R.string.start));
                             mood_scanning.setVisibility(View.GONE);
@@ -847,7 +854,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
+                                    displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount()),
+                                            String.valueOf(dbHandler.getExceptAnalysedCount()));
                                 }
                             });
 
@@ -861,7 +869,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
+                                    displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount())
+                                            , String.valueOf(dbHandler.getExceptAnalysedCount()));
                                 }
                             });
                         }
@@ -873,7 +882,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
+                            displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount())
+                                    , String.valueOf(dbHandler.getExceptAnalysedCount()));
                         }
                     });
                 }

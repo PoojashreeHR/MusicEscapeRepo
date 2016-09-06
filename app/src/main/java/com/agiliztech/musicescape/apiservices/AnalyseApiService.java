@@ -102,17 +102,15 @@ public class AnalyseApiService extends Service {
                                     e.printStackTrace();
                                 }
                             }
-
-                        } else {
-                            Intent intent = new Intent(SERVICE_EVENT);
-                            Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
-                            intent.putExtra("songresponse_analysed", "");
-                            LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
-                            stopSelf();
-                            break;
                         }
                     }else{
                         Toast.makeText(AnalyseApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SERVICE_EVENT);
+                        Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
+                        intent.putExtra("songresponse_analysed", "");
+                        LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
+                        stopSelf();
+                        break;
                     }
                 }
             }
