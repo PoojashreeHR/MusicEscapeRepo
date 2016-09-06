@@ -140,6 +140,14 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }
     };
 
+    private BroadcastReceiver mSetProcessingTextFromSpotifyApi = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String count = intent.getStringExtra("processing_count");
+            mood_scanning.setText("Processing " + count+" of "+songList.size());
+        }
+    };
+
     private BroadcastReceiver mAnalyseServiceBroadCast = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -413,6 +421,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSetProcessingTextFromSpotifyApi);
         super.onPause();
 
 
@@ -428,6 +437,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 new IntentFilter(SpotifyApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
+        LocalBroadcastManager.getInstance(this).registerReceiver(mSetProcessingTextFromSpotifyApi,
+                new IntentFilter(SpotifyApiService.SET_PROCESSING_EVEENT));
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
          scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);

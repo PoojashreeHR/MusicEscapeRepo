@@ -41,7 +41,7 @@ public class JourneyService {
         return sharedInstance;
     }
 
-    public List<DashboardItem> getAllPresetsAndFavouritesJourneys() {
+    public List<DashboardItem> getAllPresets() {
         List<Journey> journeys = null;
         List<DashboardItem> items = new ArrayList<DashboardItem>();
 
@@ -61,6 +61,13 @@ public class JourneyService {
             items.add(dbItem);
         }
 
+
+
+        return items;
+    }
+
+    public List<DashboardItem> getAllFavouritesJourneys(){
+        List<DashboardItem> items = new ArrayList<DashboardItem>();
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
         List<JourneySession> favsList = journeySessionDBHelper.getFavouriteJourneySessions();
         journeySessionDBHelper.close();
@@ -74,7 +81,6 @@ public class JourneyService {
                 items.add(dbItem);
             }
         }
-
         return items;
     }
 
@@ -1138,10 +1144,11 @@ public class JourneyService {
         return session;
     }
 
-    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray, SongMoodCategory current, SongMoodCategory target){
+    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray,
+                                                          SongMoodCategory current, SongMoodCategory target, boolean addToDb){
         List<Song>  songs = null;
         JourneySession session = null;
-        JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
+
 
         if(songsArray == null){
             songs = createPlaylistFromJourney(j.getJourneyEVArray());
@@ -1160,8 +1167,11 @@ public class JourneyService {
         session.setCurrentMood(current);
         session.setTargetMood(target);
 
-        journeySessionDBHelper.addJourneySession(session);
-        journeySessionDBHelper.close();
+        if(addToDb) {
+            JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
+            journeySessionDBHelper.addJourneySession(session);
+            journeySessionDBHelper.close();
+        }
 
         return session;
     }

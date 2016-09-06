@@ -66,6 +66,11 @@ public class SpotifyApiService extends Service {
                         data.put("limit", "1");
                         data.put("type", "track");
 
+                        Intent setProcessingIntent = new Intent(SET_PROCESSING_EVEENT);
+                        setProcessingIntent.putExtra("processing_count",""+i);
+                        LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(setProcessingIntent);
+
+
 
                         Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
                         try {
@@ -173,6 +178,8 @@ public class SpotifyApiService extends Service {
         }
         // return arrayName[0];
     }
+
+    public static final String SET_PROCESSING_EVEENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response_processing";
 
 
 }

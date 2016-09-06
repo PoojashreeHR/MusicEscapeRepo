@@ -43,8 +43,9 @@ public class NewDashboardActivity extends BaseMusicActivity {
     SharedPreferences dashboardPreference;
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
+    Button btn_default,btn_user;
     String dashboard;
-    private RecyclerView recyclerView;
+    private RecyclerView recyclerView,recyclerView_user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,31 @@ public class NewDashboardActivity extends BaseMusicActivity {
         setContentView(R.layout.activity_new_dashboard);
 
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
+
+        btn_default = (Button) findViewById(R.id.btn_default);
+        btn_default.setTextColor(Color.parseColor("#F2DD52"));
+        btn_default.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               btn_default.setTextColor(Color.parseColor("#F2DD52"));
+                btn_user.setTextColor(Color.parseColor("#FFFFFF"));
+                recyclerView.setVisibility(View.VISIBLE);
+                recyclerView_user.setVisibility(View.GONE);
+
+            }
+        });
+
+        btn_user = (Button) findViewById(R.id.btn_user);
+        btn_user.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                btn_user.setTextColor(Color.parseColor("#F2DD52"));
+                btn_default
+                        .setTextColor(Color.parseColor("#FFFFFF"));
+                recyclerView_user.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            }
+        });
 
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
         menu_draw = (ImageView) findViewById(R.id.menu_draw);
@@ -116,7 +142,10 @@ public class NewDashboardActivity extends BaseMusicActivity {
         });
 
          recyclerView = (RecyclerView) findViewById(R.id.history_rv);
+        recyclerView_user = (RecyclerView) findViewById(R.id.user_rv);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView_user.setLayoutManager(new LinearLayoutManager(this));
 
 
     }
@@ -125,11 +154,17 @@ public class NewDashboardActivity extends BaseMusicActivity {
     protected void onResume() {
         super.onResume();
         recyclerView.setAdapter(new DashboardAdapter(getJourneyData()));
+        recyclerView_user.setAdapter(new DashboardAdapter(getUserJourneyData()));
     }
 
     private List<DashboardItem> getJourneyData() {
         JourneyService journeyService = JourneyService.getInstance(this);
-        return journeyService.getAllPresetsAndFavouritesJourneys();
+        return journeyService.getAllPresets();
+    }
+
+    private List<DashboardItem> getUserJourneyData() {
+        JourneyService journeyService = JourneyService.getInstance(this);
+        return journeyService.getAllFavouritesJourneys();
     }
 
     private Size getGapsSize() {
@@ -172,6 +207,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
                         startPlaylistviewWithJourney(item.getJourney());
                     }
                 });
+                holder.tv_tracks.setText(item.getJourney().getTrackCount()+" Tracks");
             }
             else{
                 holder.journeyView.setJourneyPoints(item.getSession().getJourney().getJourneyDotsArray());
@@ -183,9 +219,11 @@ public class NewDashboardActivity extends BaseMusicActivity {
                         startPlaylistviewWithJourneySession(item.getSession());
                     }
                 });
+                holder.tv_tracks.setText(item.getSession().getJourney().getTrackCount()+" Tracks");
             }
 
             holder.journeyView.setEnabled(false);
+
 
 
         }
@@ -208,20 +246,22 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
             FrameLayout overlay;
             JourneyView journeyView;
-            TextView tv_title;
+            TextView tv_title, tv_tracks;
 
             public HistoryViewHolder(View itemView) {
                 super(itemView);
                 journeyView = (JourneyView) itemView.findViewById(R.id.journey);
                 tv_title = (TextView) itemView.findViewById(R.id.tv_title);
                 overlay = (FrameLayout) itemView.findViewById(R.id.overlay);
+                tv_tracks = (TextView) itemView.findViewById(R.id.tv_tracks);
             }
         }
     }
 
     private void startPlaylistviewWithJourney(Journey journey) {
         JourneyService journeyService = JourneyService.getInstance(this);
-        JourneySession session  = journeyService.createJourneySessionFromJourney(journey,null, SongMoodCategory.scAllSongs, SongMoodCategory.scAllSongs);
+        JourneySession session  = journeyService.createJourneySessionFromJourney(journey,null,
+                SongMoodCategory.scAllSongs, SongMoodCategory.scAllSongs, false);
         startPlaylistviewWithJourneySession(session);
     }
 
