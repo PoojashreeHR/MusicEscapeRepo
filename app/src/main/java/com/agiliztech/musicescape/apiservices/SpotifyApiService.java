@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
@@ -25,6 +26,7 @@ import retrofit2.Call;
  */
 public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
+    public static final String SET_PROCESSING_EVEENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response_processing";
     DBHandler handler;
     private String TAG = "SpotifyApiService.java";
 
@@ -70,6 +72,9 @@ public class SpotifyApiService extends Service {
                             Log.e(TAG, " SENDING QUERY TO SPOTIFY API : " + data.toString());
                             SpotifyMain main = call.execute().body();
                             if (main != null) {
+                                Intent setProcessingIntent = new Intent(SET_PROCESSING_EVEENT);
+                                setProcessingIntent.putExtra("processing_count",""+i);
+                                LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(setProcessingIntent);
                                 if (main.getTracks().getItems().size() > 0) {
                                     Log.e(TAG, " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
                                     String spotifyId = main.getTracks().getItems().get(0).getId();
@@ -80,6 +85,7 @@ public class SpotifyApiService extends Service {
                                     if (identifiedCount < 100 && sizeOfLoop == songNamesList.size() - 1) {
                                         Log.e(TAG, " PRINTING if (identifiedCount < 100 && sizeOfLoop == songNamesList.size()) : " + i);
                                         sendToAnalyseAPI();
+                                        stopSelf();
                                         break;
                                     } else if (identifiedCount - sentRows >= 100 || (identifiedCount - sentRows < 100 && sizeOfLoop == songNamesList.size() - 1)) {
                                         //globalRowCounter = globalRowCounter + 1;
@@ -93,6 +99,11 @@ public class SpotifyApiService extends Service {
                                         }
                                     }
                                 } else {
+                                    if(sizeOfLoop == songNamesList.size()-1){
+                                        handler.updateSongStatusForSpotifyError(name);
+                                        sendToAnalyseAPI();
+                                        break;
+                                    }
                                     handler.updateSongStatusForSpotifyError(name);
                                     //Log.e("NOT MATCHED ", " NOT MATCHING :  " + name);
                                     Log.e(TAG, " IF SPOTIFY ID NOT FOUND THEN STORE IN DB  : ORIGINAL NAME : " + name + "\n NEW NAME : " + originalName);
@@ -102,6 +113,7 @@ public class SpotifyApiService extends Service {
                             e.printStackTrace();
                         }
                     } else {
+                        Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                         Intent sendingIntent = new Intent(SERVICE_EVENT);
                         LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
                         break;

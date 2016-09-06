@@ -1,6 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
-import android.app.NotificationManager;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -16,11 +16,11 @@ import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.apiservices.AnalyseApiService;
@@ -78,6 +78,13 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private final String TAG = "MoodMappingActivity";
     DBHandler dbHandler;
 
+    private BroadcastReceiver mSetProcessingTextFromSpotifyApi = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String count = intent.getStringExtra("processing_count");
+            mood_scanning.setText("Processing " + count);
+        }
+    };
 
     private BroadcastReceiver mServiceBroadcast = new BroadcastReceiver() {
         @Override
@@ -124,12 +131,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             if (!UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
                 testButton.setText("START");
                 mood_scanning.setVisibility(View.GONE);
+                displayNetworkDialog();
             } else {
                 ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
-                SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
+               // if (spotifyInfos.size() > 0) {
+                    SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
                 new ScanAndAnalyseAsync().execute(spotifyModelMain);
                 Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
-
+                /*} else {
+                    testButton.setText("START");
+                    mood_scanning.setVisibility(View.GONE);
+                }*/
             }
         }
     };
@@ -138,7 +150,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String songJson = intent.getStringExtra("songresponse_analysed");
-            if(!songJson.equals("")){
+            if (!songJson.equals("")) {
                 final ResponseSongPollModel model = new Gson().fromJson(songJson, ResponseSongPollModel.class);
                 //Log.e("ON RECEIVE ANALYSED " ," : " + model.getSongs().get(0).getMood());
                 ArrayList<SongInfo> info = new ArrayList<>();
@@ -157,7 +169,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 testButton.setText(getResources().getString(R.string.start));
                 mood_scanning.setText("Scanning");
                 mood_scanning.setVisibility(View.GONE);
-            }else{
+            } else {
                 testButton.setText("START");
                 mood_scanning.setVisibility(View.GONE);
             }
@@ -197,7 +209,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             Log.e("SAME ", " SAME");
                             testButton.setText(getResources().getString(R.string.start));
                             isPlaying = false;
-                            displayAlertDialog();
+                            // displayAlertDialog();
+                            String analysedCount = String.valueOf(dbHandler.getAnalysedCount());
+                            String otherCount = String.valueOf(dbHandler.getExceptAnalysedCount());
+                            displayScannedCompletedDialog(analysedCount, otherCount);
                         } else {
                             Log.e("NOT SAME", " NOT SAME");
                             new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
@@ -354,6 +369,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSetProcessingTextFromSpotifyApi);
         super.onPause();
 
 
@@ -369,8 +385,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 new IntentFilter(SpotifyApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mAnalyseServiceBroadCast,
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
-
-
+        LocalBroadcastManager.getInstance(this).registerReceiver(mSetProcessingTextFromSpotifyApi,
+                new IntentFilter(SpotifyApiService.SET_PROCESSING_EVEENT));
     }
 
     @Override
@@ -380,6 +396,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mServiceBroadcast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mSpotifyServiceBroadCast);
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mAnalyseServiceBroadCast);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mSetProcessingTextFromSpotifyApi);
         if (sp != null) {
             if (playbackPaused) {
                 if (musicSrv != null) {
@@ -467,6 +484,48 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         }*//*
     }*/
 
+    public void displayScannedCompletedDialog(String analysedCount, String otherCount) {
+        final Dialog scanCompleteDialog = new Dialog(MoodMappingActivity.this);
+        scanCompleteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        scanCompleteDialog.setContentView(R.layout.scan_completed_dialog);
+
+        TextView tv = (TextView) scanCompleteDialog.findViewById(R.id.tv_content);
+
+        String defaultString = getResources().getString(R.string.scan_completed);
+        defaultString = defaultString.replace("mnop", analysedCount);
+        defaultString = defaultString.replace("qrst", otherCount);
+        tv.setText(defaultString);
+
+        Button btnLater = (Button) scanCompleteDialog.findViewById(R.id.btn_later);
+        btnLater.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scanCompleteDialog.dismiss();
+                mood_scanning.setVisibility(View.GONE);
+            }
+        });
+        Button btnNow = (Button) scanCompleteDialog.findViewById(R.id.btn_now);
+        btnNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
+                    scanCompleteDialog.dismiss();
+                    testButton.setText(getResources().getString(R.string.pause));
+                    mood_scanning.setText(" Processing ");
+                    mood_scanning.setVisibility(View.VISIBLE);
+                    new CallScanApiInAsync().execute(dbHandler);
+                } else {
+                    displayNetworkDialog();
+                    //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
+                    testButton.setText(getResources().getString(R.string.start));
+                    mood_scanning.setVisibility(View.GONE);
+                }
+            }
+        });
+        scanCompleteDialog.setCanceledOnTouchOutside(false);
+        scanCompleteDialog.show();
+    }
+
     public void displayAlertDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // String text = "SCAN COMPLETED";
@@ -475,14 +534,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        testButton.setText(getResources().getString(R.string.pause));
-                        mood_scanning.setText(" Processing ");
-                        mood_scanning.setVisibility(View.VISIBLE);
+
                         if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
+                            testButton.setText(getResources().getString(R.string.pause));
+                            mood_scanning.setText(" Processing ");
+                            mood_scanning.setVisibility(View.VISIBLE);
                             new CallScanApiInAsync().execute(dbHandler);
                         } else {
-                            Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
+                            displayNetworkDialog();
+                            //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
                             testButton.setText(getResources().getString(R.string.start));
+                            mood_scanning.setVisibility(View.GONE);
                         }
                     }
                 })
@@ -590,7 +652,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
                     callService(aVoid);
                 } else {
-                    Toast.makeText(MoodMappingActivity.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+                    displayNetworkDialog();
+                    //Toast.makeText(MoodMappingActivity.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 if (dbHandler.getSongsWithPendingStatus("pending").size() > 0) {
@@ -605,7 +668,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         //callSpotifyService.putExtra("batchId", batchid);
                         startService(callSpotifyService);
                     } else {
-                        Toast.makeText(MoodMappingActivity.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+                        displayNetworkDialog();
+                        //Toast.makeText(MoodMappingActivity.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                         testButton.setText(getResources().getString(R.string.start));
                     }
                 } else {
@@ -636,7 +700,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         protected String doInBackground(SpotifyModelMain... params) {
             String batchId = "";
-            if(UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
+            if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
 
                 ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
                 Log.e(TAG, " PASSING SpotifyModelMain object to Analyse API : " + new Gson().toJson(params[0]));
@@ -656,7 +720,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     e.printStackTrace();
                 }
                 return batchId;
-            }else{
+            } else {
+                displayNetworkDialog();
                 return batchId;
             }
             //return batchId;
@@ -718,7 +783,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    displayAlertDialog();
+                                    displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
                                 }
                             });
 
@@ -732,7 +797,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    displayAlertDialog();
+                                    displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
                                 }
                             });
                         }
@@ -744,7 +809,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            displayAlertDialog();
+                            displayScannedCompletedDialog("0",String.valueOf(dbHandler.getExceptAnalysedCount()));
                         }
                     });
                 }
@@ -783,5 +848,22 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         public void removeSongFromDB(DBHandler dbHandler, com.agiliztech.musicescape.models.Song model) {
             dbHandler.removeDeviceSongsFromDB(model.getpID());
         }
+    }
+
+    public void displayNetworkDialog() {
+        final Dialog networkDialog = new Dialog(MoodMappingActivity.this);
+        networkDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        networkDialog.setContentView(R.layout.network_dialog_layout);
+
+        Button button = (Button) networkDialog.findViewById(R.id.nt_dismiss_dialog);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                networkDialog.dismiss();
+                mood_scanning.setVisibility(View.GONE);
+            }
+        });
+        networkDialog.show();
+
     }
 }

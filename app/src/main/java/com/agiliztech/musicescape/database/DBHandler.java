@@ -299,7 +299,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
             cv.put(KEY_API_STATUS, "again_analysing");
-            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "\'" + spotifyInfos.get(i).getId() + "\'", null);
+            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "=\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
         db.close();
 
@@ -460,5 +460,18 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return null;
+    }
+
+    public int getAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
+    }
+    public int getExceptAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.rest.ApiClient;
@@ -101,14 +102,17 @@ public class AnalyseApiService extends Service {
                                     e.printStackTrace();
                                 }
                             }
+
+                        } else {
+                            Intent intent = new Intent(SERVICE_EVENT);
+                            Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
+                            intent.putExtra("songresponse_analysed", "");
+                            LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
+                            stopSelf();
+                            break;
                         }
                     }else{
-                        Intent intent = new Intent(SERVICE_EVENT);
-                        Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
-                        intent.putExtra("songresponse_analysed", "");
-                        LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
-                        stopSelf();
-                        break;
+                        Toast.makeText(AnalyseApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                     }
                 }
             }
