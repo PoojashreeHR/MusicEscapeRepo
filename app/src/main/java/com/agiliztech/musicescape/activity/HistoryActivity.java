@@ -1,21 +1,22 @@
 package com.agiliztech.musicescape.activity;
 
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.widget.CompoundButtonCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
+import android.view.Window;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -33,6 +34,8 @@ import java.util.List;
 
 public class HistoryActivity extends BaseMusicActivity {
 
+    final Context context = this;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +44,7 @@ public class HistoryActivity extends BaseMusicActivity {
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HistoryActivity.this,DashboardActivity.class);
+                Intent intent = new Intent(HistoryActivity.this,NewDashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -100,13 +103,7 @@ public class HistoryActivity extends BaseMusicActivity {
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
             holder.journeyView.setEnabled(false);
 
-            holder.overlay.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //startPlaylistviewWithJourney(session);
-                    saveSession(session);
-                }
-            });
+
 
             holder.tv_currentmood.setTextColor(SongsManager.colorForMood(session.getCurrentMood()));
             holder.tv_targetmood.setTextColor(SongsManager.colorForMood(session.getTargetMood()));
@@ -125,6 +122,38 @@ public class HistoryActivity extends BaseMusicActivity {
                 exception.printStackTrace();
             }
 
+            holder.overlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final Dialog dialogs = new Dialog(context);
+                    LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    View layout = inflater.inflate(R.layout.dialog_save_history, null);
+                    dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    Button btn_save = (Button) layout.findViewById(R.id.btn_save);
+                    btn_save.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            saveSession(session);
+                            dialogs.dismiss();
+                        }
+                    });
+                    Button btn_cancel = (Button) layout.findViewById(R.id.btn_cancel);
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialogs.dismiss();
+                        }
+                    });
+
+                    dialogs.setContentView(layout);
+                    dialogs.show();
+
+                /*dialogs.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT,800);*/
+                }
+            });
+
         }
 
         @Override
@@ -142,6 +171,7 @@ public class HistoryActivity extends BaseMusicActivity {
              JourneyView journeyView;
               TextView tv_currentmood,tv_targetmood,tv_playlistCreated;
              View right_view;
+             LinearLayout ll_saveHistory;
 
              public HistoryViewHolder(View itemView) {
                  super(itemView);
@@ -151,6 +181,14 @@ public class HistoryActivity extends BaseMusicActivity {
                  tv_targetmood = (TextView) itemView.findViewById(R.id.tv_targetmood);
                  tv_playlistCreated = (TextView) itemView.findViewById(R.id.tv_playlistCreated);
                  right_view = (View) itemView.findViewById(R.id.right_view);
+                 ll_saveHistory = (LinearLayout) itemView.findViewById(R.id.ll_saveHistory);
+
+
+
+
+
+
+
 
              }
          }

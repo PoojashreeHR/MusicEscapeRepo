@@ -304,7 +304,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LibraryActivity.this, DashboardActivity.class);
+                Intent intent = new Intent(LibraryActivity.this, NewDashboardActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -324,10 +324,10 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 //songScan.setBackgroundResource(R.drawable.menu_buttons_song_scan_active);
-                Toast.makeText(getApplicationContext(), "Button clicked!",
-                        Toast.LENGTH_SHORT).show();
                 songScan.setFocusableInTouchMode(false);
                 songScan.setFocusable(false);
+                Intent intent = new Intent(LibraryActivity.this, MoodMappingActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

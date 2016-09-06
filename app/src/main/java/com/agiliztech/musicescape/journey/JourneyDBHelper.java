@@ -105,8 +105,8 @@ public class JourneyDBHelper extends SQLiteOpenHelper {
 
         try{
             Cursor cursor = db.rawQuery("select * from "+Global.JOURNEY_TBL_NAME
-                    +" where "+whereClause+" = "+value
-                    +" order by "+COL_NAME,null);
+                    +" where "+whereClause+" = '"+value
+                    +"' order by "+COL_NAME,null);
 
             if (cursor .moveToFirst()) {
                 journeys = new ArrayList<>();

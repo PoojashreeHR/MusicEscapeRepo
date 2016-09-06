@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Global {
     public static final String DBNAME = "MusEscDB";
-    public static final int DBVERSION = 1;
+    public static final int DBVERSION = 2;
 
     public static final String JOURNEY_TBL_NAME = "TblJourney";
     public static final String JOURNEY_SESSION_TBL_NAME = "TblJourneySession";
@@ -19,4 +19,5 @@ public class Global {
     public static String INTROSCREENSSHOWN = "introScreensShown";
     public static boolean isLibPlaylist;
     public static ArrayList<Song> libPlaylistSongs;
+    public static String isScannedOnce = "isScannedOnce";
 }

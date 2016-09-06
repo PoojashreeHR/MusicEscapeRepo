@@ -1,13 +1,16 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -37,6 +40,7 @@ import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.apimodels.SpotifyModelMain;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.google.gson.Gson;
@@ -77,7 +81,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
     private final String TAG = "MoodMappingActivity";
     DBHandler dbHandler;
-
+    final Context context = this;
     private BroadcastReceiver mSetProcessingTextFromSpotifyApi = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -135,6 +139,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             } else {
                 ArrayList<SpotifyInfo> spotifyInfos = dbHandler.getSongsWithServerIdAndSpotifyId();
                // if (spotifyInfos.size() > 0) {
+                dbHandler.updateSongWithAnalysingStatus(spotifyInfos);
                     SpotifyModelMain spotifyModelMain = new SpotifyModelMain(UtilityClass.getDeviceId(MoodMappingActivity.this), spotifyInfos);
                 new ScanAndAnalyseAsync().execute(spotifyModelMain);
                 Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
@@ -157,6 +162,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 for (int i = 0; i < model.getSongs().size(); i++) {
                     info.add(model.getSongs().get(i));
                 }
+                if(model.getSongs().size() > 0){
+                    updateScannedOnce();
+                }
                 dbHandler.updateSongsWithEnergyAndValence(info);
                 tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
                 tv_excited.setText(dbHandler.getMoodCount("excited") + "");
@@ -176,8 +184,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
         }
     };
+
+    private void updateScannedOnce() {
+        scannedOnce = true;
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putBoolean(Global.isScannedOnce, scannedOnce)
+                .commit();
+
+    }
+
     SharedPreferences settings;
     private ArrayList<Song> totalSongs;
+    private boolean scannedOnce;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,13 +274,21 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         library.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                if(!scannedOnce){
+                    showNotScannedAlert();
+                    return;
+                }
+
                 if (settings.getBoolean("first_time_library", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("library", "Library");
                     startActivity(intent);
+                    finish();
                 } else {
                     Intent intent = new Intent(getApplicationContext(), LibraryActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -271,13 +297,20 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!scannedOnce){
+                    showNotScannedAlert();
+                    return;
+                }
+
                 if (settings.getBoolean("is_first_time", true)) {
                     Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
                     intent.putExtra("dashboard", "Dashboard");
                     startActivity(intent);
+                    finish();
                 } else {
-                    Intent intent = new Intent(getApplicationContext(), DashboardActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), NewDashboardActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });
@@ -305,6 +338,31 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         //slidingUpPanelLayout.setScrollableView(mRecyclerView);
         //setup controller
         setController();
+
+    }
+
+    private void showNotScannedAlert() {
+        //Toast.makeText(MoodMappingActivity.this, getString(R.string.no_songs), Toast.LENGTH_SHORT).show();
+
+        final Dialog dialogs = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.dialog_waitforscan, null);
+        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button btn_dismissr = (Button) layout.findViewById(R.id.btn_dismissr);
+        btn_dismissr.setTypeface(tf);
+        TextView tv_scanCompletion = (TextView) layout.findViewById(R.id.tv_scanCompletion);
+        TextView tv_completion = (TextView) layout.findViewById(R.id.tv_completion);
+        tv_scanCompletion.setTypeface(tf);
+        tv_completion.setTypeface(tf);
+        btn_dismissr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogs.dismiss();
+            }
+        });
+        dialogs.setContentView(layout);
+        dialogs.show();
 
     }
 
@@ -387,6 +445,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 new IntentFilter(AnalyseApiService.SERVICE_EVENT));
         LocalBroadcastManager.getInstance(this).registerReceiver(mSetProcessingTextFromSpotifyApi,
                 new IntentFilter(SpotifyApiService.SET_PROCESSING_EVEENT));
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);
+
     }
 
     @Override
@@ -530,7 +591,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         // String text = "SCAN COMPLETED";
         //mood_scanning.setVisibility(View.GONE);
-        builder.setTitle("Scan Completed")
+        builder.setMessage("Scan Completed. Do you want to do analyse now ?")
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -542,6 +603,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             new CallScanApiInAsync().execute(dbHandler);
                         } else {
                             displayNetworkDialog();
+                            networkAlertDialog();
                             //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
                             testButton.setText(getResources().getString(R.string.start));
                             mood_scanning.setVisibility(View.GONE);
@@ -554,7 +616,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         testButton.setText(getResources().getString(R.string.start));
                         mood_scanning.setVisibility(View.GONE);
                     }
-                }).setMessage("Message").show();
+                }).show();
 
     }
 
@@ -593,23 +655,25 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     }
 
     public void networkAlertDialog() {
-        LayoutInflater factory = LayoutInflater.from(this);
-        final View networkDialogView = factory.inflate(R.layout.network_dialog_layout, null);
-        final AlertDialog networkDialog = new AlertDialog.Builder(this).create();
-        networkDialog.setView(networkDialogView);
-        TextView scan_msg = (TextView) networkDialogView.findViewById(R.id.nt_dialog_title);
-        TextView text_dialog = (TextView) networkDialogView.findViewById(R.id.nt_text_dialog);
-        scan_msg.setTypeface(tf);
-        text_dialog.setTypeface(tf);
-        networkDialogView.findViewById(R.id.nt_dismiss_dialog).setOnClickListener(new View.OnClickListener() {
-
+        final Dialog network_dialog = new Dialog(context);
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.network_dialog_layout, null);
+        network_dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        network_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        Button nt_dismiss_dialog = (Button) layout.findViewById(R.id.nt_dismiss_dialog);
+        nt_dismiss_dialog.setTypeface(tf);
+        TextView nt_dialog_title = (TextView) layout.findViewById(R.id.nt_dialog_title);
+        TextView nt_text_dialog = (TextView) layout.findViewById(R.id.nt_text_dialog);
+        nt_dialog_title.setTypeface(tf);
+        nt_text_dialog.setTypeface(tf);
+        nt_dismiss_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //your business logic
-                networkDialog.dismiss();
+                network_dialog.dismiss();
             }
         });
-        networkDialog.show();
+        network_dialog.setContentView(layout);
+        network_dialog.show();
     }
 
     class CallScanApiInAsync extends AsyncTask<DBHandler, Void, String> {

@@ -40,7 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         dashboardButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SettingsActivity.this,DashboardActivity.class);
+                Intent intent = new Intent(SettingsActivity.this,NewDashboardActivity.class);
                 startActivity(intent);
                 finish();
             }

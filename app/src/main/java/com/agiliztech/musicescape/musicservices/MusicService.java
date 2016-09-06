@@ -102,6 +102,9 @@ public class MusicService extends Service implements
         List<JourneySong> journeySongList = session.getSongs();
 
         ArrayList<Song> songList = new ArrayList<>();
+        if(journeySongList == null){
+            return;
+        }
         for (int i = 0; i < journeySongList.size(); i++) {
             songList.add(journeySongList.get(i).getSong());
         }
@@ -311,7 +314,7 @@ public class MusicService extends Service implements
                 //songPosn = 0;
                 player.stop();
             }else{
-                playSong();
+                //playSong();
             }
         } else if(repeatSingleSong){
             //songPosn = songPosn;

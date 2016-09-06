@@ -299,7 +299,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
             cv.put(KEY_API_STATUS, "again_analysing");
-            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "=\'" + spotifyInfos.get(i).getId() + "\'", null);
+            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + " =\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
         db.close();
 

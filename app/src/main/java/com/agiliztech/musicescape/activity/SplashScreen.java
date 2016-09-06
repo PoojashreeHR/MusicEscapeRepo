@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.utils.Global;
 
 public class SplashScreen extends AppCompatActivity {
 
@@ -18,7 +20,6 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
-
         Typeface tf = Typeface.createFromAsset(getAssets(),
                 "fonts/MontserratRegular.ttf");
         TextView content = (TextView) findViewById(R.id.textView10);
@@ -31,7 +32,7 @@ public class SplashScreen extends AppCompatActivity {
             public void onClick(View v) {
                 //isStoragePermissionGranted();
                 Intent intent = new Intent(getApplicationContext(), SlidingImage.class);
-                intent.putExtra("moodMapping","MoodMapping");
+               // intent.putExtra("moodMapping","MoodMapping");
                 startActivity(intent);
                 finish();
             }
@@ -42,7 +43,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), PrivacyActivity.class);
-                intent.putExtra("splash", "SlashScreen");
+           //     intent.putExtra("splash", "SlashScreen");
                 startActivity(intent);
             }
         });

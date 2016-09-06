@@ -80,6 +80,9 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
         catch (Exception e){
             UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
         }
     }
 
@@ -107,6 +110,9 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
         catch (Exception e){
             UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
         }
         return journeys;
     }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 
 import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.models.DashboardItem;
 import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
@@ -40,33 +41,41 @@ public class JourneyService {
         return sharedInstance;
     }
 
-    public List<Journey> getAllFavouriteAndPresetsJourneys() {
+    public List<DashboardItem> getAllPresetsAndFavouritesJourneys() {
         List<Journey> journeys = null;
+        List<DashboardItem> items = new ArrayList<DashboardItem>();
+
+        generatePresetsIfRequired();
 
         JourneyDBHelper journeyDBHelper = new JourneyDBHelper(mContext);
-        List<Journey> presetsList = journeyDBHelper.getJourneysBy(JourneyDBHelper.COL_GEN_BY, "Presets");
+        List<Journey> presetsList = journeyDBHelper.getJourneysBy(JourneyDBHelper.COL_GEN_BY, "Preset");
         journeyDBHelper.close();
 
         if (presetsList != null && presetsList.size() > 0) {
             journeys = presetsList;
         }
 
+        for(Journey j : journeys){
+            DashboardItem dbItem = new DashboardItem(true);
+            dbItem.setJourney(j);
+            items.add(dbItem);
+        }
+
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
         List<JourneySession> favsList = journeySessionDBHelper.getFavouriteJourneySessions();
         journeySessionDBHelper.close();
 
-        if (favsList.size() > 0) {
+        if (favsList !=null && favsList.size() > 0) {
 
-            if (journeys == null) {
-                journeys = new ArrayList<Journey>();
-            }
 
             for (JourneySession session : favsList) {
-                journeys.add(session.getJourney());
+                DashboardItem dbItem = new DashboardItem(false);
+                dbItem.setSession(session);
+                items.add(dbItem);
             }
         }
 
-        return journeys;
+        return items;
     }
 
     public void unFavouriteJourney(JourneySession session) {
@@ -83,7 +92,7 @@ public class JourneyService {
         JourneyDBHelper journeyDBHelper = new JourneyDBHelper(mContext);
         List<Journey> allJourneys = journeyDBHelper.getAllJourneys();
 
-        if (allJourneys.size() > 0) {
+        if (allJourneys == null || allJourneys.size() > 0) {
             createCheerUpJourney();
             createWorkOutJourney();
             createPartyJourney();

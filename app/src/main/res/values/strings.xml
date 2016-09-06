@@ -26,6 +26,7 @@
     <string name="dialog_msg">We\'ve finished tagging\n your library.\n\n Now all your songs will\n appear in playlist\n and mood journey</string>
     <string name="nt_dialog_msg">Looks like you\'re not on a\n network. \n To speed things up,and\n please enable your network</string>
     <string name="pref_previously_started">1</string>
+    <string name="no_songs">You haven\'t scanned yet. please scan first</string>
     <string name="splash_msg">Takes you on a journey through emotions using your own music</string>
     <string name="start">START</string>
     <string name="pause">PAUSE</string>
