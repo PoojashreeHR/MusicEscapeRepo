@@ -557,15 +557,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         final Dialog scanCompleteDialog = new Dialog(MoodMappingActivity.this);
         scanCompleteDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         scanCompleteDialog.setContentView(R.layout.scan_completed_dialog);
-
+        scanCompleteDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         TextView tv = (TextView) scanCompleteDialog.findViewById(R.id.tv_content);
-
+        TextView tv_heading = (TextView) scanCompleteDialog.findViewById(R.id.tv_heading);
+        tv_heading.setTypeface(tf);
+        tv.setTypeface(tf);
         String defaultString = getResources().getString(R.string.scan_completed);
         defaultString = defaultString.replace("mnop", analysedCount);
         defaultString = defaultString.replace("qrst", otherCount);
         tv.setText(defaultString);
 
         Button btnLater = (Button) scanCompleteDialog.findViewById(R.id.btn_later);
+        btnLater.setTypeface(tf);
         btnLater.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -574,6 +577,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         });
         Button btnNow = (Button) scanCompleteDialog.findViewById(R.id.btn_now);
+        btnNow.setTypeface(tf);
         btnNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -584,6 +588,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     mood_scanning.setVisibility(View.VISIBLE);
                     new CallScanApiInAsync().execute(dbHandler);
                 } else {
+                    scanCompleteDialog.dismiss();
                     displayNetworkDialog();
                     //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
                     testButton.setText(getResources().getString(R.string.start));
@@ -929,7 +934,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         final Dialog networkDialog = new Dialog(MoodMappingActivity.this);
         networkDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         networkDialog.setContentView(R.layout.network_dialog_layout);
-
+        networkDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         Button button = (Button) networkDialog.findViewById(R.id.nt_dismiss_dialog);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

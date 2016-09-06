@@ -36,7 +36,7 @@ import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
-import com.agiliztech.musicescape.utils.RecyclerViewPagerAdapter;
+
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
