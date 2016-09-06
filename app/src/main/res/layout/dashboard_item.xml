@@ -3,6 +3,7 @@
     android:layout_width="162dp"
     android:id="@+id/ll_saveHistory"
     android:layout_height="270dp"
+    android:background="@drawable/dashboard_bg"
     android:orientation="vertical">
 
 

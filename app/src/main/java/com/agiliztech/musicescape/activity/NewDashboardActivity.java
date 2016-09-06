@@ -36,6 +36,8 @@ import com.agiliztech.musicescape.utils.SongsManager;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class NewDashboardActivity extends BaseMusicActivity {
 
@@ -46,6 +48,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
     Button btn_default,btn_user;
     String dashboard;
     private RecyclerView recyclerView,recyclerView_user;
+    private Timer highlightTimer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
             }
         });
 
+        highlightTimer = new Timer();
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
         menu_draw = (ImageView) findViewById(R.id.menu_draw);
         menu_draw.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +99,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
                     startActivity(intent);
                    // finish();
                 }
+
             }
         });
 
@@ -114,6 +119,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
                     startActivity(intent);
                     //finish();
                 }
+
             }
         });
 
@@ -125,6 +131,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 menu_activeSettings.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(NewDashboardActivity.this,SettingsActivity.class);
                 startActivity(intent);
+
                 //finish();
             }
         });
@@ -137,6 +144,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 menu_activelibrary.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(NewDashboardActivity.this,LibraryActivity.class);
                 startActivity(intent);
+
                 //finish();
             }
         });
@@ -155,6 +163,18 @@ public class NewDashboardActivity extends BaseMusicActivity {
         super.onResume();
         recyclerView.setAdapter(new DashboardAdapter(getJourneyData()));
         recyclerView_user.setAdapter(new DashboardAdapter(getUserJourneyData()));
+        resetSelected();
+    }
+
+    private void resetSelected() {
+        menu_activedraw.setVisibility(View.GONE);
+        menu_activehistory.setVisibility(View.GONE);
+        menu_activelibrary.setVisibility(View.GONE);
+        menu_activeSettings.setVisibility(View.GONE);
+        menu_draw.setVisibility(View.VISIBLE);
+        menu_history.setVisibility(View.VISIBLE);
+        menu_library.setVisibility(View.VISIBLE);
+        menu_settings.setVisibility(View.VISIBLE);
     }
 
     private List<DashboardItem> getJourneyData() {
