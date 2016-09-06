@@ -26,7 +26,6 @@ import retrofit2.Call;
  */
 public class SpotifyApiService extends Service {
     public static final String SERVICE_EVENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response";
-    public static final String SET_PROCESSING_EVEENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response_processing";
     DBHandler handler;
     private String TAG = "SpotifyApiService.java";
     private int errorCount = 0;
@@ -68,16 +67,18 @@ public class SpotifyApiService extends Service {
                         data.put("limit", "1");
                         data.put("type", "track");
 
+                        Intent setProcessingIntent = new Intent(SET_PROCESSING_EVEENT);
+                        setProcessingIntent.putExtra("processing_count",""+i);
+                        LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(setProcessingIntent);
+
+
 
                         Call<SpotifyMain> call = apiInterface.spotifyApiCalling(data);
                         try {
                             Log.e(TAG, " SENDING QUERY TO SPOTIFY API : " + data.toString());
                             SpotifyMain main = call.execute().body();
                             if (main != null) {
-                                Intent setProcessingIntent = new Intent(SET_PROCESSING_EVEENT);
-                                setProcessingIntent.putExtra("processing_count",""+i);
-                                LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(setProcessingIntent);
-                                if (main.getTracks().getItems().size() > 0) {
+                                 if (main.getTracks().getItems().size() > 0) {
                                     Log.e(TAG, " SPOTIFY ID " + main.getTracks().getItems().get(0).getId());
                                     String spotifyId = main.getTracks().getItems().get(0).getId();
                                     Log.e(TAG, " IF SPOTIFY ID FOUND THEN STORE IN DB  : " + spotifyId);
@@ -185,6 +186,8 @@ public class SpotifyApiService extends Service {
         }
         // return arrayName[0];
     }
+
+    public static final String SET_PROCESSING_EVEENT = "com.agiliztech.musicescape.musicservices.MusicService" + "_sportify_event_response_processing";
 
 
 }
