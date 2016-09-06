@@ -52,6 +52,6 @@ public interface ApiInterface {
     //SongRetag
     //Response String (HTTP 201)
     @POST("api/v3/songs/retag")
-    Call<String> retagSongs(@Body SongRetagMain retagMain);
+    Call<Void> retagSongs(@Body SongRetagMain retagMain);
 
 }

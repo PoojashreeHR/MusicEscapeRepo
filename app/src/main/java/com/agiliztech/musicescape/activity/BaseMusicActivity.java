@@ -91,11 +91,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             String curSongJson = intent.getStringExtra("currentSong");
             Song song = new Gson().fromJson(curSongJson, Song.class);
-            if(song == null) {
+            if (song == null) {
                 return;
             }
-                tv_songname.setText(song.getSongName());
-                tv_song_detail.setText(song.getArtist().getArtistName());
+            tv_songname.setText(song.getSongName());
+            tv_song_detail.setText(song.getArtist().getArtistName());
 
             updateMusicPlayerByMood();
             ArrayList<Song> songs = songList;
@@ -119,19 +119,16 @@ public class BaseMusicActivity extends AppCompatActivity implements
         if (Global.isJourney) {
             List<JourneySong> jSongs = JourneyService.getInstance(this).getCurrentSession().getSongs();
             ArrayList<Song> currentSongs = new ArrayList<>();
-            for (int i = 0; jSongs!= null && i < jSongs.size(); i++) {
+            for (int i = 0; jSongs != null && i < jSongs.size(); i++) {
                 if (jSongs.get(i).getSong() != null) {
                     currentSongs.add(jSongs.get(i).getSong());
                 }
             }
             // Collections.reverse(currentSongs);
             return currentSongs;
-        }
-
-        else if(Global.isLibPlaylist){
+        } else if (Global.isLibPlaylist) {
             return Global.libPlaylistSongs;
-        }
-        else {
+        } else {
             DBHandler dbHandler = new DBHandler(this);
             return dbHandler.getAllSongsFromDB();
         }
@@ -369,7 +366,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         // TODO Auto-generated method stub
 
 
-        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music,null);
+        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null);
         // Your base layout here
         contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
         getLayoutInflater().inflate(layoutResID, contentFrame, true);
@@ -648,8 +645,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             Bitmap backgroundBmp = BitmapFactory.decodeResource(getResources(), colorp);
             background = new BitmapDrawable(getResources(), backgroundBmp);
             layerDrawable.setDrawableByLayerId(android.R.id.background, background);
-        }
-        catch (ClassCastException e){
+        } catch (ClassCastException e) {
             Log.d("changeSeekbarColor", e.getMessage());
             Log.d("changeSeekbarColor", "Using only basic color");
         }

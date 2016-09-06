@@ -610,7 +610,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             new CallScanApiInAsync().execute(dbHandler);
                         } else {
                             displayNetworkDialog();
-                           // networkAlertDialog();
+                            // networkAlertDialog();
                             //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
                             testButton.setText(getResources().getString(R.string.start));
                             mood_scanning.setVisibility(View.GONE);
@@ -875,7 +875,20 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             });
                         }
                     } else {
-                        Log.e("UP TO DATE", " ");
+                        if (dbHandler.getAnalysedCount() != songs.size()) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount())
+                                            , String.valueOf(dbHandler.getExceptAnalysedCount()));
+                                }
+                            });
+                        } else {
+                            /** Display A dialog which says, all songs are categorized
+                             *  CALL dialog_scancomplete.xml
+                             * */
+                        }
+                        //Log.e("UP TO DATE", " ");
                     }
                 } else {
                     storeSongsINDB(params[0], songs);
