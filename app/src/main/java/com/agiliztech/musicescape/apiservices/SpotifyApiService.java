@@ -28,6 +28,7 @@ public class SpotifyApiService extends Service {
     DBHandler handler;
     private String TAG = "SpotifyApiService.java";
     private int errorCount = 0;
+    private boolean sentToAnalyseOnce;
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -115,6 +116,9 @@ public class SpotifyApiService extends Service {
                     //rare case where all spotify calls are empty
                     broadcastEvent();
                 }
+                if(!sentToAnalyseOnce){
+                    broadcastEvent();
+                }
                 stopSelf();
             }
         }.start();
@@ -127,7 +131,7 @@ public class SpotifyApiService extends Service {
     }
 
     public void sendToAnalyseAPI() {
-
+         sentToAnalyseOnce = true;
         ArrayList<SpotifyInfo> spotifyInfos = handler.getSongsWithServerIdAndSpotifyId();
 
         // Send TO ANALYSE
