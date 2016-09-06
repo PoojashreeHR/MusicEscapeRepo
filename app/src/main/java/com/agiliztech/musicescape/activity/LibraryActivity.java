@@ -3,13 +3,19 @@ package com.agiliztech.musicescape.activity;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,10 +36,12 @@ import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
+import com.agiliztech.musicescape.utils.RecyclerViewPagerAdapter;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -62,9 +70,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         private HashMap<String, Integer> mMapIndex;
         String mood;
         Context context;
-
-
-
+       //List<SwipedState> list ;
 
         @Override
         public HashMap<String, Integer> getMapIndex() {
@@ -78,16 +84,17 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             public ImageView rv_swap_library;
             public SwipeRevealLayout swipe_layout_library;
             private ImageView mood_image;
-
-            public MyViewHolder(View view, TextView v) {
+            private ViewPager viewPager;
+            public MyViewHolder(View view) {
                 super(view);
-                mTextView = v;
+                //mTextView = v;
                 title = (TextView) view.findViewById(R.id.song_title);
                 artist = (TextView) view.findViewById(R.id.song_artist);
                 songlistLayout = (LinearLayout) view.findViewById(R.id.songListLayout);
-                rv_swap_library = (ImageView) view.findViewById(R.id.rv_swap_library);
-                swipe_layout_library = (SwipeRevealLayout) view.findViewById(R.id.swipe_layout_library);
+                //rv_swap_library = (ImageView) view.findViewById(R.id.rv_swap_library);
+                //swipe_layout_library = (SwipeRevealLayout) view.findViewById(R.id.swipe_layout_library);
                 mood_image = (ImageView) view.findViewById(R.id.mood_image);
+               // viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
             }
         }
@@ -98,18 +105,42 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             mMapIndex = mapIndex;
             this.mood = mood;
             this.context = context;
+//            list = new ArrayList<>();
+//            for (int i = 0; i < songList.size(); i++) {
+//                list.add(i, SwipedState.SHOWING_PRIMARY_CONTENT);
+//            }
+
+
         }
 
         @Override
         public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
+           /* ViewPager v = (ViewPager) LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.song_list_row, parent, false);
+            RecyclerViewPagerAdapter adapter = new RecyclerViewPagerAdapter();
+
+            ((ViewPager) v.findViewById(R.id.viewPager)).setAdapter(adapter);
+
+            //Perhaps the first most crucial part. The ViewPager loses its width information when it is put
+            //inside a RecyclerView. It needs to be explicitly resized, in this case to the width of the
+            //screen. The height must be provided as a fixed value.
+            DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
+            v.getLayoutParams().width = displayMetrics.widthPixels;
+            v.requestLayout();
+
+            MyViewHolder vh = new MyViewHolder(v);
+            return vh;*/
+
+
             View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_row, parent, false);
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.side_index_item, parent, false);
-            return new MyViewHolder(itemView, (TextView) v);
+            return new MyViewHolder(itemView);
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        public void onBindViewHolder(final MyViewHolder holder, int position) {
             final int pos = position;
 
             Song model = songList.get(position);
@@ -167,14 +198,48 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             }
             holder.artist.setText(model.getArtist().getArtistName());
             holder.songlistLayout.setTag(pos);
+           /* holder.viewPager.setCurrentItem(list.get(position).ordinal());
+            holder.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                int previousPagePosition = 0;
 
-            holder.rv_swap_library.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onPageScrolled(int pagePosition, float positionOffset, int positionOffsetPixels) {
+                    if (pagePosition == previousPagePosition)
+                        return;
+
+                    switch (pagePosition) {
+                        case 0:
+                            list.set(pos, SwipedState.SHOWING_PRIMARY_CONTENT);
+                            break;
+                        case 1:
+                            list.set(pos, SwipedState.SHOWING_SECONDARY_CONTENT);
+                            break;
+
+                    }
+                    previousPagePosition = pagePosition;
+
+                    //Log.i("MyAdapter", "PagePosition " + position + " set to " + mItemSwipedStates.get(position).ordinal());
+                }
+
+                @Override
+                public void onPageSelected(int pagePosition) {
+                    //This method keep incorrectly firing as the RecyclerView scrolls.
+                    //Use the one above instead
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+            });
+*/
+         /*   holder.rv_swap_library.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     songRetagInLibrary(position);
                 }
             });
-
+*/
+            //((ViewPager) holder.viewPager).setCurrentItem(list.get(position));
             holder.songlistLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -205,7 +270,10 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
            setUpPlaylist();
         }
     }
-
+    private enum SwipedState {
+        SHOWING_PRIMARY_CONTENT,
+        SHOWING_SECONDARY_CONTENT
+    }
 
     @TargetApi(Build.VERSION_CODES.M)
     @Override
@@ -335,6 +403,60 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(libAdapter);
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+                                  RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder instanceof LibraryRecyclerView.MyViewHolder) return 1f;
+                return super.getSwipeThreshold(viewHolder);
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                Toast.makeText(LibraryActivity.this, "Swiped", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
+                return makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE,swipeFlags);
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+                    // Get RecyclerView item from the ViewHolder
+                    View itemView = viewHolder.itemView;
+
+                    Paint p = new Paint();
+                    if (dX > 0) {
+            /* Set your color for positive displacement */
+
+                        // Draw Rect with varying right side, equal to displacement dX
+                        c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
+                                (float) itemView.getBottom(), p);
+                    } else {
+            /* Set your color for negative displacement */
+
+                        // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
+                        c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
+                                (float) itemView.getRight(), (float) itemView.getBottom(), p);
+                    }
+
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                }
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
         // }
 
 

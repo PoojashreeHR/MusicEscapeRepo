@@ -461,4 +461,17 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return null;
     }
+
+    public int getAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
+    }
+    public int getExceptAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
+    }
 }
