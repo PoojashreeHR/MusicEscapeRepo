@@ -55,10 +55,13 @@ public class JourneyService {
             journeys = presetsList;
         }
 
-        for(Journey j : journeys){
-            DashboardItem dbItem = new DashboardItem(true);
-            dbItem.setJourney(j);
-            items.add(dbItem);
+        if (journeys != null) {
+            for (Journey j : journeys) {
+                DashboardItem dbItem = new DashboardItem(true);
+                dbItem.setJourney(j);
+                items.add(dbItem);
+
+            }
         }
 
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);

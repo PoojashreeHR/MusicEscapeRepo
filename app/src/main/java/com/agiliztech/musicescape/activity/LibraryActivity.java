@@ -34,9 +34,9 @@ import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewI
 import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewItemDecoration;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Song;
+import com.agiliztech.musicescape.models.SongUiObj;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
-import com.agiliztech.musicescape.utils.RecyclerViewPagerAdapter;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
@@ -66,10 +66,11 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
 
     public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerView.MyViewHolder> implements FastScrollRecyclerViewInterface {
-        List<Song> songList;
+        List<SongUiObj> songList;
         private HashMap<String, Integer> mMapIndex;
         String mood;
         Context context;
+        int SONGUI = 0, ALPHAUI = 1;
        //List<SwipedState> list ;
 
         @Override
@@ -77,7 +78,19 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             return this.mMapIndex;
         }
 
-        public class MyViewHolder extends RecyclerView.ViewHolder {
+        private class TextViewHolder extends MyViewHolder {
+
+            public TextView alphabet;
+
+            public TextViewHolder(View itemView) {
+                super(itemView);
+                alphabet = (TextView) itemView.findViewById(R.id.alphabet);
+            }
+
+
+        }
+
+        private class SongViewHolder extends MyViewHolder{
             public LinearLayout songlistLayout;
             public TextView mTextView;
             public TextView title, artist;
@@ -85,7 +98,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             public SwipeRevealLayout swipe_layout_library;
             private ImageView mood_image;
             private ViewPager viewPager;
-            public MyViewHolder(View view) {
+            public SongViewHolder(View view) {
                 super(view);
                 //mTextView = v;
                 title = (TextView) view.findViewById(R.id.song_title);
@@ -94,12 +107,20 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 //rv_swap_library = (ImageView) view.findViewById(R.id.rv_swap_library);
                 //swipe_layout_library = (SwipeRevealLayout) view.findViewById(R.id.swipe_layout_library);
                 mood_image = (ImageView) view.findViewById(R.id.mood_image);
-               // viewPager = (ViewPager) view.findViewById(R.id.viewPager);
+                // viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
             }
         }
 
-        public LibraryRecyclerView(List<Song> songList, HashMap<String, Integer> mapIndex,
+
+        public class MyViewHolder extends RecyclerView.ViewHolder {
+
+            public MyViewHolder(View itemView) {
+                super(itemView);
+            }
+        }
+
+        public LibraryRecyclerView(List<SongUiObj> songList, HashMap<String, Integer> mapIndex,
                                    String mood,  Context context) {
             this.songList = songList;
             mMapIndex = mapIndex;
@@ -132,72 +153,93 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             MyViewHolder vh = new MyViewHolder(v);
             return vh;*/
 
-
-            View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_row, parent, false);
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.side_index_item, parent, false);
-            return new MyViewHolder(itemView);
+            if(viewType == SONGUI) {
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_row, parent, false);
+                View v = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.side_index_item, parent, false);
+                return new SongViewHolder(itemView);
+            }
+            else{
+                View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_alphabet_row, parent, false);
+                return new TextViewHolder(itemView);
+            }
         }
 
         @Override
-        public void onBindViewHolder(final MyViewHolder holder, int position) {
+        public int getItemViewType(int position) {
+            SongUiObj modelUi = songList.get(position);
+            if(modelUi.isSong()){
+                return SONGUI;
+            }
+            else{
+                return ALPHAUI;
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(final MyViewHolder myViewholder, int position) {
             final int pos = position;
 
-            Song model = songList.get(position);
-            //holder.mTextView.setText(model.getArtist());
-            holder.title.setText(model.getSongName());
-            if (mood.contains("depressed")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scDepressed));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
-            } else if (mood.contains("happy")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scHappy));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_happy_library_inactive));
-            } else if (mood.contains("chilled")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scChilled));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_chilled_library_inactive));
-            } else if (mood.contains("peaceful")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scPeaceful));
-            } else if (mood.contains("bored")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scBored));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bored_library_inactive));
-            } else if (mood.contains("stressed")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scStressed));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_stressed_library_inactive));
-            } else if (mood.contains("aggressive")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scAggressive));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_aggressive_library_inactive));
-            } else if (mood.contains("excited")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scExcited));
-                holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
-            } else if (mood.contains("nomood")) {
-                holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scMoodNotFound));
-            } else if (mood.contains("allmood") || TextUtils.isEmpty(mood)) {
-                SongMoodCategory mood = model.getMood();
-                Log.e("MOOD RECYCLER VIEW", " MOOD : " + mood);
-                if (mood == null) {
-                    mood = SongMoodCategory.scAllSongs;
-                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notfound_library_inactive));
-                } else if (mood == SongMoodCategory.scDepressed) {
+            SongUiObj modelUi = songList.get(position);
+
+            if(modelUi.isSong()){
+                Song model = modelUi.getSongObj();
+
+                SongViewHolder holder = (SongViewHolder) myViewholder;
+
+                holder.title.setText(model.getSongName());
+                if (mood.contains("depressed")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scDepressed));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
-                } else if (mood == SongMoodCategory.scExcited) {
-                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
-                } else if (mood == SongMoodCategory.scHappy) {
+                } else if (mood.contains("happy")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scHappy));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_happy_library_inactive));
-                } else if (mood == SongMoodCategory.scChilled) {
+                } else if (mood.contains("chilled")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scChilled));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_chilled_library_inactive));
-                } else if (mood == SongMoodCategory.scPeaceful) {
-                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_peaceful_library_inactive));
-                } else if (mood == SongMoodCategory.scBored) {
+                } else if (mood.contains("peaceful")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scPeaceful));
+                } else if (mood.contains("bored")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scBored));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bored_library_inactive));
-                } else if (mood == SongMoodCategory.scStressed) {
+                } else if (mood.contains("stressed")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scStressed));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_stressed_library_inactive));
-                } else if (mood == SongMoodCategory.scAggressive) {
+                } else if (mood.contains("aggressive")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scAggressive));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_aggressive_library_inactive));
+                } else if (mood.contains("excited")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scExcited));
+                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
+                } else if (mood.contains("nomood")) {
+                    holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scMoodNotFound));
+                } else if (mood.contains("allmood") || TextUtils.isEmpty(mood)) {
+                    SongMoodCategory mood = model.getMood();
+                    Log.e("MOOD RECYCLER VIEW", " MOOD : " + mood);
+                    if (mood == null) {
+                        mood = SongMoodCategory.scAllSongs;
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notfound_library_inactive));
+                    } else if (mood == SongMoodCategory.scDepressed) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_depressed_library_inactive));
+                    } else if (mood == SongMoodCategory.scExcited) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
+                    } else if (mood == SongMoodCategory.scHappy) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_happy_library_inactive));
+                    } else if (mood == SongMoodCategory.scChilled) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_chilled_library_inactive));
+                    } else if (mood == SongMoodCategory.scPeaceful) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_peaceful_library_inactive));
+                    } else if (mood == SongMoodCategory.scBored) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bored_library_inactive));
+                    } else if (mood == SongMoodCategory.scStressed) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_stressed_library_inactive));
+                    } else if (mood == SongMoodCategory.scAggressive) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_aggressive_library_inactive));
+                    }
+                    holder.title.setTextColor(SongsManager.colorForMood(mood));
                 }
-                holder.title.setTextColor(SongsManager.colorForMood(mood));
-            }
-            holder.artist.setText(model.getArtist().getArtistName());
-            holder.songlistLayout.setTag(pos);
+                holder.artist.setText(model.getArtist().getArtistName());
+                holder.songlistLayout.setTag(pos);
            /* holder.viewPager.setCurrentItem(list.get(position).ordinal());
             holder.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 int previousPagePosition = 0;
@@ -239,13 +281,20 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 }
             });
 */
-            //((ViewPager) holder.viewPager).setCurrentItem(list.get(position));
-            holder.songlistLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    createTempPlaylsitFromSong(pos);
-                }
-            });
+                //((ViewPager) holder.viewPager).setCurrentItem(list.get(position));
+                holder.songlistLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        createTempPlaylsitFromSong(pos);
+                    }
+                });
+            }
+            else{
+                //handle alphabets
+                TextViewHolder tvholder = (TextViewHolder) myViewholder;
+                tvholder.alphabet.setText(modelUi.getAlphabet());
+            }
+
 
 
         }
@@ -394,9 +443,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         }*/
 
         // if (listOfSongs.size() > 0) {
-        dbSongList = listOfSongs;
+        dbSongList = changeSongNames(listOfSongs);
         HashMap<String, Integer> mapIndex = calculateIndexesForName(listOfSongs);
-        libAdapter = new LibraryRecyclerView(listOfSongs, mapIndex, mood,LibraryActivity.this);
+        libAdapter = new LibraryRecyclerView(addAlphabets(listOfSongs), mapIndex, mood,LibraryActivity.this);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         FastScrollRecyclerViewItemDecoration decoration = new FastScrollRecyclerViewItemDecoration(this);
         recyclerView.addItemDecoration(decoration);
@@ -460,6 +509,44 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         // }
 
 
+    }
+
+    private ArrayList<Song> changeSongNames(ArrayList<Song> listOfSongs) {
+        int i = 0;
+        for(Song s : listOfSongs){
+            listOfSongs.set(i, changeSongNameCase(s));
+            i++;
+        }
+        return listOfSongs;
+    }
+
+    private List<SongUiObj> addAlphabets(ArrayList<Song> listOfSongs) {
+        List<String> alphabets = new ArrayList<>();
+        List<SongUiObj> songUiObjects = new ArrayList<>();
+        for(Song song : listOfSongs){
+            String firstLetter = song.getSongName().substring(0,1);
+
+            if(TextUtils.isDigitsOnly(firstLetter)){
+                firstLetter = "#";
+            }
+
+            if(!alphabets.contains(firstLetter.toUpperCase())){
+                alphabets.add(firstLetter.toUpperCase());
+                songUiObjects.add(new SongUiObj(false, firstLetter.toUpperCase()));
+            }
+            songUiObjects.add(new SongUiObj(true, song));
+        }
+        return songUiObjects;
+    }
+
+    private Song changeSongNameCase(Song song) {
+        String name = song.getSongName().substring(1, song.getSongName().length());
+        String chatFirst = String.valueOf(song.getSongName().charAt(0));
+        String modifiedName = chatFirst.toUpperCase() + name;
+
+        song.setSongName(modifiedName);
+
+        return song;
     }
 
     public void artistWise() {
