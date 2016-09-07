@@ -14,7 +14,6 @@ import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -65,17 +64,16 @@ public class JourneyService {
         }
 
 
-
         return items;
     }
 
-    public List<DashboardItem> getAllFavouritesJourneys(){
+    public List<DashboardItem> getAllFavouritesJourneys() {
         List<DashboardItem> items = new ArrayList<DashboardItem>();
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
         List<JourneySession> favsList = journeySessionDBHelper.getFavouriteJourneySessions();
         journeySessionDBHelper.close();
 
-        if (favsList !=null && favsList.size() > 0) {
+        if (favsList != null && favsList.size() > 0) {
 
 
             for (JourneySession session : favsList) {
@@ -963,18 +961,18 @@ public class JourneyService {
         return (count == 0);
     }
 
-    public List<Song> createPlaylistFromJourney(List<PointF> journeyArray){
+    public List<Song> createPlaylistFromJourney(List<PointF> journeyArray) {
         List<Song> playListArray = returnEVArrayFromJourney(journeyArray);
 
         String key = "limit_journey";
         SharedPreferences sharedpreferences = mContext.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         int limit = sharedpreferences.getInt(key, 0);
 
-        if(limit > 0){
+        if (limit > 0) {
             int songLimit = limit * 15 * 60; //secs
             int totalDuration = getTotalSongsDuration(playListArray);
-            if(totalDuration >= songLimit){
-                return checkSongDurationLimits(songLimit+10, playListArray);
+            if (totalDuration >= songLimit) {
+                return checkSongDurationLimits(songLimit + 10, playListArray);
             }
         }
 
@@ -984,18 +982,18 @@ public class JourneyService {
     private List<Song> checkSongDurationLimits(int W, List<Song> playListArray) {
         List<Song> knapsackArray = null;
         knapsackArray = new ArrayList<>(playListArray.size());
-        for(Song song:playListArray){
+        for (Song song : playListArray) {
             knapsackArray.add(song);
         }
 
         knapsackArray = filterNullSongs(knapsackArray);
         List<WeightObject> weightArray = sortSongsWithWeight(knapsackArray);
 
-        knapsackArray = knapsackWithWeightArrayAndLimits(weightArray,W);
+        knapsackArray = knapsackWithWeightArrayAndLimits(weightArray, W);
 
         int idx = 0;
-        for(Song song : playListArray){
-            if(knapsackArray.contains(song)){
+        for (Song song : playListArray) {
+            if (knapsackArray.contains(song)) {
                 playListArray.set(idx, null);
             }
             idx++;
@@ -1008,14 +1006,14 @@ public class JourneyService {
         List<Song> keepSongs = new ArrayList<>(WLimits);
         int N = weightArray.size() - 1;
 
-        List<List<Integer>> optionA = new ArrayList<>(N+1);
-        List<List<Boolean>> solA = new ArrayList<>(N+1);
+        List<List<Integer>> optionA = new ArrayList<>(N + 1);
+        List<List<Boolean>> solA = new ArrayList<>(N + 1);
 
-        for(int i=0; i< (N+1); i++ ){
-            List<Integer> optASecond = new ArrayList<Integer>(WLimits+1);
-            List<Boolean> solASecond = new ArrayList<Boolean>(WLimits+1);
+        for (int i = 0; i < (N + 1); i++) {
+            List<Integer> optASecond = new ArrayList<Integer>(WLimits + 1);
+            List<Boolean> solASecond = new ArrayList<Boolean>(WLimits + 1);
 
-            for(int j=0; j<WLimits +1; j++){
+            for (int j = 0; j < WLimits + 1; j++) {
                 optASecond.add(0);
                 solASecond.add(false);
             }
@@ -1025,28 +1023,28 @@ public class JourneyService {
         }
 
         int totalDuration = 0;
-        for(int n = 1; n <= N; n++){
-            for(int w =1; w<= WLimits; w++){
-                WeightObject wObj = weightArray.get(n-1);
+        for (int n = 1; n <= N; n++) {
+            for (int w = 1; w <= WLimits; w++) {
+                WeightObject wObj = weightArray.get(n - 1);
 
-                int opt1 = optionA.get(n-1).get(w);
+                int opt1 = optionA.get(n - 1).get(w);
                 int opt2 = Integer.MIN_VALUE;
 
                 int knWeight = wObj.getWeight();
 
-                if(knWeight <= w){
-                    opt2 = wObj.getValue() + optionA.get(n-1).get(w-knWeight);
+                if (knWeight <= w) {
+                    opt2 = wObj.getValue() + optionA.get(n - 1).get(w - knWeight);
                 }
 
-                optionA.get(n).set(w,Math.max(opt1, opt2));
+                optionA.get(n).set(w, Math.max(opt1, opt2));
                 solA.get(n).set(w, opt2 > opt1);
             }
         }
 
-        for(int n = N, w = WLimits; n > 0; n--){
-            if(solA.get(n).get(w)){
-                w = w - (weightArray.get(n-1).getWeight());
-                WeightObject obj = weightArray.get(n-1);
+        for (int n = N, w = WLimits; n > 0; n--) {
+            if (solA.get(n).get(w)) {
+                w = w - (weightArray.get(n - 1).getWeight());
+                WeightObject obj = weightArray.get(n - 1);
                 totalDuration = totalDuration + obj.getWeight();
                 keepSongs.add(obj.getSongObj());
             }
@@ -1061,10 +1059,10 @@ public class JourneyService {
         int value = 100;
         int idx = 0;
 
-        for(Song song: songs){
+        for (Song song : songs) {
             WeightObject weightObject = new WeightObject();
 
-            if(SongsManager.getIntValue(song.getMood()) != mood){
+            if (SongsManager.getIntValue(song.getMood()) != mood) {
                 mood = SongsManager.getIntValue(song.getMood());
                 value = 100;
             }
@@ -1085,27 +1083,27 @@ public class JourneyService {
 
     public int getTotalSongsDuration(List<Song> playListArray) {
         int total = 0;
-        for(Song song : playListArray){
-            if(song != null) {
+        for (Song song : playListArray) {
+            if (song != null) {
                 total += song.getPlaybackDuration();
             }
         }
         return total;
     }
 
-    private Song findClosestSongFrom(List<Song> slArray, float E, float V){
+    private Song findClosestSongFrom(List<Song> slArray, float E, float V) {
         Song closestSongItem = null;
         float kClosesDist = 1;
 
-        for(Song songItem : slArray){
-            PointF songEV = new PointF( songItem.getEnergy(), songItem.getValance());
-            PointF pointEV = new PointF(E,V);
+        for (Song songItem : slArray) {
+            PointF songEV = new PointF(songItem.getEnergy(), songItem.getValance());
+            PointF pointEV = new PointF(E, V);
 
             float distance = distanceBetweenEVPoints(pointEV, songEV);
 
-            if(kClosesDist > distance){
+            if (kClosesDist > distance) {
                 kClosesDist = distance;
-                closestSongItem =songItem;
+                closestSongItem = songItem;
             }
 
         }
@@ -1116,15 +1114,15 @@ public class JourneyService {
         return (float) Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2));
     }
 
-    public JourneySession createJourneySessionFromSession(JourneySession js){
+    public JourneySession createJourneySessionFromSession(JourneySession js) {
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
 
         JourneySession session = new JourneySession();
 
         trackDots = new ArrayList<>();
 
-        for(JourneySong obj : js.getSongs()){
-            if(obj.isSwapped()){
+        for (JourneySong obj : js.getSongs()) {
+            if (obj.isSwapped()) {
                 JourneySong songObj = new JourneySong();
                 songObj.setSong(obj.getSong());
                 songObj.setTrackNo(obj.getTrackNo());
@@ -1148,20 +1146,19 @@ public class JourneyService {
     }
 
     public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray,
-                                                          SongMoodCategory current, SongMoodCategory target, boolean addToDb){
-        List<Song>  songs = null;
+                                                          SongMoodCategory current, SongMoodCategory target, boolean addToDb) {
+        List<Song> songs = null;
         JourneySession session = null;
 
 
-        if(songsArray == null){
+        if (songsArray == null) {
             songs = createPlaylistFromJourney(j.getJourneyEVArray());
             session = createJourneySessionFromSongs(songs);
-        }
-        else{
+        } else {
             session = createJourneySessionFromSongs(songsArray);
         }
 
-        session.setName((j.getName() == null || j.getName().length() > 0 )? j.getName() : "NEW PLAYLIST");
+        session.setName((j.getName() == null || j.getName().length() > 0) ? j.getName() : "NEW PLAYLIST");
         session.setJourney(j);
         session.setFavourite(0);
         session.setSessionSyncStatus(0);
@@ -1170,7 +1167,7 @@ public class JourneyService {
         session.setCurrentMood(current);
         session.setTargetMood(target);
 
-        if(addToDb) {
+        if (addToDb) {
             JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
             journeySessionDBHelper.addJourneySession(session);
             journeySessionDBHelper.close();
@@ -1179,7 +1176,7 @@ public class JourneyService {
         return session;
     }
 
-    public JourneySession createJourneySessionFromLibrary(List<Song> libArray){
+    public JourneySession createJourneySessionFromLibrary(List<Song> libArray) {
         JourneySession session = createJourneySessionFromSongs(libArray);
         session.setName("library");
         return session;
@@ -1190,8 +1187,8 @@ public class JourneyService {
         trackDots = new ArrayList<>();
 
         int idx = 0;
-        for(Song song : songs){
-            if(song != null){
+        for (Song song : songs) {
+            if (song != null) {
                 JourneySong songObj = new JourneySong();
                 songObj.setSong(song);
                 songObj.setTrackNo(idx);
@@ -1206,18 +1203,18 @@ public class JourneyService {
         return session;
     }
 
-    public JourneySong swapSong(JourneySong jSongObj, SongMoodCategory songMood){
+    public JourneySong swapSong(JourneySong jSongObj, SongMoodCategory songMood) {
         List<Song> jSongArray = Global.currentSongList;
 
         List<Song> songArray = new ArrayList<>();
-        for(Song song : jSongArray){
+        for (Song song : jSongArray) {
             songArray.add(song);
         }
 
         PointF songObjEV = new PointF(jSongObj.getSong().getValance(), jSongObj.getSong().getEnergy());
         Song newSong = findSongBasedOnEV(songObjEV, songArray);
 
-        if(newSong != null){
+        if (newSong != null) {
             jSongObj.setSwapped(true);
             JourneySong newJSong = new JourneySong();
 
@@ -1232,33 +1229,33 @@ public class JourneyService {
         return null;
     }
 
-    public List<JourneySong> filterSwapSongFromJourneySession(JourneySession jSession){
+    public List<JourneySong> filterSwapSongFromJourneySession(JourneySession jSession) {
         List<JourneySong> jSessionArray = jSession.getSongs();
         List<JourneySong> filteredArray = new ArrayList<>();
 
-        for(JourneySong song : jSessionArray){
-            if(!song.isSwapped()){
+        for (JourneySong song : jSessionArray) {
+            if (!song.isSwapped()) {
                 filteredArray.add(song);
             }
         }
         return filteredArray;
     }
 
-    public List<JourneySong> filterNullJourneySongFromArray(List<JourneySong> songWithNullArray){
+    public List<JourneySong> filterNullJourneySongFromArray(List<JourneySong> songWithNullArray) {
         List<JourneySong> filteredNullArray = new ArrayList<>();
 
-        for(JourneySong song : songWithNullArray){
-            if(song.getSong() != null){
+        for (JourneySong song : songWithNullArray) {
+            if (song.getSong() != null) {
                 filteredNullArray.add(song);
             }
         }
         return filteredNullArray;
     }
 
-    public JourneySession retagJourneySongwithNewMood(JourneySong jSongObj, SongMoodCategory newMood){
+    public JourneySession retagJourneySongwithNewMood(JourneySong jSongObj, SongMoodCategory newMood) {
         JourneySession jSession = this.currentSession;
 
-        if(Global.isJourney){
+        if (Global.isJourney) {
             PointF newMoodEV = SongsService.getInstance(mContext).changejSongMoodToNewMood(jSongObj, newMood);
 
             Song song = jSongObj.getSong();
@@ -1278,18 +1275,18 @@ public class JourneyService {
         return jSession;
     }
 
-    public void updateCurrent(SongMoodCategory mood){
+    public void updateCurrent(SongMoodCategory mood) {
         this.currentSession.setCurrentMood(mood);
     }
 
-    public void updateTarget(SongMoodCategory mood){
+    public void updateTarget(SongMoodCategory mood) {
         this.currentSession.setFinishMood(mood);
     }
 
-    public void clearUpJourneySession(){
+    public void clearUpJourneySession() {
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
         List<JourneySession> theTopEightJourneySessionArray = journeySessionDBHelper.getTopEightSessions();
-        if(theTopEightJourneySessionArray.size() <= 8){
+        if (theTopEightJourneySessionArray.size() <= 8) {
             journeySessionDBHelper.close();
             return;
         }
@@ -1299,7 +1296,7 @@ public class JourneyService {
         journeySessionDBHelper.close();
     }
 
-    public JourneySession getCurrentSession(){
+    public JourneySession getCurrentSession() {
         return currentSession;
     }
 

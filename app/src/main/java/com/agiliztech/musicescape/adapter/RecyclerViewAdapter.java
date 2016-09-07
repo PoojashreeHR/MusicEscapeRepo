@@ -169,12 +169,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            swipe_layout = (SwipeRevealLayout) itemView.findViewById(R.id.swipe_layout);
+            //swipe_layout = (SwipeRevealLayout) itemView.findViewById(R.id.swipe_layout);
             rv_song_name = (TextView) itemView.findViewById(R.id.rv_song_name);
-            rv_ll = (SwipeRevealLayout) itemView.findViewById(R.id.click_layout);
+            //rv_ll = (SwipeRevealLayout) itemView.findViewById(R.id.click_layout);
             rv_song_detail = (TextView) itemView.findViewById(R.id.rv_song_detail);
-            rv_retag = (ImageView) itemView.findViewById(R.id.rv_retag);
-            rv_swap = (ImageView) itemView.findViewById(R.id.rv_swap);
+            //rv_retag = (ImageView) itemView.findViewById(R.id.rv_retag);
+            //rv_swap = (ImageView) itemView.findViewById(R.id.rv_swap);
             container_song_item = (LinearLayout) itemView.findViewById(R.id.container_song_item);
         }
     }

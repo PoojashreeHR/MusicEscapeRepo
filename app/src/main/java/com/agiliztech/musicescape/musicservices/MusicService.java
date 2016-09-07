@@ -314,7 +314,7 @@ public class MusicService extends Service implements
                 //songPosn = 0;
                 player.stop();
             }else{
-                //playSong();
+                playSong();
             }
         } else if(repeatSingleSong){
             //songPosn = songPosn;

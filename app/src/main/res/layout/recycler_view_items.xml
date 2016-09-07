@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<!--<com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout"
     android:layout_width="match_parent"
@@ -12,13 +12,13 @@
 
     <FrameLayout
         android:id="@+id/frm_left_swap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         >
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/alert_dark_frame"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/ic_swap2"
             android:id="@+id/rv_swap"
             />
 
@@ -40,7 +40,7 @@
                 android:src="@drawable/img_retag_new"
                 android:id="@+id/rv_retag"
                 />
-        </FrameLayout>
+        </FrameLayout>-->
         <LinearLayout
 
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -96,6 +96,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout><!--
     </com.chauthai.swipereveallayout.SwipeRevealLayout>
-</com.chauthai.swipereveallayout.SwipeRevealLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>-->
