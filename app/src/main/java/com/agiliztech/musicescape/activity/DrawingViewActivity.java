@@ -168,7 +168,8 @@ public class DrawingViewActivity extends BaseMusicActivity {
         newJourney.setJourneyEVArray(vePoints);
         newJourney.setTrackCount(filterNullArray.size());
 
-        JourneySession session = JourneyService.getInstance(this).createJourneySessionFromJourney(newJourney, filterNullArray, currentMood, targetMood);
+        JourneySession session = JourneyService.getInstance(this).
+                createJourneySessionFromJourney(newJourney, filterNullArray, currentMood, targetMood, true);
         JourneyService.getInstance(this).setCurrentSession(session);
 
        // drawViewToPlaylist();

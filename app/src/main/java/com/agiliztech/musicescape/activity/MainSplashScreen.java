@@ -102,7 +102,7 @@ public class MainSplashScreen extends Activity {
                     finish();
                 }
             }
-        },3000);
+        },1000);
     }
 
     @Override

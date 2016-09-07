@@ -157,4 +157,21 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
             UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
         }
     }
+
+    public void updateName(JourneySession session, String name) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_NAME, name);
+            session.setName(name);
+            contentValues.put(COL_JOURNEY_SESSION_OBJ, UtilityClass.getJsonConvertor().toJson(session));
+            db.update(Global.JOURNEY_SESSION_TBL_NAME,contentValues,COL_JOURNEY_ID+" = '"+session.getJourneyID()+"'",null);
+        }
+        catch (Exception e){
+            UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
+        }
+    }
 }

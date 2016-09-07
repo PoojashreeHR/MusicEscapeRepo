@@ -2,44 +2,128 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="162dp"
     android:id="@+id/ll_saveHistory"
-    android:layout_height="270dp"
+    android:layout_height="255dp"
+    android:background="@drawable/dashboard_bg"
     android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Exited"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/enable_thumb_yellow"
-        android:textSize="14sp"
-        android:textStyle="bold"
-        android:layout_gravity="top|center"
-        />
+    <!--<TextView-->
+        <!--android:id="@+id/tv_title"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:gravity="center"-->
+        <!--android:text="Exited"-->
+        <!--android:textAppearance="?android:attr/textAppearanceLarge"-->
+        <!--android:textColor="@color/enable_thumb_yellow"-->
+        <!--android:textSize="14sp"-->
+        <!--android:textStyle="bold"-->
+        <!--android:layout_gravity="top|center"-->
+        <!--/>-->
 
     <FrameLayout
         android:id="@+id/overlay"
         android:layout_width="162dp"
-        android:layout_height="270dp"
+        android:layout_height="255dp"
         android:scaleType="centerCrop"
 
         >
 
+        <View
+            android:id="@+id/top_view"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="top|start"
+            android:alpha="0.9"
+            android:visibility="visible"
+            android:background="#262626" />
+        <View
+            android:id="@+id/bottom_view"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_gravity="bottom|start"
+            android:alpha="0.9"
+            android:visibility="visible"
+            android:background="#262626" />
+        <View
+            android:id="@+id/right_view"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:visibility="visible"
+            android:layout_gravity="center|end"
+            android:background="#262626"
+            />
+        <View
+            android:id="@+id/left_view"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:alpha="0.9"
+            android:visibility="visible"
+            android:layout_gravity="center|start"
+            android:background="#262626"
+            />
+<!--Header-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="35dp"
+            android:id="@+id/tracktitle"
+            android:gravity="top"
+            android:layout_marginTop="17dp"
+            android:layout_gravity="center">
 
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Exited"
+                android:layout_centerHorizontal="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#ffffff"
+                android:textSize="14sp" />
 
+        </RelativeLayout>
         <com.agiliztech.musicescape.journey.JourneyView
             android:id="@+id/journey"
             android:layout_width="126dp"
             android:layout_height="180dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="top"
+            android:layout_marginBottom="30dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp" />
+        <!--Tracks-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="17dp"
+            android:id="@+id/tracklist"
+            android:gravity="bottom"
+            android:layout_marginTop="35dp"
+            android:layout_gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_tracks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:gravity="center"
+                        android:text="2 Tracks"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:textColor="@color/exited"
+                        android:textSize="14sp" />
+
+
+
+
+
+            </RelativeLayout>
+
 
 
 
 
     </FrameLayout>
+
 </LinearLayout>

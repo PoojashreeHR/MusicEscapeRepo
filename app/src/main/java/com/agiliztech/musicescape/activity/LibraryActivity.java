@@ -1,11 +1,9 @@
 package com.agiliztech.musicescape.activity;
 
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Canvas;
-import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,13 +11,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,16 +25,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
-
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewInterface;
 import com.agiliztech.musicescape.fasrscrollinginterface.FastScrollRecyclerViewItemDecoration;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Song;
+import com.agiliztech.musicescape.models.apimodels.SongRetagInfo;
+import com.agiliztech.musicescape.models.apimodels.SongRetagMain;
+import com.agiliztech.musicescape.rest.ApiClient;
+import com.agiliztech.musicescape.rest.ApiInterface;
 import com.agiliztech.musicescape.models.SongUiObj;
 import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.utils.Global;
+
 import com.agiliztech.musicescape.utils.SongsManager;
+import com.agiliztech.musicescape.utils.UtilityClass;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener {
     Spinner sp;
@@ -78,6 +84,12 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             return this.mMapIndex;
         }
 
+        public void updateSongMoodSelectedByUser(int position, int moodPosition, Song songs) {
+            songList.get(position).setSongObj(songs);
+            notifyDataSetChanged();
+
+        }
+
         private class TextViewHolder extends MyViewHolder {
 
             public TextView alphabet;
@@ -104,8 +116,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 title = (TextView) view.findViewById(R.id.song_title);
                 artist = (TextView) view.findViewById(R.id.song_artist);
                 songlistLayout = (LinearLayout) view.findViewById(R.id.songListLayout);
-                //rv_swap_library = (ImageView) view.findViewById(R.id.rv_swap_library);
-                //swipe_layout_library = (SwipeRevealLayout) view.findViewById(R.id.swipe_layout_library);
+                rv_swap_library = (ImageView) view.findViewById(R.id.rv_swap_library);
+                swipe_layout_library = (SwipeRevealLayout) view.findViewById(R.id.swipe_layout_library);
                 mood_image = (ImageView) view.findViewById(R.id.mood_image);
                 // viewPager = (ViewPager) view.findViewById(R.id.viewPager);
 
@@ -183,9 +195,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             SongUiObj modelUi = songList.get(position);
 
             if(modelUi.isSong()){
-                Song model = modelUi.getSongObj();
+                final Song model = modelUi.getSongObj();
 
-                SongViewHolder holder = (SongViewHolder) myViewholder;
+               final  SongViewHolder holder = (SongViewHolder) myViewholder;
 
                 holder.title.setText(model.getSongName());
                 if (mood.contains("depressed")) {
@@ -240,6 +252,15 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 }
                 holder.artist.setText(model.getArtist().getArtistName());
                 holder.songlistLayout.setTag(pos);
+                holder.rv_swap_library.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (holder.swipe_layout_library.isOpened()) {
+                            holder.swipe_layout_library.close(true);
+                        }
+                        songRetagInLibrary(pos, model);
+                    }
+                });
            /* holder.viewPager.setCurrentItem(list.get(position).ordinal());
             holder.viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 int previousPagePosition = 0;
@@ -452,7 +473,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(libAdapter);
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
+       /* ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
 
             @Override
@@ -486,26 +507,26 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
                     Paint p = new Paint();
                     if (dX > 0) {
-            /* Set your color for positive displacement */
+            *//* Set your color for positive displacement *//*
 
                         // Draw Rect with varying right side, equal to displacement dX
                         c.drawRect((float) itemView.getLeft(), (float) itemView.getTop(), dX,
                                 (float) itemView.getBottom(), p);
                     } else {
-            /* Set your color for negative displacement */
+            *//* Set your color for negative displacement *//*
 
                         // Draw Rect with varying left side, equal to the item's right side plus negative displacement dX
                         c.drawRect((float) itemView.getRight() + dX, (float) itemView.getTop(),
                                 (float) itemView.getRight(), (float) itemView.getBottom(), p);
                     }
 
-                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+                    super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, false);
                 }
             }
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+        itemTouchHelper.attachToRecyclerView(recyclerView);*/
         // }
 
 
@@ -776,7 +797,124 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     }
 
 
-    public void songRetagInLibrary(int position) {
+    public void songRetagInLibrary(int position, Song model) {
         // Logic for Retag from Library
+        if (UtilityClass.checkInternetConnectivity(this)) {
+            Log.e("ABC", "XYZ");
+            displaySelectMoodDialog(model, position);
+            //sendToApi(model);
+        }
+    }
+
+    public void sendToApi(final String mood, final Song model, final int position, final int moodPosition) {
+        final ArrayList<SongRetagInfo> info = new ArrayList<>();
+        final int serverSongId = dbHandler.getServerSongId((int) model.getpID());
+        final Song song = model;
+        for (int i = 0; i < 1; i++) {
+            SongRetagInfo infos = new SongRetagInfo();
+            infos.setSong(serverSongId);
+            infos.setEnergy(model.getEnergy());
+            infos.setValence(model.getValance());
+            infos.setMood(mood);
+            info.add(infos);
+        }
+
+        song.setMood(SongsManager.getMoodFromIndex(moodPosition));
+        SongRetagMain main = new SongRetagMain(UtilityClass.getDeviceId(this), info);
+        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+        Call<Void> call = apiInterface.retagSongs(main);
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    dbHandler.updateSongStatusWithModifiedMood(mood, serverSongId);
+                    libAdapter.updateSongMoodSelectedByUser(position, moodPosition, song);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(LibraryActivity.this, "Some Issue Occured, Plz try after some time", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
+    public void displaySelectMoodDialog(final Song model, final int position) {
+        Log.e("ABC2", "XYZ2");
+        final Dialog moodDialog = new Dialog(this);
+        moodDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        moodDialog.setContentView(R.layout.selecting_mood_dialog);
+        TextView exitedText_dialog, happyText_dialog, chilledText_dialog, peacefullText_dialog, boredText_dialog,
+                depressedText_dialog, stressedText_dialog, aggressiveText_dialog;
+
+        exitedText_dialog = (TextView) moodDialog.findViewById(R.id.exitedText_dialog);
+
+        happyText_dialog = (TextView) moodDialog.findViewById(R.id.happyText_dialog);
+        chilledText_dialog = (TextView) moodDialog.findViewById(R.id.chilledText_dialog);
+        peacefullText_dialog = (TextView) moodDialog.findViewById(R.id.peacefullText_dialog);
+        boredText_dialog = (TextView) moodDialog.findViewById(R.id.boredText_dialog);
+        depressedText_dialog = (TextView) moodDialog.findViewById(R.id.depressedText_dialog);
+        stressedText_dialog = (TextView) moodDialog.findViewById(R.id.stressedText_dialog);
+        aggressiveText_dialog = (TextView) moodDialog.findViewById(R.id.aggressiveText_dialog);
+
+        exitedText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Excited", model, position, 0);
+            }
+        });
+        happyText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Happy", model, position, 1);
+            }
+        });
+        chilledText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Chilled", model, position, 2);
+            }
+        });
+        peacefullText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Peaceful", model, position, 3);
+            }
+        });
+        boredText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Bored", model, position, 4);
+            }
+        });
+        depressedText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Depressed", model, position, 5);
+            }
+        });
+        stressedText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.show();
+                sendToApi("Stressed", model, position, 6);
+            }
+        });
+        aggressiveText_dialog.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                moodDialog.dismiss();
+                sendToApi("Aggressive", model, position, 7);
+            }
+        });
+        moodDialog.setCanceledOnTouchOutside(false);
+        moodDialog.show();
     }
 }
