@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:hint="NEW PLAYLIST"
-            android:textColorHint="#EEE"
+            android:textColorHint="#777777"
             android:inputType="text"
             android:textColor="#ffffff"
             android:id="@+id/title"
