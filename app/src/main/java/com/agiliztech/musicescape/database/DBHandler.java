@@ -466,12 +466,14 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'analysed\'", null);
         Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        db.close();
         return (int) count;
     }
     public int getExceptAnalysedCount() {
         SQLiteDatabase db = this.getWritableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
         Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        db.close();
         return (int) count;
     }
 
@@ -497,7 +499,7 @@ public class DBHandler extends SQLiteOpenHelper {
             oldSong.setMood(SongsManager.getMoodForText(mood));
             cv.put(KEY_META_DATA,new Gson().toJson(oldSong));
         }
-        cv.put(KEY_SONG_MOOD,mood);
+        cv.put(KEY_SONG_MOOD,mood.toLowerCase());
         cv.put(KEY_STATUS,"analysed");
         int x = db.update(TABLE_SONGS,cv,KEY_SERVER_SONG_ID + "="+ id,null);
         Log.e("SongMood", "SONG MOOD UPDATED " + x);
