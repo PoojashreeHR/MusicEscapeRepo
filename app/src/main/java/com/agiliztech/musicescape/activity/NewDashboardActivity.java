@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -45,10 +47,11 @@ public class NewDashboardActivity extends BaseMusicActivity {
     SharedPreferences dashboardPreference;
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
-    Button btn_default,btn_user;
+    TabItem btn_default,btn_user;
     String dashboard;
     private RecyclerView recyclerView,recyclerView_user;
     private Timer highlightTimer;
+    private TabLayout dash_items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +60,33 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 
-        btn_default = (Button) findViewById(R.id.btn_default);
-        btn_default.setTextColor(Color.parseColor("#F2DD52"));
-        btn_default.setOnClickListener(new View.OnClickListener() {
+        dash_items = (TabLayout) findViewById(R.id.dash_items);
+        dash_items.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-               btn_default.setTextColor(Color.parseColor("#F2DD52"));
-                btn_user.setTextColor(Color.parseColor("#FFFFFF"));
-                recyclerView.setVisibility(View.VISIBLE);
-                recyclerView_user.setVisibility(View.GONE);
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition() == 0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView_user.setVisibility(View.GONE);
+                }
+                else{
+                    recyclerView_user.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
 
-        btn_user = (Button) findViewById(R.id.btn_user);
-        btn_user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn_user.setTextColor(Color.parseColor("#F2DD52"));
-                btn_default
-                        .setTextColor(Color.parseColor("#FFFFFF"));
-                recyclerView_user.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            }
-        });
+
+
 
         highlightTimer = new Timer();
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
@@ -231,7 +237,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
             }
             else{
                 holder.journeyView.setJourneyPoints(item.getSession().getJourney().getJourneyDotsArray());
-                holder.tv_title.setText(handleNull(item.getSession().getJourney().getName()));
+                holder.tv_title.setText(handleNull(item.getSession().getName()));
                 holder.overlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
