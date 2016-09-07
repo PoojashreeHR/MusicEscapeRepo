@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Created by Pooja on 18-08-2016.
  */
-public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerView.MyViewHolder> implements FastScrollRecyclerViewInterface {
+public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerView.MyViewHolder> implements FastScrollRecyclerViewInterface{
     List<Song> songList;
     private HashMap<String, Integer> mMapIndex;
     String mood;
@@ -75,7 +75,7 @@ public class LibraryRecyclerView extends RecyclerView.Adapter<LibraryRecyclerVie
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_row, parent, false);
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.side_index_item, parent, false);
-        return new MyViewHolder(itemView, (TextView) v);
+            return new MyViewHolder(itemView, (TextView) v);
     }
 
     @Override

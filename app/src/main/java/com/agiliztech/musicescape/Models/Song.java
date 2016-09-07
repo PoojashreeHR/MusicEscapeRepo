@@ -317,4 +317,5 @@ public class Song {
                 && this.artist.getArtistName().equals(((Song) obj).getArtist().getArtistName())
                 && this.album.getAlbumTitle().equals(((Song) obj).getAlbum().getAlbumTitle());
     }
+    
 }
