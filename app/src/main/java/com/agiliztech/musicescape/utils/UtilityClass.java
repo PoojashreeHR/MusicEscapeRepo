@@ -107,7 +107,7 @@ public class UtilityClass {
             px *=0.67;
         }
         else if(width > 500 && width <= 800){
-            px *=1;
+            px *=0.95;
         }
         else{
             px *=2;
