@@ -5,21 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.journey.JourneyDBHelper;
 import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneyView;
 import com.agiliztech.musicescape.journey.Size;
+import com.agiliztech.musicescape.models.JourneySession;
 
 public class PlaylistJourneyActivity extends BaseMusicActivity {
 
     private JourneyView journeyView;
-    private TextView title;
+    private EditText title;
     private FrameLayout overlay;
     private ImageView dashboardButton;
 
@@ -66,10 +73,46 @@ public class PlaylistJourneyActivity extends BaseMusicActivity {
         journeyView.setMode(JourneyView.DrawingMode.DMJOURNEY);
         journeyView.setEnabled(false);
 
-        title = (TextView) findViewById(R.id.title);
-        title.setText(journeyService.getCurrentSession().getJourney().getName());
+        title = (EditText) findViewById(R.id.title);
+        String name = journeyService.getCurrentSession().getJourney().getName();
+        final JourneySession session = journeyService.getCurrentSession();
+        if(name == null || name.equalsIgnoreCase("NEW PLAYLIST")) {
+            title.setText(journeyService.getCurrentSession().getName());
+            title.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if ((actionId == EditorInfo.IME_ACTION_DONE) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN))) {
+
+                        String name = v.getText().toString();
+                        if(name == null || name.length() == 0){
+                            Toast.makeText(PlaylistJourneyActivity.this, "Please enter a valid name !!!", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                        updateJourneyName(session, name);
+
+                        return false;
+                    }
+                    return false;
+                }
+            });
+
+        }
+        else{
+            title.setText(name);
+            title.setEnabled(false);
+
+        }
 
 
+
+
+
+    }
+
+    private void updateJourneyName(JourneySession session, String name) {
+        JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(this);
+        journeySessionDBHelper.updateName(session,name);
+        journeySessionDBHelper.close();
     }
 
     private int dpToPx(int dp560) {

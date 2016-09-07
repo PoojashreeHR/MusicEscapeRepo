@@ -5,7 +5,7 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorAccent">@color/exited</item>
     </style>
     <!-- App Full Screen Theme -->
     <style name="AppFullScreenTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -39,6 +39,19 @@
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#ffffff
         </item>
+
+    </style>
+
+    <style name="MyCustomTabLayout" parent="Widget.Design.TabLayout">
+        <item name="tabTextAppearance">@style/MyCustomTabText</item>
+        <item name="tabSelectedTextColor">@color/exited</item>
+        <item name="android:background">#2F2F2F</item>
+
+    </style>
+
+    <style name="MyCustomTabText" parent="TextAppearance.AppCompat.Button">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
     <!--&lt;!&ndash;Used for spinner&ndash;&gt;-->
     <!--<style name="countries_list">-->
