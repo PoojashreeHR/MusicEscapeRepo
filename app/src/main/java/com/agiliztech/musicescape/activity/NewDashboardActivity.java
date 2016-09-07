@@ -22,6 +22,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -34,6 +35,7 @@ import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
+import com.agiliztech.musicescape.utils.UtilityClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -61,6 +63,10 @@ public class NewDashboardActivity extends BaseMusicActivity {
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 
         dash_items = (TabLayout) findViewById(R.id.dash_items);
+
+        RelativeLayout.LayoutParams relparams = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        dash_items.setLayoutParams(relparams);
+
         dash_items.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -220,6 +226,10 @@ public class NewDashboardActivity extends BaseMusicActivity {
             final int pos = position;
             final DashboardItem item = sessions.get(pos);
 
+            holder.ll_saveHistory.setLayoutParams(getLayoutParams());
+            holder.overlay.setLayoutParams(getLayoutParams());
+            holder.overlay.setPadding(dpToPx(18),0, dpToPx(18),0);
+            holder.journeyView.setLayoutParams(getFrameLayoutParams());
 
             holder.journeyView.setGaps(getGapsSize());
             holder.journeyView.setMode(JourneyView.DrawingMode.DMMENU);
@@ -270,6 +280,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
         class HistoryViewHolder extends  RecyclerView.ViewHolder {
 
 
+            LinearLayout ll_saveHistory;
             FrameLayout overlay;
             JourneyView journeyView;
             TextView tv_title, tv_tracks;
@@ -280,8 +291,35 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 tv_title = (TextView) itemView.findViewById(R.id.tv_title);
                 overlay = (FrameLayout) itemView.findViewById(R.id.overlay);
                 tv_tracks = (TextView) itemView.findViewById(R.id.tv_tracks);
+                ll_saveHistory = (LinearLayout) itemView.findViewById(R.id.ll_saveHistory);
             }
         }
+    }
+
+    private FrameLayout.LayoutParams getFrameLayoutParams() {
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(126),dpToPx(180));
+        layoutParams.setMargins(0, dpToPx(30),0,dpToPx(30));
+        return layoutParams;
+    }
+
+    private LinearLayout.LayoutParams getLayoutParams() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(162),dpToPx(255));
+        return layoutParams;
+    }
+
+    public int dpToPx(int dp560) {
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = adjustWidth(dp560);
+       int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public int adjustWidth(int dp560){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = dp560 * displayMetrics.widthPixels / 560;
+        return (int) UtilityClass.convertPixelsToDpWidth(dp,this);
+         //return  dp;
     }
 
     private void startPlaylistviewWithJourney(Journey journey) {

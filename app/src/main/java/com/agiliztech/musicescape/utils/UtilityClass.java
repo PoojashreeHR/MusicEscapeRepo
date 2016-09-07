@@ -1,8 +1,11 @@
 package com.agiliztech.musicescape.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.telephony.TelephonyManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -54,6 +57,76 @@ public class UtilityClass {
                 .getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
         return ((wifi != null & datac != null)
                 && (wifi.isConnected() | datac.isConnected()));
+    }
+
+    public static float convertPixelsToDp(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int devSize = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int height = metrics.heightPixels;
+
+        if(height > 1280){
+            px *=3;
+        }
+        else if(height > 800 && height <= 1280){
+            px *=2;
+        }
+        else if(height > 500 && height <= 800){
+            px *=1;
+        }
+        else{
+            px *=0.5;
+        }
+
+//        if (devSize == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+//            px *= 3;
+//        }
+//        else if (devSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+//            px *= 2;
+//        }
+//        else if (devSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+//            px *= 1;
+//        }
+
+
+        //float dp = px / ((float)metrics.density);
+        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return dp;
+    }
+
+    public static float convertPixelsToDpWidth(float px, Context context){
+        Resources resources = context.getResources();
+        DisplayMetrics metrics = resources.getDisplayMetrics();
+        int devSize = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+        int width = metrics.widthPixels;
+
+        if(width > 1280){
+            px *=0.5;
+        }
+        else if(width > 800 && width <= 1280){
+            px *=0.67;
+        }
+        else if(width > 500 && width <= 800){
+            px *=1;
+        }
+        else{
+            px *=2;
+        }
+
+//        if (devSize == Configuration.SCREENLAYOUT_SIZE_LARGE) {
+//            px *= 3;
+//        }
+//        else if (devSize == Configuration.SCREENLAYOUT_SIZE_NORMAL) {
+//            px *= 2;
+//        }
+//        else if (devSize == Configuration.SCREENLAYOUT_SIZE_SMALL) {
+//            px *= 1;
+//        }
+
+
+        //float dp = px / ((float)metrics.density);
+       // float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
+        return px;
     }
 
 
