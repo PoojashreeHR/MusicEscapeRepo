@@ -478,8 +478,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
+                Song song = mAdapter.getSongObject(position);
                 if (direction == ItemTouchHelper.LEFT) {
-                    Song song = mAdapter.getSongObject(position);
                     songRetag(position, song);
                     mAdapter.notifyItemChanged(position);
                 } else {

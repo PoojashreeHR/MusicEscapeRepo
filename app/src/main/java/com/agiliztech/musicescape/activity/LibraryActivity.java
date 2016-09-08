@@ -244,7 +244,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 holder.songlistLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        createTempPlaylsitFromSong(pos);
+                        Log.e("POSITION ", "" + pos);
+                        createTempPlaylsitFromSong(pos, model);
                     }
                 });
             } else {
@@ -263,17 +264,24 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
     }
 
-    private void createTempPlaylsitFromSong(int pos) {
+    private void createTempPlaylsitFromSong(int pos, Song song) {
         if (musicSrv != null) {
             if (musicSrv.isPng()) {
                 musicSrv.pausePlayer();
             }
-            musicSrv.setList(dbSongList);
-            Global.isJourney = false;
-            playSelectedSong(pos);
-            Global.isLibPlaylist = true;
-            Global.libPlaylistSongs = dbSongList;
-            setUpPlaylist();
+            if (song != null) {
+                musicSrv.setList(dbSongList);
+                Global.isJourney = false;
+                for (int i = 0; i < dbSongList.size(); i++) {
+                    if (song.getSongName().equals(dbSongList.get(i).getSongName())) {
+                        playSelectedSong(i);
+                        break;
+                    }
+                }
+                Global.isLibPlaylist = true;
+                Global.libPlaylistSongs = dbSongList;
+                setUpPlaylist();
+            }
         }
     }
 
