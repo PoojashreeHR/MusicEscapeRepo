@@ -79,6 +79,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         String mood;
         Context context;
         int SONGUI = 0, ALPHAUI = 1;
+        ArrayList<String> listOfPositions;
 
         @Override
         public HashMap<String, Integer> getMapIndex() {
@@ -141,6 +142,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             mMapIndex = mapIndex;
             this.mood = mood;
             this.context = context;
+            listOfPositions = new ArrayList<>();
         }
 
         @Override
@@ -152,6 +154,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                         .inflate(R.layout.side_index_item, parent, false);
                 return new SongViewHolder(itemView);
             } else {
+
                 View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_list_alphabet_row, parent, false);
                 return new TextViewHolder(itemView);
             }
@@ -174,8 +177,11 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             SongUiObj modelUi = songList.get(position);
 
             if (modelUi.isSong()) {
-                final Song model = modelUi.getSongObj();
 
+                final Song model = modelUi.getSongObj();
+                if (!listOfPositions.contains(String.valueOf(model.getpID()))) {
+                    listOfPositions.add(String.valueOf(model.getpID()));
+                }
                 final SongViewHolder holder = (SongViewHolder) myViewholder;
 
                 holder.title.setText(model.getSongName());
@@ -245,7 +251,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                     @Override
                     public void onClick(View v) {
                         Log.e("POSITION ", "" + pos);
-                        createTempPlaylsitFromSong(pos, model);
+                        int newPosition = listOfPositions.indexOf(String.valueOf(model.getpID()));
+                        Log.e(" LIST POSITION ", " PRINTING LIST POSITION : " + newPosition);
+                        createTempPlaylsitFromSong(newPosition, model);
                     }
                 });
             } else {
@@ -269,19 +277,12 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             if (musicSrv.isPng()) {
                 musicSrv.pausePlayer();
             }
-            if (song != null) {
-                musicSrv.setList(dbSongList);
-                Global.isJourney = false;
-                for (int i = 0; i < dbSongList.size(); i++) {
-                    if (song.getSongName().equals(dbSongList.get(i).getSongName())) {
-                        playSelectedSong(i);
-                        break;
-                    }
-                }
-                Global.isLibPlaylist = true;
-                Global.libPlaylistSongs = dbSongList;
-                setUpPlaylist();
-            }
+            musicSrv.setList(dbSongList);
+            Global.isJourney = false;
+            playSelectedSong(pos);
+            Global.isLibPlaylist = true;
+            Global.libPlaylistSongs = dbSongList;
+            setUpPlaylist();
         }
     }
 
