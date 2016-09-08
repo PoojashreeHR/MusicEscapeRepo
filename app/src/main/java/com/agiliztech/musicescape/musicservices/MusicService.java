@@ -4,16 +4,18 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Binder;
-import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
@@ -56,6 +58,9 @@ public class MusicService extends Service implements
     private boolean repeatPlayList = false;
     private Random rand;
 
+    AudioManager am;
+    TelephonyManager mgr;
+    PhoneStateListener phoneStateListener;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -64,8 +69,32 @@ public class MusicService extends Service implements
 
     @Override
     public void onCreate() {
+
         //create the service
         super.onCreate();
+        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        mgr = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                if (state == TelephonyManager.CALL_STATE_RINGING) {
+                    //Incoming call: Pause music
+
+                    pausePlayer();
+                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                    //Not in call: Play music
+                    go();
+                } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    //A call is dialing, active or on hold
+                    pausePlayer();
+                }
+                super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+
+        if (mgr != null) {
+            mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
         //initialize position
         songPosn = 0;
         //random
@@ -102,7 +131,7 @@ public class MusicService extends Service implements
         List<JourneySong> journeySongList = session.getSongs();
 
         ArrayList<Song> songList = new ArrayList<>();
-        if(journeySongList == null){
+        if (journeySongList == null) {
             return;
         }
         for (int i = 0; i < journeySongList.size(); i++) {
@@ -141,37 +170,63 @@ public class MusicService extends Service implements
         return playSong;
     }
 
+    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+        @Override
+        public void onAudioFocusChange(int focusChange) {
+            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                // Pause playback
+                player.pause();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                // Resume playback
+                player.start();
+            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                //am.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
+                am.abandonAudioFocus(afChangeListener);
+                player.pause();
+                // Stop playback
+            }
+        }
+    };
+
     //play a song
     public void playSong() {
         //play
-        player.reset();
-        //get song
-        playSong = songs.get(songPosn);
-        //get title
-        songTitle = playSong.getSongName();
-        songDetail = handleNullArtist(playSong.getArtist());
-        //get id
-        long currSong = playSong.getpID();
-        //set uri
-        Uri trackUri = ContentUris.withAppendedId(
-                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                currSong);
-        //set the data source
-        try {
+        int result = am.requestAudioFocus(afChangeListener,
+                // Use the music stream.
+                AudioManager.STREAM_MUSIC,
+                // Request permanent focus.
+                AudioManager.AUDIOFOCUS_GAIN);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            player.reset();
+            //get song
+            playSong = songs.get(songPosn);
+            //get title
+            songTitle = playSong.getSongName();
+            songDetail = handleNullArtist(playSong.getArtist());
+            //get id
+            long currSong = playSong.getpID();
+            //set uri
+            Uri trackUri = ContentUris.withAppendedId(
+                    android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                    currSong);
+            //set the data source
+            try {
 
-            player.setDataSource(getApplicationContext(), trackUri);
-            Intent intent = new Intent(SERVICE_EVENT);
-            intent.putExtra("currentSong", new Gson().toJson(playSong));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-        } catch (Exception e) {
-            Log.e("MUSIC SERVICE", "Error setting data source", e);
-            tryInternalStorage(currSong);
-        }
-        try {
-            player.prepareAsync();
-        } catch (Exception e) {
+                player.setDataSource(getApplicationContext(), trackUri);
+                Intent intent = new Intent(SERVICE_EVENT);
+                intent.putExtra("currentSong", new Gson().toJson(playSong));
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            } catch (Exception e) {
+                Log.e("MUSIC SERVICE", "Error setting data source", e);
+                tryInternalStorage(currSong);
+            }
+            try {
+                player.prepareAsync();
+            } catch (Exception e) {
 
+            }
         }
+
     }
 
     private String handleNullArtist(Artist artist) {
@@ -240,12 +295,12 @@ public class MusicService extends Service implements
                 .setOngoing(true)
                 .setContentTitle("Playing")
                 .setContentText(songTitle);
-        Notification not;/* = builder.build();*/
-        if (Build.VERSION.SDK_INT < 16) {
+        Notification not = builder.build();
+       /* if (Build.VERSION.SDK_INT < 16) {
             not = builder.getNotification();
         } else {
             not = builder.build();
-        }
+        }*/
         startForeground(NOTIFY_ID, not);
     }
 
@@ -308,32 +363,34 @@ public class MusicService extends Service implements
             }
             songPosn = newSong;
             playSong();
-        } else if(noRepeatSong) {
+        } else if (noRepeatSong) {
             songPosn++;
-            if (songPosn >= songs.size()){
+            if (songPosn >= songs.size()) {
                 //songPosn = 0;
                 player.stop();
-            }else{
+            } else {
                 playSong();
             }
-        } else if(repeatSingleSong){
+        } else if (repeatSingleSong) {
             //songPosn = songPosn;
             playSong();
-        } else if(repeatPlayList){
+        } else if (repeatPlayList) {
             songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;
             playSong();
-        }else{
+        } else {
            /* songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;*/
         }
-
-
     }
 
     public void killService() {
+        if (mgr != null) {
+            mgr.listen(phoneStateListener, PhoneStateListener.LISTEN_NONE);
+        }
         stopForeground(true);
         stopSelf();
+
     }
 
     @Override
@@ -347,19 +404,19 @@ public class MusicService extends Service implements
         else shuffle = true;
     }
 
-    public void setNoRepeat(boolean setNoRepeat){
+    public void setNoRepeat(boolean setNoRepeat) {
         noRepeatSong = setNoRepeat;
         repeatPlayList = false;
         repeatSingleSong = false;
     }
 
-    public void setRepeatPlayList(boolean setRepeatPlaylist){
+    public void setRepeatPlayList(boolean setRepeatPlaylist) {
         repeatPlayList = setRepeatPlaylist;
-        noRepeatSong =false;
+        noRepeatSong = false;
         repeatSingleSong = false;
     }
 
-    public void setRepeatSingleSong(boolean setRepeat){
+    public void setRepeatSingleSong(boolean setRepeat) {
         repeatSingleSong = setRepeat;
         noRepeatSong = false;
         repeatPlayList = false;
