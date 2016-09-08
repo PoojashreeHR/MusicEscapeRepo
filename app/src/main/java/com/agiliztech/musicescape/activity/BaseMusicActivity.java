@@ -352,12 +352,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
         // Logic for Retag from Library
         if (UtilityClass.checkInternetConnectivity(this)) {
             Log.e("ABC", "XYZ");
-            displaySelectMoodDialog(model, position);
+            displaySelectMoodDialogFromBase(model, position);
             //sendToApi(model);
         }
     }
 
-    public void displaySelectMoodDialog(final Song model, final int position) {
+    public void displaySelectMoodDialogFromBase(final Song model, final int position) {
         Log.e("ABC2", "XYZ2");
         final Dialog moodDialog = new Dialog(this);
         moodDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -379,63 +379,63 @@ public class BaseMusicActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Excited", model, position, 0);
+                sendToApiFromBase("Excited", model, position, 0);
             }
         });
         happyText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Happy", model, position, 1);
+                sendToApiFromBase("Happy", model, position, 1);
             }
         });
         chilledText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Chilled", model, position, 2);
+                sendToApiFromBase("Chilled", model, position, 2);
             }
         });
         peacefullText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Peaceful", model, position, 3);
+                sendToApiFromBase("Peaceful", model, position, 3);
             }
         });
         boredText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Bored", model, position, 4);
+                sendToApiFromBase("Bored", model, position, 4);
             }
         });
         depressedText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Depressed", model, position, 5);
+                sendToApiFromBase("Depressed", model, position, 5);
             }
         });
         stressedText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.show();
-                sendToApi("Stressed", model, position, 6);
+                sendToApiFromBase("Stressed", model, position, 6);
             }
         });
         aggressiveText_dialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moodDialog.dismiss();
-                sendToApi("Aggressive", model, position, 7);
+                sendToApiFromBase("Aggressive", model, position, 7);
             }
         });
         moodDialog.setCanceledOnTouchOutside(false);
         moodDialog.show();
     }
 
-    public void sendToApi(final String mood, final Song model, final int position, final int moodPosition) {
+    public void sendToApiFromBase(final String mood, final Song model, final int position, final int moodPosition) {
         final ArrayList<SongRetagInfo> info = new ArrayList<>();
         final DBHandler dbHandler = new DBHandler(this);
         final int serverSongId = dbHandler.getServerSongId((int) model.getpID());
@@ -479,11 +479,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
                 //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
+                Song song = mAdapter.getSongObject(position);
                 if (direction == ItemTouchHelper.LEFT) {
-                    Song song = mAdapter.getSongObject(position);
-                    songRetag(position, song);
                     mAdapter.notifyItemChanged(position);
+                    songRetag(position, song);
                 } else {
+                    swapSong(position, song);
                     mAdapter.notifyItemChanged(position);
                 }
             }
