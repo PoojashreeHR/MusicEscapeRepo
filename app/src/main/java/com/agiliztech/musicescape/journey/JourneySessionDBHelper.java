@@ -66,6 +66,27 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
     }
 
+    public void favJourneySession(JourneySession session){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COL_JOURNEY_ID, session.getJourneyID());
+            contentValues.put(COL_NAME, session.getName());
+            contentValues.put(COL_FAVOURITE, session.getFavourite());
+            contentValues.put(COL_JOURNEY_SESSION_OBJ, UtilityClass.getJsonConvertor().toJson(session));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            contentValues.put(COL_JOURNEY_STARTED, simpleDateFormat.format(session.getStarted()));
+            db.update(Global.JOURNEY_SESSION_TBL_NAME,contentValues,COL_JOURNEY_ID+" = '"+session.getJourneyID()+"'",null);
+        }
+        catch (Exception e){
+            UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
+        }
+    }
+
+
     public List<JourneySession> getFavouriteJourneySessions(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<JourneySession> journeys = null;
@@ -89,6 +110,9 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
         catch (Exception e){
             UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
         }
         return journeys;
     }

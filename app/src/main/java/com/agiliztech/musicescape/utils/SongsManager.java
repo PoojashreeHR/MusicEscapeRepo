@@ -144,6 +144,30 @@ public class SongsManager {
         return allColors.get(mood);
     }
 
+    public static SongMoodCategory getMoodFromIndex(int moodIndex){
+        switch (moodIndex){
+            case 0:
+                return SongMoodCategory.scExcited;
+            case 1:
+                return SongMoodCategory.scHappy;
+            case 2:
+                return SongMoodCategory.scChilled;
+            case 3:
+                return SongMoodCategory.scPeaceful;
+            case 4:
+                return SongMoodCategory.scBored;
+            case 5 :
+                return SongMoodCategory.scDepressed;
+            case 6:
+                return SongMoodCategory.scStressed;
+            case 7:
+                return SongMoodCategory.scAggressive;
+            case 8:
+                return SongMoodCategory.scMoodNotFound;
+        }
+        return SongMoodCategory.scMoodNotFound;
+    }
+
     public static String textForMood(int moodIndex) {
         String[] allTexts = new String[] {"Excited","Happy"
         ,"Chilled","Peaceful","Bored", "Depressed"
@@ -283,74 +307,147 @@ public class SongsManager {
         }
     }
 
-    public static int getMoodImage(SongMoodCategory mood,int position){
-        switch (position){
-            case 0:
-                switch (mood){
-                    case scExcited:
-                        return R.drawable.ic_excited_top_journey_inactive;
-                    case scHappy:
-                        return R.drawable.ic_happy_top_journey_inactive;
-                    case scChilled:
-                        return R.drawable.ic_chilled_top_journey_inactive;
-                    case scPeaceful:
-                        return R.drawable.ic_peaceful_top_journey_inactive;
-                    case scBored:
-                        return R.drawable.ic_bored_top_journey_inactive;
-                    case scDepressed:
-                        return R.drawable.ic_depressed_top_journey_inactive;
-                    case scStressed:
-                        return R.drawable.ic_stressed_top_journey_inactive;
-                    case scAggressive:
-                        return R.drawable.ic_aggressive_top_journey_inactive;
-                    case scAllSongs:
-                        return R.drawable.ic_notfound_top_journey_inactive;
-                }
-            case 123456789:
-                switch (mood){
-                    case scExcited:
-                        return R.drawable.ic_excited_bottom_journey_inactive;
-                    case scHappy:
-                        return R.drawable.ic_happy_bottom_journey_inactive;
-                    case scChilled:
-                        return R.drawable.ic_chilled_bottom_journey_inactive;
-                    case scPeaceful:
-                        return R.drawable.ic_peaceful_bottom_journey_inactive;
-                    case scBored:
-                        return R.drawable.ic_bored_bottom_journey_inactive;
-                    case scDepressed:
-                        return R.drawable.ic_depressed_bottom_journey_inactive;
-                    case scStressed:
-                        return R.drawable.ic_stressed_bottom_journey_inactive;
-                    case scAggressive:
-                        return R.drawable.ic_aggressive_bottom_journey_inactive;
-                    case scAllSongs:
-                        return R.drawable.ic_notfound_bottom_journey_inactive;
-                }
-            case 1:
-                switch (mood){
-                    case scExcited:
-                        return R.drawable.ic_excited_middle_journey_inactive;
-                    case scHappy:
-                        return R.drawable.ic_happy_middle_journey_inactive;
-                    case scChilled:
-                        return R.drawable.ic_chilled_middle_journey_inactive;
-                    case scPeaceful:
-                        return R.drawable.ic_peaceful_middle_journey_inactive;
-                    case scBored:
-                        return R.drawable.ic_bored_middle_journey_inactive;
-                    case scDepressed:
-                        return R.drawable.ic_depressed_middle_journey_inactive;
-                    case scStressed:
-                        return R.drawable.ic_stressed_middle_journey_inactive;
-                    case scAggressive:
-                        return R.drawable.ic_aggressive_middle_journey_inactive;
-                    case scAllSongs:
-                        return R.drawable.ic_notfound_middle_journey_inactive;
-                }
+    public static int getMoodImage(SongMoodCategory mood,int position,boolean isPlaying){
+        if(isPlaying){
+
+            switch (position){
+                case 0:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_top_journey_active;
+                        case scHappy:
+                            return R.drawable.ic_happy_top_journey_active;
+                        case scChilled:
+                            return R.drawable.ic_chilled_top_journey_active;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_top_journey_active;
+                        case scBored:
+                            return R.drawable.ic_bored_top_journey_active;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_top_journey_active;
+                        case scStressed:
+                            return R.drawable.ic_stressed_top_journey_active;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_top_journey_active;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_top_journey_active;
+                    }
+                case 123456789:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_bottom_journey_active;
+                        case scHappy:
+                            return R.drawable.ic_happy_bottom_journey_active;
+                        case scChilled:
+                            return R.drawable.ic_chilled_bottom_journey_active;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_bottom_journey_active;
+                        case scBored:
+                            return R.drawable.ic_bored_bottom_journey_active;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_bottom_journey_active;
+                        case scStressed:
+                            return R.drawable.ic_stressed_bottom_journey_active;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_bottom_journey_active;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_bottom_journey_active;
+                    }
+                case 1:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_middle_journey_active;
+                        case scHappy:
+                            return R.drawable.ic_happy_middle_journey_active;
+                        case scChilled:
+                            return R.drawable.ic_chilled_middle_journey_active;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_middle_journey_active;
+                        case scBored:
+                            return R.drawable.ic_bored_middle_journey_active;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_middle_journey_active;
+                        case scStressed:
+                            return R.drawable.ic_stressed_middle_journey_active;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_middle_journey_active;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_middle_journey_active;
+                    }
 
 
+            }
+            return 0;
         }
-        return 0;
+        else{
+            switch (position){
+                case 0:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_top_journey_inactive;
+                        case scHappy:
+                            return R.drawable.ic_happy_top_journey_inactive;
+                        case scChilled:
+                            return R.drawable.ic_chilled_top_journey_inactive;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_top_journey_inactive;
+                        case scBored:
+                            return R.drawable.ic_bored_top_journey_inactive;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_top_journey_inactive;
+                        case scStressed:
+                            return R.drawable.ic_stressed_top_journey_inactive;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_top_journey_inactive;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_top_journey_inactive;
+                    }
+                case 123456789:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_bottom_journey_inactive;
+                        case scHappy:
+                            return R.drawable.ic_happy_bottom_journey_inactive;
+                        case scChilled:
+                            return R.drawable.ic_chilled_bottom_journey_inactive;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_bottom_journey_inactive;
+                        case scBored:
+                            return R.drawable.ic_bored_bottom_journey_inactive;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_bottom_journey_inactive;
+                        case scStressed:
+                            return R.drawable.ic_stressed_bottom_journey_inactive;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_bottom_journey_inactive;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_bottom_journey_inactive;
+                    }
+                case 1:
+                    switch (mood){
+                        case scExcited:
+                            return R.drawable.ic_excited_middle_journey_inactive;
+                        case scHappy:
+                            return R.drawable.ic_happy_middle_journey_inactive;
+                        case scChilled:
+                            return R.drawable.ic_chilled_middle_journey_inactive;
+                        case scPeaceful:
+                            return R.drawable.ic_peaceful_middle_journey_inactive;
+                        case scBored:
+                            return R.drawable.ic_bored_middle_journey_inactive;
+                        case scDepressed:
+                            return R.drawable.ic_depressed_middle_journey_inactive;
+                        case scStressed:
+                            return R.drawable.ic_stressed_middle_journey_inactive;
+                        case scAggressive:
+                            return R.drawable.ic_aggressive_middle_journey_inactive;
+                        case scAllSongs:
+                            return R.drawable.ic_notfound_middle_journey_inactive;
+                    }
+
+
+            }
+            return 0;
+        }
     }
 }

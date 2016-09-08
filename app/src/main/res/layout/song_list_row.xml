@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipe_layout_library"
@@ -11,18 +10,17 @@
     >
     <FrameLayout
         android:id="@+id/frm_left_swap"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         >
         <ImageView
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@drawable/img_retag_new"
             android:id="@+id/rv_swap_library"
             />
 
     </FrameLayout>
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/songListLayout"
         android:layout_width="match_parent"
@@ -34,7 +32,8 @@
         <ImageView
             android:id="@+id/mood_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -61,6 +60,7 @@
                 android:textColor="@color/Gray"
                 android:textSize="20sp" />
         </LinearLayout>
+
     </LinearLayout>
 
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

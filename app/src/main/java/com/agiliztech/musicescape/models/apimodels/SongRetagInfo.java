@@ -31,6 +31,9 @@ public class SongRetagInfo implements Parcelable {
         mood = in.readString();
     }
 
+    public SongRetagInfo() {
+    }
+
     public static final Creator<SongRetagInfo> CREATOR = new Creator<SongRetagInfo>() {
         @Override
         public SongRetagInfo createFromParcel(Parcel in) {

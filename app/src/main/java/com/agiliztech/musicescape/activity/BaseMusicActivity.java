@@ -8,7 +8,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,11 +36,8 @@ import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
-import com.agiliztech.musicescape.adapter.OnSwipeTouchListener;
-import com.agiliztech.musicescape.adapter.RecyclerViewAdapter;
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySong;
@@ -45,7 +48,6 @@ import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
-import com.agiliztech.musicescape.view.CustomDrawableForSeekBar;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.google.gson.Gson;
@@ -58,7 +60,7 @@ import java.util.List;
 
 
 public class BaseMusicActivity extends AppCompatActivity implements
-         MediaController.MediaPlayerControl {
+        MediaController.MediaPlayerControl {
 
     protected static MusicService musicSrv;
     protected boolean musicBound = false;
@@ -69,7 +71,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     public boolean paused = false, playbackPaused = false;
 
     protected ImageButton btn_pause;
-    protected ImageButton loop_not_selected, loop_selected;
+    protected ImageButton loop_not_selected, loop_selected_for_playlist, loop_selected_for_single_song;
     protected TextView tv_songname;
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
@@ -82,32 +84,50 @@ public class BaseMusicActivity extends AppCompatActivity implements
     private RecyclerView mRecyclerView;
     private SharedPreferences sp;
 
+
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String curSongJson = intent.getStringExtra("currentSong");
             Song song = new Gson().fromJson(curSongJson, Song.class);
+            if (song == null) {
+                return;
+            }
             tv_songname.setText(song.getSongName());
             tv_song_detail.setText(song.getArtist().getArtistName());
+
             updateMusicPlayerByMood();
+            ArrayList<Song> songs = songList;
+            for (int i = 0; i < songs.size(); i++) {
+                songs.get(i).setPlaying(false);
+                if (songs.get(i).getSongName().equals(song.getSongName())) {
+                    mAdapter.updateActiveSongImage(song, i);
+                    mRecyclerView.scrollToPosition(i);
+                    mAdapter.notifyDataSetChanged();
+                    break;
+                }
+            }
             SharedPreferences.Editor editor = sp.edit();
             editor.putString("song_name", song.getSongName());
             editor.putString("song_detail", song.getArtist().getArtistName());
             editor.apply();
         }
     };
+
     public ArrayList<Song> getSongsFromCurPlaylist() {
         if (Global.isJourney) {
             List<JourneySong> jSongs = JourneyService.getInstance(this).getCurrentSession().getSongs();
             ArrayList<Song> currentSongs = new ArrayList<>();
-            for (int i = 0; i < jSongs.size(); i++) {
+            for (int i = 0; jSongs != null && i < jSongs.size(); i++) {
                 if (jSongs.get(i).getSong() != null) {
                     currentSongs.add(jSongs.get(i).getSong());
                 }
             }
             // Collections.reverse(currentSongs);
             return currentSongs;
+        } else if (Global.isLibPlaylist) {
+            return Global.libPlaylistSongs;
         } else {
             DBHandler dbHandler = new DBHandler(this);
             return dbHandler.getAllSongsFromDB();
@@ -141,6 +161,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             }
         });
         ibPlayPause = (ImageButton) findViewById(R.id.btn_play_pause);
+        // ibPlayPause.setOnClickListener(this);
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
         ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +193,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
 
         play_music_seek_bar = (SeekBar) findViewById(R.id.play_music_seek_bar);
+        play_music_seek_bar.setScaleY(1.5f);
+        play_music_seek_bar.setPadding(0, 0, 0, 0);
+        if (Build.VERSION.SDK_INT > 16) {
+            play_music_seek_bar.getThumb().mutate().setAlpha(0);
+        } else {
+            play_music_seek_bar.getThumb().mutate().setAlpha(0);
+        }
         play_music_seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -187,9 +215,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onStopTrackingTouch(SeekBar seekBar) {
                 handler.removeCallbacks(mUpdateTimeTask);
                 int totalDuration = musicSrv.getDur();
-                Log.e("onStopTrackingTouch " , " TOTAL DURATION : " + totalDuration);
+                Log.e("onStopTrackingTouch ", " TOTAL DURATION : " + totalDuration);
                 int currPosition = UtilityClass.progressToTimer(seekBar.getProgress(), totalDuration);
-                Log.e("onStopTrackingTouch " , " CURRENT POSITION : " + currPosition);
+                Log.e("onStopTrackingTouch ", " CURRENT POSITION : " + currPosition);
                 musicSrv.seek(currPosition);
                 updateProgressBar();
             }
@@ -198,22 +226,47 @@ public class BaseMusicActivity extends AppCompatActivity implements
         tv_songname.setSelected(true);
         tv_song_detail = (TextView) findViewById(R.id.tv_song_detail);
         loop_not_selected = (ImageButton) findViewById(R.id.loop_not_selected);
-        loop_selected = (ImageButton) findViewById(R.id.loop_selected);
+        loop_selected_for_playlist = (ImageButton) findViewById(R.id.loop_selected_for_playlist);
+        loop_selected_for_single_song = (ImageButton) findViewById(R.id.loop_selected_for_single_song);
 
-        loop_selected.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loop_not_selected.setVisibility(View.VISIBLE);
-                loop_selected.setVisibility(View.GONE);
-            }
-        });
+
         loop_not_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loop_not_selected.setVisibility(View.GONE);
-                loop_selected.setVisibility(View.VISIBLE);
+                if (loop_not_selected.getVisibility() == View.VISIBLE) {
+                    loop_not_selected.setVisibility(View.GONE);
+                    loop_selected_for_playlist.setVisibility(View.VISIBLE);
+                    loop_selected_for_single_song.setVisibility(View.GONE);
+                    musicSrv.setRepeatPlayList(true);
+                }
+
             }
         });
+        loop_selected_for_playlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loop_selected_for_playlist.getVisibility() == View.VISIBLE) {
+                    loop_selected_for_single_song.setVisibility(View.VISIBLE);
+                    loop_selected_for_playlist.setVisibility(View.GONE);
+                    loop_not_selected.setVisibility(View.GONE);
+                    musicSrv.setRepeatSingleSong(true);
+                }
+            }
+        });
+        loop_selected_for_single_song.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (loop_selected_for_single_song.getVisibility() == View.VISIBLE) {
+                    loop_selected_for_single_song.setVisibility(View.GONE);
+                    loop_not_selected.setVisibility(View.VISIBLE);
+                    loop_selected_for_playlist.setVisibility(View.GONE);
+                    musicSrv.setNoRepeat(true);
+                }
+
+            }
+        });
+
+
         songList = new ArrayList<>();
         //songList = getSongsFromCurPlaylist();
         slider = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
@@ -226,6 +279,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
         linearLayout.setOnTouchListener(new View.OnTouchListener() {
             int downX, upX;
+
             @Override
             public boolean onTouch(View v, MotionEvent event) {
 
@@ -233,21 +287,17 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     downX = (int) event.getX();
                     Log.i("event.getX()", " downX " + downX);
                     return true;
-                }
-
-                else if (event.getAction() == MotionEvent.ACTION_UP) {
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     upX = (int) event.getX();
                     Log.i("event.getX()", " upX " + downX);
                     if (upX - downX > 100) {
                         // swipe right
-                       // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
+                        // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
                         musicSrv.playPrev();
                         tv_songname.setText(musicSrv.getSongName());
                         tv_song_detail.setText(musicSrv.getSongDetail());
-                    }
-
-                    else if (downX - upX > -100) {
-                      //  Toast.makeText(getApplicationContext(),"Swiping Left",Toast.LENGTH_LONG).show();
+                    } else if (downX - upX > -100) {
+                        //  Toast.makeText(getApplicationContext(),"Swiping Left",Toast.LENGTH_LONG).show();
                         musicSrv.playNext();
                         tv_songname.setText(musicSrv.getSongName());
                         tv_song_detail.setText(musicSrv.getSongDetail());
@@ -266,7 +316,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected void setUpPlaylist() {
         songList = getSongsFromCurPlaylist();
         if (songList.size() > 0) {
-            mAdapter = new RecyclerViewAdapter(songList, this);
+            mAdapter = new RecyclerViewAdapter(songList, this, false, null);
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -316,7 +366,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
         // TODO Auto-generated method stub
 
 
-        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null); // Your base layout here
+        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null);
+        // Your base layout here
         contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
         getLayoutInflater().inflate(layoutResID, contentFrame, true);
 
@@ -387,8 +438,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
             ibPlayPause.setImageResource(SongsManager.getImageResource(currSong.getMood(), true));
             changeSeekbarColor(play_music_seek_bar, SongsManager.colorForMood(currSong.getMood()));
         } else {
-            btn_pause.setImageDrawable(getResources().getDrawable(R.mipmap.pause_not_found));
-            ibPlayPause.setImageDrawable(getResources().getDrawable(R.mipmap.play_not_found));
+            btn_pause.setImageDrawable(getResources().getDrawable(R.drawable.ic_current_notfound_pause2x));
+            ibPlayPause.setImageDrawable(getResources().getDrawable(R.drawable.ic_current_notfound_play));
             changeSeekbarColor(play_music_seek_bar, Color.WHITE);
         }
     }
@@ -539,6 +590,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
     }
 
     private void onMusicServiceConnected() {
+        if (loop_not_selected.getVisibility() == View.VISIBLE) {
+            musicSrv.setNoRepeat(true);
+        } else if (loop_selected_for_playlist.getVisibility() == View.VISIBLE) {
+            musicSrv.setRepeatSingleSong(true);
+        } else if (loop_selected_for_single_song.getVisibility() == View.VISIBLE) {
+            musicSrv.setRepeatPlayList(true);
+        }
         /*if (isSongPlaying) {
             updateProgressBar();
             if (musicSrv == null) {
@@ -581,24 +639,18 @@ public class BaseMusicActivity extends AppCompatActivity implements
     }
 
     public void changeSeekbarColor(SeekBar s, int colorp) {
-        CustomDrawableForSeekBar drawableForSeekBar =
-                new CustomDrawableForSeekBar(0, 0, 0, 25, colorp, 0);
-
-
-        if (Build.VERSION.SDK_INT > 16) {
-            s.setBackground(drawableForSeekBar);
+        try {
+            LayerDrawable layerDrawable = (LayerDrawable) s.getProgressDrawable();
+            Drawable background;// = (Drawable) layerDrawable.findDrawableByLayerId(android.R.id.background);
+            Bitmap backgroundBmp = BitmapFactory.decodeResource(getResources(), colorp);
+            background = new BitmapDrawable(getResources(), backgroundBmp);
+            layerDrawable.setDrawableByLayerId(android.R.id.background, background);
+        } catch (ClassCastException e) {
+            Log.d("changeSeekbarColor", e.getMessage());
+            Log.d("changeSeekbarColor", "Using only basic color");
         }
-        if (Build.VERSION.SDK_INT < 16) {
-            s.setBackgroundDrawable(drawableForSeekBar);
-        }
 
-        /*Drawable drawable = getResources().getDrawable(R.drawable.progress_drawable_demo);
-        s.setProgressDrawable(drawable);
-*/
-
-       /* GradientDrawable drawable = (GradientDrawable)s.getBackground();
-        drawable.setStroke(20, getResources().getColor(R.color.happy)); // set stroke width and stroke color
-*/
+        s.getProgressDrawable().setColorFilter(colorp, PorterDuff.Mode.SRC_IN);
     }
 
     private Handler handler = new Handler();
@@ -648,11 +700,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
         List<Song> listOfSongs;
         Context context;
+        boolean isPlaying;
+        Song song;
 
-        public RecyclerViewAdapter(List<Song> listOfSongs, Context context) {
+        public RecyclerViewAdapter(List<Song> listOfSongs, Context context, boolean isPlaying, Song song) {
             this.listOfSongs = listOfSongs;
-
             this.context = context;
+            this.isPlaying = isPlaying;
+            this.song = song;
         }
 
         @Override
@@ -733,17 +788,32 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     }
                 }
             });
+            if (isPlaying) {
+
+            }
             SongMoodCategory mood = model.getMood();
             if (mood == null) {
                 mood = SongMoodCategory.scAllSongs;
             }
             holder.rv_song_name.setTextColor(SongsManager.colorForMood(mood));
             if (pos == 0) {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 0));
+                if (songList.get(pos).isPlaying()) {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 0, true));
+                } else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 0, false));
+                }
             } else if (pos == listOfSongs.size() - 1) {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789));
+                if (songList.get(pos).isPlaying()) {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789, true));
+                } else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 123456789, false));
+                }
             } else {
-                holder.image.setImageResource(SongsManager.getMoodImage(mood, 1));
+                if (songList.get(pos).isPlaying()) {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 1, true));
+                } else {
+                    holder.image.setImageResource(SongsManager.getMoodImage(mood, 1, false));
+                }
             }
             holder.rv_song_name.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -794,6 +864,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
             } else {
                 return artist.getArtistName();
             }
+        }
+
+        public void updateActiveSongImage(Song song, int position) {
+            Song songs = song;
+            //SongMoodCategory moods = songs.getMood();
+            songs.setPlaying(true);
+            listOfSongs.set(position, songs);
+            notifyDataSetChanged();
         }
 
         class MyViewHolder extends RecyclerView.ViewHolder {

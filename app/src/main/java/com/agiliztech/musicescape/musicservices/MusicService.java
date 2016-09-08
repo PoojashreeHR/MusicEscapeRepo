@@ -51,6 +51,9 @@ public class MusicService extends Service implements
     private static final int NOTIFY_ID = 1;
     //shuffle flag and random
     private boolean shuffle = false;
+    private boolean noRepeatSong = false;
+    private boolean repeatSingleSong = false;
+    private boolean repeatPlayList = false;
     private Random rand;
 
 
@@ -99,6 +102,9 @@ public class MusicService extends Service implements
         List<JourneySong> journeySongList = session.getSongs();
 
         ArrayList<Song> songList = new ArrayList<>();
+        if(journeySongList == null){
+            return;
+        }
         for (int i = 0; i < journeySongList.size(); i++) {
             songList.add(journeySongList.get(i).getSong());
         }
@@ -152,6 +158,7 @@ public class MusicService extends Service implements
                 currSong);
         //set the data source
         try {
+
             player.setDataSource(getApplicationContext(), trackUri);
             Intent intent = new Intent(SERVICE_EVENT);
             intent.putExtra("currentSong", new Gson().toJson(playSong));
@@ -300,11 +307,27 @@ public class MusicService extends Service implements
                 newSong = rand.nextInt(songs.size());
             }
             songPosn = newSong;
-        } else {
+            playSong();
+        } else if(noRepeatSong) {
+            songPosn++;
+            if (songPosn >= songs.size()){
+                //songPosn = 0;
+                player.stop();
+            }else{
+                //playSong();
+            }
+        } else if(repeatSingleSong){
+            //songPosn = songPosn;
+            playSong();
+        } else if(repeatPlayList){
             songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;
+            playSong();
+        }else{
+           /* songPosn++;
+            if (songPosn >= songs.size()) songPosn = 0;*/
         }
-        playSong();
+
 
     }
 
@@ -323,5 +346,24 @@ public class MusicService extends Service implements
         if (shuffle) shuffle = false;
         else shuffle = true;
     }
+
+    public void setNoRepeat(boolean setNoRepeat){
+        noRepeatSong = setNoRepeat;
+        repeatPlayList = false;
+        repeatSingleSong = false;
+    }
+
+    public void setRepeatPlayList(boolean setRepeatPlaylist){
+        repeatPlayList = setRepeatPlaylist;
+        noRepeatSong =false;
+        repeatSingleSong = false;
+    }
+
+    public void setRepeatSingleSong(boolean setRepeat){
+        repeatSingleSong = setRepeat;
+        noRepeatSong = false;
+        repeatPlayList = false;
+    }
+
 
 }

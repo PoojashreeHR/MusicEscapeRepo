@@ -299,7 +299,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
 
             cv.put(KEY_API_STATUS, "again_analysing");
-            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + "\'" + spotifyInfos.get(i).getId() + "\'", null);
+            db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + " =\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
         db.close();
 
@@ -461,5 +461,48 @@ public class DBHandler extends SQLiteOpenHelper {
 
         return null;
     }
-    
+
+    public int getAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
+    }
+    public int getExceptAnalysedCount() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
+        Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
+        return (int) count;
+    }
+
+    public int getServerSongId(int i) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT "+KEY_SERVER_SONG_ID+" FROM " +
+                TABLE_SONGS + " WHERE " + KEY_CLIENT_ID + "=" + i,null);
+        int x = 0;
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                x=  Integer.parseInt(cursor.getString(cursor.getColumnIndex(KEY_SERVER_SONG_ID)));
+            } while (cursor.moveToNext());
+        }
+         return x;
+    }
+
+    public void updateSongStatusWithModifiedMood(String mood,int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        Song oldSong = getSongObject(id);
+        if(oldSong != null){
+            oldSong.setMood(SongsManager.getMoodForText(mood));
+            cv.put(KEY_META_DATA,new Gson().toJson(oldSong));
+        }
+        cv.put(KEY_SONG_MOOD,mood);
+        cv.put(KEY_STATUS,"analysed");
+        int x = db.update(TABLE_SONGS,cv,KEY_SERVER_SONG_ID + "="+ id,null);
+        Log.e("SongMood", "SONG MOOD UPDATED " + x);
+        db.close();
+    }
+
+
 }

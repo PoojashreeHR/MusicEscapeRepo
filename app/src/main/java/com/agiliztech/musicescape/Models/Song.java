@@ -8,7 +8,7 @@ import java.util.List;
  * Created by amrithamayangorky on 8/12/16.
  */
 public class Song {
-
+    private boolean isPlaying;
     private int acousticness;
     private String analysisStatus;
     private String artistNameFirstLetter;
@@ -308,6 +308,14 @@ public class Song {
 
     public void setJourneySongs(List<JourneySongs> journeySongs) {
         this.journeySongs = journeySongs;
+    }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
+    public void setPlaying(boolean playing) {
+        isPlaying = playing;
     }
 
     @Override

@@ -78,7 +78,9 @@
             android:name=".activity.DrawingViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.MoodMappingActivity" />
+        <activity
+            android:name=".activity.MoodMappingActivity"
+            android:screenOrientation="portrait" />
         <!-- <activity android:name=".activity.MainSplashScreen" -->
         <!-- android:theme="@style/AppFullScreenTheme" -->
         <!-- android:screenOrientation="portrait"/> -->
@@ -89,8 +91,14 @@
         <activity
             android:name=".activity.HistoryActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.PlaylistJourneyActivity" />
-        <activity android:name=".activity.SelectingMoodActivity"></activity>
+        <activity
+            android:name=".activity.PlaylistJourneyActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".activity.SelectingMoodActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.NewDashboardActivity"></activity>
     </application>
 
 </manifest>

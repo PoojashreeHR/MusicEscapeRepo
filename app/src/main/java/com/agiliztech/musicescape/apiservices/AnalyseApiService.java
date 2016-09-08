@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.UtilityClass;
 import com.google.gson.Gson;
 
 import java.util.concurrent.CountDownLatch;
@@ -53,52 +55,62 @@ public class AnalyseApiService extends Service {
             public void run() {
 
                 while (true) {
-                    // if (variable.contains("1")) {
-                    latch = new CountDownLatch(1);
-                    ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
-                    Call<ResponseSongPollModel> call1 = apiInterface.analysePollSongs(batchIds);
-                    //latch = new CountDownLatch(1);
-                    call1.enqueue(new Callback<ResponseSongPollModel>() {
-                        @Override
-                        public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
+                    if (UtilityClass.checkInternetConnectivity(AnalyseApiService.this)) {
+                        // if (variable.contains("1")) {
+                        latch = new CountDownLatch(1);
+                        ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
+                        Call<ResponseSongPollModel> call1 = apiInterface.analysePollSongs(batchIds);
+                        //latch = new CountDownLatch(1);
+                        call1.enqueue(new Callback<ResponseSongPollModel>() {
+                            @Override
+                            public void onResponse(Call<ResponseSongPollModel> call, Response<ResponseSongPollModel> response) {
 
-                            if (response.isSuccessful()) {
-                                Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
-                                responseSongPollModel = response.body();
+                                if (response.isSuccessful()) {
+                                    Log.e("RESPONSE SUCCESS ", new Gson().toJson(response.body()));
+                                    responseSongPollModel = response.body();
 
 
+                                    //latch.countDown();
+                                    // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
+                                Log.e("RESPONSE ERROR ", "" + t.getMessage());
                                 //latch.countDown();
-                                // responseSongPollModel.setSongs(new ArrayList<>(Arrays.asList(responseSongPollModel.getSongs().get(0))));
-
+                            }
+                        });
+                        try {
+                            latch.await(10, TimeUnit.SECONDS);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        if (responseSongPollModel != null) {
+                            if (responseSongPollModel.getStatus().equalsIgnoreCase("completed")) {
+                                Intent intent = new Intent(SERVICE_EVENT);
+                                Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
+                                intent.putExtra("songresponse_analysed", new Gson().toJson(responseSongPollModel));
+                                LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
+                                stopSelf();
+                                break;
+                            } else {
+                                try {
+                                    Thread.sleep(4000);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
-
-                        @Override
-                        public void onFailure(Call<ResponseSongPollModel> call, Throwable t) {
-                            Log.e("RESPONSE ERROR ", "" + t.getMessage());
-                            //latch.countDown();
-                        }
-                    });
-                    try {
-                        latch.await(10, TimeUnit.SECONDS);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    if (responseSongPollModel != null) {
-                        if (responseSongPollModel.getStatus().equalsIgnoreCase("completed")) {
-                            Intent intent = new Intent(SERVICE_EVENT);
-                            Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
-                            intent.putExtra("songresponse_analysed", new Gson().toJson(responseSongPollModel));
-                            LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
-                            stopSelf();
-                            break;
-                        } else {
-                            try {
-                                Thread.sleep(4000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                    }else{
+                        Toast.makeText(AnalyseApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SERVICE_EVENT);
+                        Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));
+                        intent.putExtra("songresponse_analysed", "");
+                        LocalBroadcastManager.getInstance(AnalyseApiService.this).sendBroadcast(intent);
+                        stopSelf();
+                        break;
                     }
                 }
             }

@@ -1,63 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimary"
-        tools:context="com.agiliztech.musicescape.activity.AppInfoActivity"
-    android:weightSum="5">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    android:orientation="vertical"
+    android:weightSum="5"
+    tools:context="com.agiliztech.musicescape.activity.AppInfoActivity">
 
 
     <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".5"
-        android:layout_width="match_parent"
         android:orientation="horizontal">
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:id="@+id/toolbar_setting"
-        app:theme="@style/ToolBarStyle">
 
-        <FrameLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_setting"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/frameLayout">
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:theme="@style/ToolBarStyle">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/backbutton"
-                android:layout_marginLeft="5dp"
-                android:background="@drawable/backbut"/>
-
-            <TextView
+            <FrameLayout
+                android:id="@+id/frameLayout"
                 android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:id="@+id/appInfo"
-                android:text="@string/title_activity_app_info"
-                android:textColor="@color/Gray"
-                android:gravity="center"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:layout_gravity="center_horizontal|top" />
-        </FrameLayout>
-    </android.support.v7.widget.Toolbar>
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/backbutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/backbut" />
+
+                <TextView
+                    android:id="@+id/appInfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="45dp"
+                    android:layout_gravity="center_horizontal|top"
+                    android:gravity="center"
+                    android:text="@string/title_activity_app_info"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:textColor="@color/Gray" />
+            </FrameLayout>
+        </android.support.v7.widget.Toolbar>
     </RelativeLayout>
+
     <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4.5"
-        android:layout_width="match_parent"
         android:orientation="vertical">
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/appInfoRecyclerView"
-        android:layout_marginRight="25dp"
-        android:layout_marginLeft="25dp">
 
-    </android.support.v7.widget.RecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/appInfoRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp">
+
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/tv_version_appinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/appInfoRecyclerView"
+            android:text="eScape Version 1.1 Build 200.0"
+            android:layout_centerInParent="true"
+            android:textColor="@color/Gray"
+            android:textSize="18sp"
+            />
     </RelativeLayout>
 </LinearLayout>

@@ -22,7 +22,7 @@ public class JourneySession {
     private String name;
     private int sessionSyncStatus;
     private Date started;
-    private int targetMood;
+    private SongMoodCategory targetMood;
     private int totalDuration;
     private int totalPlaylistDuration;
     private String journeyID;
@@ -111,11 +111,11 @@ public class JourneySession {
         this.started = started;
     }
 
-    public int getTargetMood() {
+    public SongMoodCategory getTargetMood() {
         return targetMood;
     }
 
-    public void setTargetMood(int targetMood) {
+    public void setTargetMood(SongMoodCategory targetMood) {
         this.targetMood = targetMood;
     }
 
@@ -182,6 +182,9 @@ public class JourneySession {
 
     public List<Integer> trackNumbers() {
         List<Integer> trackNos = new ArrayList<>();
+        if(songs == null || songs.size() == 0){
+            return trackNos;
+        }
         for (JourneySong song : songs) {
             trackNos.add(song.getTrackNo());
         }

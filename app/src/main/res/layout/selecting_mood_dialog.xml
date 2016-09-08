@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/black"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/moodSelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="20dp"
+        android:text="Select Mood Category"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:paddingRight="50dp"
+        android:paddingLeft="50dp"
+
+        />
+
+    <TextView
+        android:id="@+id/exitedText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Exited"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/exited"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/happyText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Happy"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/happy"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/chilledText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Chilled"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/chilled"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/peacefullText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Peacefull"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/peacefull"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/boredText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Bored"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/Bored"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/depressedText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Depressed"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/depressed"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/stressedText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Stressed"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/stressed"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/aggressiveText_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:gravity="center"
+        android:onClick="onClick"
+        android:text="Aggressive"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/Aggressive"
+        android:textSize="20sp" />
+</LinearLayout>

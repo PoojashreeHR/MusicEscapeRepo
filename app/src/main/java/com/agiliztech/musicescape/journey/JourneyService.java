@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.graphics.PointF;
 
 import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.models.DashboardItem;
 import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
@@ -40,33 +41,50 @@ public class JourneyService {
         return sharedInstance;
     }
 
-    public List<Journey> getAllFavouriteAndPresetsJourneys() {
+    public List<DashboardItem> getAllPresets() {
         List<Journey> journeys = null;
+        List<DashboardItem> items = new ArrayList<DashboardItem>();
+
+        generatePresetsIfRequired();
 
         JourneyDBHelper journeyDBHelper = new JourneyDBHelper(mContext);
-        List<Journey> presetsList = journeyDBHelper.getJourneysBy(JourneyDBHelper.COL_GEN_BY, "Presets");
+        List<Journey> presetsList = journeyDBHelper.getJourneysBy(JourneyDBHelper.COL_GEN_BY, "Preset");
         journeyDBHelper.close();
 
         if (presetsList != null && presetsList.size() > 0) {
             journeys = presetsList;
         }
 
+        if (journeys != null) {
+            for (Journey j : journeys) {
+                DashboardItem dbItem = new DashboardItem(true);
+                dbItem.setJourney(j);
+                items.add(dbItem);
+
+            }
+        }
+
+
+
+        return items;
+    }
+
+    public List<DashboardItem> getAllFavouritesJourneys(){
+        List<DashboardItem> items = new ArrayList<DashboardItem>();
         JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
         List<JourneySession> favsList = journeySessionDBHelper.getFavouriteJourneySessions();
         journeySessionDBHelper.close();
 
-        if (favsList.size() > 0) {
+        if (favsList !=null && favsList.size() > 0) {
 
-            if (journeys == null) {
-                journeys = new ArrayList<Journey>();
-            }
 
             for (JourneySession session : favsList) {
-                journeys.add(session.getJourney());
+                DashboardItem dbItem = new DashboardItem(false);
+                dbItem.setSession(session);
+                items.add(dbItem);
             }
         }
-
-        return journeys;
+        return items;
     }
 
     public void unFavouriteJourney(JourneySession session) {
@@ -83,7 +101,7 @@ public class JourneyService {
         JourneyDBHelper journeyDBHelper = new JourneyDBHelper(mContext);
         List<Journey> allJourneys = journeyDBHelper.getAllJourneys();
 
-        if (allJourneys.size() > 0) {
+        if (allJourneys == null || allJourneys.size() > 0) {
             createCheerUpJourney();
             createWorkOutJourney();
             createPartyJourney();
@@ -1129,10 +1147,11 @@ public class JourneyService {
         return session;
     }
 
-    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray){
+    public JourneySession createJourneySessionFromJourney(Journey j, List<Song> songsArray,
+                                                          SongMoodCategory current, SongMoodCategory target, boolean addToDb){
         List<Song>  songs = null;
         JourneySession session = null;
-        JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
+
 
         if(songsArray == null){
             songs = createPlaylistFromJourney(j.getJourneyEVArray());
@@ -1148,9 +1167,14 @@ public class JourneyService {
         session.setSessionSyncStatus(0);
         session.setStarted(new Date());
         session.setJourneyID(UUID.randomUUID().toString());
+        session.setCurrentMood(current);
+        session.setTargetMood(target);
 
-        journeySessionDBHelper.addJourneySession(session);
-        journeySessionDBHelper.close();
+        if(addToDb) {
+            JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(mContext);
+            journeySessionDBHelper.addJourneySession(session);
+            journeySessionDBHelper.close();
+        }
 
         return session;
     }
@@ -1176,6 +1200,7 @@ public class JourneyService {
                 songObj.setSkipped(0);
                 session.addSongObj(songObj);
             }
+            idx++;
         }
 
         return session;

@@ -8,14 +8,31 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.journey.SongMoodCategory;
+import com.agiliztech.musicescape.models.History;
+import com.agiliztech.musicescape.models.JourneySession;
+import com.agiliztech.musicescape.utils.SongsManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SelectingMoodActivity extends AppCompatActivity implements View.OnClickListener {
+
+    boolean firstMoodSelected, secondMoodSelected;
+    SongMoodCategory firstMood, secondMood;
+    //Date playlistCreated;
+    private JourneySession journeysession = new JourneySession();
+
     TextView selectingMood;
     String result;
     @Override
@@ -30,9 +47,7 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
         nextMood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SelectingMoodActivity.this, DrawingViewActivity.class);
-                startActivity(intent);
-                finish();
+
             }
         });
 
@@ -55,7 +70,48 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View v) {
-        selectingMood.setText("What is your Target mood");
-        Toast.makeText(getApplicationContext(),"You clicked a Text",Toast.LENGTH_LONG).show();
+
+        TextView tv = (TextView) v;
+        if(!firstMoodSelected){
+            selectingMood.setText("What is your Target mood");
+            firstMoodSelected =  true;
+            firstMood = SongsManager.getMoodForText(tv.getText().toString());
+        }
+        else if(!secondMoodSelected){
+            secondMoodSelected = true;
+            secondMood = SongsManager.getMoodForText(tv.getText().toString());
+
+
+            Intent intent = new Intent(SelectingMoodActivity.this, DrawingViewActivity.class);
+            intent.putExtra("current",SongsManager.getIntValue(firstMood));
+            intent.putExtra("target",SongsManager.getIntValue(secondMood));
+
+            startActivity(intent);
+            finish();
+        }
+      //  uploadInfo(firstMood, secondMood);
+
+        //Toast.makeText(getApplicationContext(),"You clicked a Text",Toast.LENGTH_LONG).show();
     }
+
+    private void uploadInfo(SongMoodCategory firstMood, SongMoodCategory secondMood )
+    {
+
+    JSONObject jsonObject = new JSONObject();
+    try {
+        jsonObject.put("currentMood", firstMood);
+        jsonObject.put("targetMood", secondMood);
+        String postData = jsonObject.toString();
+
+        journeysession = new JourneySession();
+        journeysession.setCurrentMood(firstMood);
+        journeysession.setTargetMood(secondMood);
+//      Date dateOnlyFrmt = new Date("dd MMM");
+//      journeysession.setStarted(dateOnlyFrmt.format(new Date()));
+
+    } catch (JSONException e) {
+        e.printStackTrace();
+    }
+
+}
 }
