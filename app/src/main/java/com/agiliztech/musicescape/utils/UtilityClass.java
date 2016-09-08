@@ -55,6 +55,4 @@ public class UtilityClass {
         return ((wifi != null & datac != null)
                 && (wifi.isConnected() | datac.isConnected()));
     }
-
-
 }

@@ -42,7 +42,6 @@ import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -60,7 +59,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     BaseMusicActivity baseMusicActivity;
     private View mViewGroup;
     private View songViewGroup;
-    SongsModel songsModel = new SongsModel();
     private ImageButton mButton, songButton;
     TextView moodList, songs;
     Typeface tf;
@@ -79,7 +77,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         String mood;
         Context context;
         int SONGUI = 0, ALPHAUI = 1;
-       //List<SwipedState> list ;
+        //List<SwipedState> list ;
 
         @Override
         public HashMap<String, Integer> getMapIndex() {
@@ -199,7 +197,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             if(modelUi.isSong()){
                 final Song model = modelUi.getSongObj();
 
-               final  SongViewHolder holder = (SongViewHolder) myViewholder;
+                final  SongViewHolder holder = (SongViewHolder) myViewholder;
 
                 holder.title.setText(model.getSongName());
                 if (mood.contains("depressed")) {
@@ -339,7 +337,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             playSelectedSong(pos);
             Global.isLibPlaylist = true;
             Global.libPlaylistSongs = dbSongList;
-           setUpPlaylist();
+            setUpPlaylist();
         }
     }
     private enum SwipedState {
@@ -530,6 +528,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);*/
         // }
+
+
     }
 
     private ArrayList<Song> changeSongNames(ArrayList<Song> listOfSongs) {
@@ -571,17 +571,17 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     }
 
     public void artistWise() {
-       sortSongsArtistwiseLocal();
-       SongAdapter(dbSongList,"");
+        sortSongsArtistwiseLocal();
+        SongAdapter(dbSongList, "");
 
     }
 
     public void sortSongsArtistwiseLocal() {
-             Collections.sort(dbSongList, new Comparator<Song>() {
-                public int compare(Song a, Song b) {
-                    return a.getArtist().getArtistName().compareToIgnoreCase(b.getArtist().getArtistName());
-                }
-            });
+        Collections.sort(dbSongList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getArtist().getArtistName().compareToIgnoreCase(b.getArtist().getArtistName());
+            }
+        });
     }
 
 
@@ -591,16 +591,16 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
     }
 
     public void sortSongsAlphabeticallyLocal() {
-            Collections.sort(dbSongList, new Comparator<Song>() {
-                public int compare(Song a, Song b) {
-                    return a.getSongName().compareToIgnoreCase(b.getSongName());
-                }
-            });
+        Collections.sort(dbSongList, new Comparator<Song>() {
+            public int compare(Song a, Song b) {
+                return a.getSongName().compareToIgnoreCase(b.getSongName());
+            }
+        });
     }
 
     public void albumwise() {
         sortSongsAlbumwiseLocal();
-       SongAdapter(dbSongList, "");
+        SongAdapter(dbSongList, "");
     }
 
     public void sortSongsAlbumwiseLocal() {
@@ -652,7 +652,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 //Toast.makeText(getApplicationContext(), "Bored is clicked", Toast.LENGTH_LONG).show();
                 ArrayList<Song> modelBored = dbHandler.getSongsListBasedOnMoods("bored");
                 SongAdapter(modelBored, "bored");
-             //   songWiseDisplay(modelBored,"bored");
                 break;
             case R.id.chilled:
                 //your code here
@@ -665,7 +664,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 ArrayList<Song> modelChilled = dbHandler.getSongsListBasedOnMoods("chilled");
                 SongAdapter(modelChilled, "chilled");
-             //   songWiseDisplay(modelChilled,"chilled");
                 break;
             case R.id.depressed:
                 //your code here
@@ -678,7 +676,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 ArrayList<Song> modelDepressed = dbHandler.getSongsListBasedOnMoods("depressed");
                 SongAdapter(modelDepressed, "depressed");
-              //  songWiseDisplay();
                 break;
             case R.id.exited:
                 //your code here
@@ -746,6 +743,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 moodList.setText(allMood.getText().toString());
                 moodList.setTextColor(allMood.getTextColors());
                 moodList.setTypeface(tf);
+
                 mButton.animate().rotation(360).start();
                 mViewGroup.setVisibility(View.GONE);
                 //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
@@ -761,6 +759,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 songWiseDisplay();
                 songButton.animate().rotation(360).start();
                 songViewGroup.setVisibility(View.GONE);
+                //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 break;
             case R.id.sortArtist:
                 //your code here
@@ -772,6 +771,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 artistWise();
                 songButton.animate().rotation(360).start();
                 songViewGroup.setVisibility(View.GONE);
+                //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 break;
 
             case R.id.sortAlbum:
@@ -784,6 +784,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 albumwise();
                 songButton.animate().rotation(360).start();
                 songViewGroup.setVisibility(View.GONE);
+                //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 break;
         }
 

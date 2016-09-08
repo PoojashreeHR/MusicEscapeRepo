@@ -1,5 +1,4 @@
 package com.agiliztech.musicescape.activity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -102,7 +101,7 @@ public class MainSplashScreen extends Activity {
                     finish();
                 }
             }
-        },3000);
+        },1000);
     }
 
     @Override

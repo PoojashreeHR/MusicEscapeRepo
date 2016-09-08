@@ -223,32 +223,34 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!isPlaying) {
-                    //  mPlayer.start();
-                    testButton.setText(getResources().getString(R.string.pause));
-                    mood_scanning.setVisibility(View.VISIBLE);
-                    isPlaying = true;
-                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
-                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
-                    if (listFromDB.size() > 0) {
-                        if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
-                            Log.e("SAME ", " SAME");
-                            testButton.setText(getResources().getString(R.string.start));
-                            isPlaying = false;
-                            // displayAlertDialog();
-                            String analysedCount = String.valueOf(dbHandler.getAnalysedCount());
-                            String otherCount = String.valueOf(dbHandler.getExceptAnalysedCount());
-                            displayScannedCompletedDialog(analysedCount, otherCount);
+                String buttonText = testButton.getText().toString();
+                if (buttonText != "@string/start" && !isPlaying) {
+                        //  mPlayer.start();
+                        testButton.setText(getResources().getString(R.string.pause));
+                        mood_scanning.setVisibility(View.VISIBLE);
+                        // isPlaying = true;
+                        ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
+                        ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
+                        if (listFromDB.size() > 0) {
+                            if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
+                                Log.e("SAME ", " SAME");
+                                testButton.setText(getResources().getString(R.string.resume));
+                                isPlaying = false;
+                                // displayAlertDialog();
+                                String analysedCount = String.valueOf(dbHandler.getAnalysedCount());
+                                String otherCount = String.valueOf(dbHandler.getExceptAnalysedCount());
+                                displayScannedCompletedDialog(analysedCount, otherCount);
+                            } else {
+                                Log.e("NOT SAME", " NOT SAME");
+                                new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
+                                //displayAlertDialog();
+                            }
                         } else {
-                            Log.e("NOT SAME", " NOT SAME");
                             new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
                             //displayAlertDialog();
-                        }
-                    } else {
-                        new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
-                        //displayAlertDialog();
                     }
-                } else {
+            }
+                else {
                     // mPlayer.stop();
                     testButton.setText(getResources().getString(R.string.start));
                     isPlaying = false;
@@ -587,7 +589,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     mood_scanning.setText(" Processing ");
                     mood_scanning.setVisibility(View.VISIBLE);
                     new CallScanApiInAsync().execute(dbHandler);
-                } else {
+
+                }
+
+                else {
                     scanCompleteDialog.dismiss();
                     displayNetworkDialog();
                     //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
@@ -608,7 +613,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
                             testButton.setText(getResources().getString(R.string.pause));
                             mood_scanning.setText(" Processing ");
