@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -666,6 +667,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);
+        if(!scannedOnce){
+            hideMusicPlayer();
+        }
+        else{
+            showMusicPlayer();
+        }
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
                 new IntentFilter(MusicService.SERVICE_EVENT));
         resumeOnce();
