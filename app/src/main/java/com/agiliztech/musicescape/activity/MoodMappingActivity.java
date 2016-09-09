@@ -155,7 +155,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         public void onReceive(Context context, Intent intent) {
             String count = intent.getStringExtra("processing_count");
-            mood_scanning.setText("Processing " + count+" of "+songList.size());
+            mood_scanning.setText("Processing " + count + " of " + dbHandler.getExceptAnalysedCount());
         }
     };
 
@@ -861,29 +861,28 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         songs.removeAll(dbList);
                         for (int i = 0; i < songs.size(); i++) {
                             storeSongsINDB(params[0], songs);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount()),
-                                            String.valueOf(dbHandler.getExceptAnalysedCount()));
-                                }
-                            });
-
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount()),
+                                        String.valueOf(dbHandler.getExceptAnalysedCount()));
+                            }
+                        });
                     }
                     //If Songs Deleted
                     else if (songs.size() < dbList.size()) {
                         dbList.removeAll(songs);
                         for (int i = 0; i < dbList.size(); i++) {
                             removeSongFromDB(params[0], dbList.get(i));
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount())
-                                            , String.valueOf(dbHandler.getExceptAnalysedCount()));
-                                }
-                            });
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                displayScannedCompletedDialog(String.valueOf(dbHandler.getAnalysedCount())
+                                        , String.valueOf(dbHandler.getExceptAnalysedCount()));
+                            }
+                        });
                     } else {
                         if (dbHandler.getAnalysedCount() != songs.size()) {
                             runOnUiThread(new Runnable() {

@@ -27,6 +27,7 @@ import com.agiliztech.musicescape.journey.Size;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.Global;
+import com.agiliztech.musicescape.utils.UtilityClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -69,6 +70,21 @@ public class HistoryActivity extends BaseMusicActivity {
                 .putBoolean("history", false).commit();
     }
 
+
+    public int dpToPx(int dp560) {
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = adjustWidth(dp560);
+        int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public int adjustWidth(int dp560){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = dp560 * displayMetrics.widthPixels / 560;
+        return (int) UtilityClass.convertPixelsToDpWidth(dp,this);
+        //return  dp;
+    }
     private class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryViewHolder>
 
     {
@@ -103,7 +119,7 @@ public class HistoryActivity extends BaseMusicActivity {
             holder.journeyView.setJourneyPoints(session.getJourney().getJourneyDotsArray());
             holder.journeyView.setEnabled(false);
 
-
+            holder.journeyView.setPadding(dpToPx(18),0, dpToPx(18),0);
 
             holder.tv_currentmood.setTextColor(SongsManager.colorForMood(session.getCurrentMood()));
             holder.tv_targetmood.setTextColor(SongsManager.colorForMood(session.getTargetMood()));

@@ -11,6 +11,12 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <supports-screens android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="true"
+        android:anyDensity="true" />
+
     <application
         android:name=".MainApplication"
         android:allowBackup="true"
@@ -90,7 +96,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.HistoryActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".activity.PlaylistJourneyActivity"
             android:screenOrientation="portrait"
@@ -98,7 +105,8 @@
         <activity
             android:name=".activity.SelectingMoodActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.NewDashboardActivity"></activity>
+        <activity android:name=".activity.NewDashboardActivity"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +22,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
@@ -32,6 +35,7 @@ import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
+import com.agiliztech.musicescape.utils.UtilityClass;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,10 +49,11 @@ public class NewDashboardActivity extends BaseMusicActivity {
     SharedPreferences dashboardPreference;
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
-    Button btn_default,btn_user;
+    TabItem btn_default,btn_user;
     String dashboard;
     private RecyclerView recyclerView,recyclerView_user;
     private Timer highlightTimer;
+    private TabLayout dash_items;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,30 +62,37 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 
-        btn_default = (Button) findViewById(R.id.btn_default);
-        btn_default.setTextColor(Color.parseColor("#F2DD52"));
-        btn_default.setOnClickListener(new View.OnClickListener() {
+        dash_items = (TabLayout) findViewById(R.id.dash_items);
+
+        RelativeLayout.LayoutParams relparams = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        dash_items.setLayoutParams(relparams);
+
+        dash_items.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onClick(View v) {
-               btn_default.setTextColor(Color.parseColor("#F2DD52"));
-                btn_user.setTextColor(Color.parseColor("#FFFFFF"));
-                recyclerView.setVisibility(View.VISIBLE);
-                recyclerView_user.setVisibility(View.GONE);
+            public void onTabSelected(TabLayout.Tab tab) {
+                if(tab.getPosition() == 0){
+                    recyclerView.setVisibility(View.VISIBLE);
+                    recyclerView_user.setVisibility(View.GONE);
+                }
+                else{
+                    recyclerView_user.setVisibility(View.VISIBLE);
+                    recyclerView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
 
             }
         });
 
-        btn_user = (Button) findViewById(R.id.btn_user);
-        btn_user.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                btn_user.setTextColor(Color.parseColor("#F2DD52"));
-                btn_default
-                        .setTextColor(Color.parseColor("#FFFFFF"));
-                recyclerView_user.setVisibility(View.VISIBLE);
-                recyclerView.setVisibility(View.GONE);
-            }
-        });
+
+
 
         highlightTimer = new Timer();
         menu_activedraw = (ImageView) findViewById(R.id.menu_activedraw);
@@ -214,6 +226,10 @@ public class NewDashboardActivity extends BaseMusicActivity {
             final int pos = position;
             final DashboardItem item = sessions.get(pos);
 
+            holder.ll_saveHistory.setLayoutParams(getLayoutParams());
+            holder.overlay.setLayoutParams(getLayoutParams());
+            holder.overlay.setPadding(dpToPx(18),0, dpToPx(18),0);
+            holder.journeyView.setLayoutParams(getFrameLayoutParams());
 
             holder.journeyView.setGaps(getGapsSize());
             holder.journeyView.setMode(JourneyView.DrawingMode.DMMENU);
@@ -231,7 +247,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
             }
             else{
                 holder.journeyView.setJourneyPoints(item.getSession().getJourney().getJourneyDotsArray());
-                holder.tv_title.setText(handleNull(item.getSession().getJourney().getName()));
+                holder.tv_title.setText(handleNull(item.getSession().getName()));
                 holder.overlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -264,6 +280,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
         class HistoryViewHolder extends  RecyclerView.ViewHolder {
 
 
+            LinearLayout ll_saveHistory;
             FrameLayout overlay;
             JourneyView journeyView;
             TextView tv_title, tv_tracks;
@@ -274,8 +291,35 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 tv_title = (TextView) itemView.findViewById(R.id.tv_title);
                 overlay = (FrameLayout) itemView.findViewById(R.id.overlay);
                 tv_tracks = (TextView) itemView.findViewById(R.id.tv_tracks);
+                ll_saveHistory = (LinearLayout) itemView.findViewById(R.id.ll_saveHistory);
             }
         }
+    }
+
+    private FrameLayout.LayoutParams getFrameLayoutParams() {
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(126),dpToPx(180));
+        layoutParams.setMargins(0, dpToPx(30),0,dpToPx(30));
+        return layoutParams;
+    }
+
+    private LinearLayout.LayoutParams getLayoutParams() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(162),dpToPx(255));
+        return layoutParams;
+    }
+
+    public int dpToPx(int dp560) {
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = adjustWidth(dp560);
+       int px = Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        return px;
+    }
+
+    public int adjustWidth(int dp560){
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int dp = dp560 * displayMetrics.widthPixels / 560;
+        return (int) UtilityClass.convertPixelsToDpWidth(dp,this);
+         //return  dp;
     }
 
     private void startPlaylistviewWithJourney(Journey journey) {
