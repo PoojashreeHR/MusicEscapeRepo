@@ -581,9 +581,15 @@ public class BaseMusicActivity extends AppCompatActivity implements
     public void setContentView(int layoutResID) {
         // TODO Auto-generated method stub
 
+        baseLayout = (FrameLayout) getLayoutInflater().inflate(R.layout.activity_base_music, null);
+        // Your base layout here
+        contentFrame = (FrameLayout) baseLayout.findViewById(R.id.container);
+        getLayoutInflater().inflate(layoutResID, contentFrame, true);
+
         anotherBaseLayout = (SlidingUpPanelLayout) getLayoutInflater().inflate(R.layout.slider_layout_to_play_song, null); // Your base layout here
         anotherContentFrame = (FrameLayout) anotherBaseLayout.findViewById(R.id.content_slider);
         getLayoutInflater().inflate(layoutResID, anotherContentFrame, true);
+        super.setContentView(baseLayout);
         super.setContentView(anotherBaseLayout);
 
         initMPElements();
