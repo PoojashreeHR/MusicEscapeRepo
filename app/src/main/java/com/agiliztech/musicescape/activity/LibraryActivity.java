@@ -179,8 +179,6 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             if (modelUi.isSong()) {
 
                 final Song model = modelUi.getSongObj();
-
-                final  SongViewHolder holder = (SongViewHolder) myViewholder;
                 if (!listOfPositions.contains(String.valueOf(model.getpID()))) {
                     listOfPositions.add(String.valueOf(model.getpID()));
                 }
