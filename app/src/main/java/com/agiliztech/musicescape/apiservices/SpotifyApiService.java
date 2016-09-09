@@ -12,6 +12,7 @@ import com.agiliztech.musicescape.models.apimodels.SpotifyInfo;
 import com.agiliztech.musicescape.models.spotifymodels.SpotifyMain;
 import com.agiliztech.musicescape.rest.SpotifyApiClient;
 import com.agiliztech.musicescape.rest.SpotifyApiInterface;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.UtilityClass;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ public class SpotifyApiService extends Service {
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public int onStartCommand(Intent intent, final int flags, int startId) {
         if(intent == null){
             return 0;
         }
@@ -57,7 +58,7 @@ public class SpotifyApiService extends Service {
                 LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(pendingIntent);*/
                 while (true) {
                     for (int i = 0; i < songNamesList.size(); i++) {
-                        if (UtilityClass.checkInternetConnectivity(SpotifyApiService.this)) {
+                        if (UtilityClass.checkInternetConnectivity(SpotifyApiService.this) && !Global.HALT_API) {
                             String name = songNamesList.get(i);
                             //if (name.contains("-")) {
                             sizeOfLoop = i;
@@ -116,21 +117,25 @@ public class SpotifyApiService extends Service {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                            if(paused.get())
-                            {
-                                synchronized(currentThread())
-                                {
-                                    // Pause
-                                    try
-                                    {
-                                        currentThread().wait();
-                                    }
-                                    catch (InterruptedException e)
-                                    {
-                                    }
+                       }
+                        else if(Global.HALT_API){
+                            try {
+                                synchronized(this){
+                                    this.wait();
+                                    Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                                    Global.HALT_API = false;
                                 }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
                             }
-                        } else {
+                           /* Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                            Global.HALT_API = false;
+                        }else {
+                            synchronized(this){
+                                this.start();}
+                        }*/
+                        }
+                        else {
                             Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                             Intent sendingIntent = new Intent(SERVICE_EVENT);
                             LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);

@@ -20,4 +20,5 @@ public class Global {
     public static boolean isLibPlaylist;
     public static ArrayList<Song> libPlaylistSongs;
     public static String isScannedOnce = "isScannedOnce";
+    public static boolean HALT_API = false;
 }

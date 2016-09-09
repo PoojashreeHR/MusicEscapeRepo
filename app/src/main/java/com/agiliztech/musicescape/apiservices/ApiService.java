@@ -5,10 +5,12 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.google.gson.Gson;
 
@@ -54,7 +56,7 @@ public class ApiService extends Service {
             public void run() {
 
                 while (true) {
-                    if (UtilityClass.checkInternetConnectivity(ApiService.this)) {
+                    if (UtilityClass.checkInternetConnectivity(ApiService.this) && !Global.HALT_API) {
                         ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
                         Call<ResponseSongPollModel> call1 = apiInterface.pollSongFromServer(batchIds);
                         Log.e(TAG, " SENDING BATCH ID TO SCAN API (POLL ) : " + batchIds);
@@ -102,6 +104,19 @@ public class ApiService extends Service {
                             }
                         }
                     }
+                    else if(Global.HALT_API){
+                        try {
+                            synchronized(this){
+                                this.wait();
+                                Toast.makeText(ApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                                Global.HALT_API = false;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+
                     else{
                         Intent intent = new Intent(SERVICE_EVENT);
                         Log.e(TAG, " RESPONSE FROM AFTER SENDING BATCH ID(SCAN API) : " + new Gson().toJson(responseSongPollModel));
