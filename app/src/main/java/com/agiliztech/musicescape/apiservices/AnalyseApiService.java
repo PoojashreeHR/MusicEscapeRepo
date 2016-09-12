@@ -10,6 +10,7 @@ import android.widget.Toast;
 import com.agiliztech.musicescape.models.apimodels.ResponseSongPollModel;
 import com.agiliztech.musicescape.rest.ApiClient;
 import com.agiliztech.musicescape.rest.ApiInterface;
+import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.UtilityClass;
 import com.google.gson.Gson;
 
@@ -55,7 +56,7 @@ public class AnalyseApiService extends Service {
             public void run() {
 
                 while (true) {
-                    if (UtilityClass.checkInternetConnectivity(AnalyseApiService.this)) {
+                    if (UtilityClass.checkInternetConnectivity(AnalyseApiService.this) && !Global.HALT_API) {
                         // if (variable.contains("1")) {
                         latch = new CountDownLatch(1);
                         ApiInterface apiInterface = ApiClient.createService(ApiInterface.class, "RandyApp", "N1nj@R@nDy");
@@ -103,7 +104,20 @@ public class AnalyseApiService extends Service {
                                 }
                             }
                         }
-                    }else{
+                    }
+                    else if(Global.HALT_API){
+                        try {
+                            synchronized(this){
+                                this.wait();
+                                Toast.makeText(AnalyseApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                                Global.HALT_API = false;
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    else{
                         Toast.makeText(AnalyseApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SERVICE_EVENT);
                         Log.e("songresponse_analysed", new Gson().toJson(responseSongPollModel));

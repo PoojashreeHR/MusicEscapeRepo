@@ -60,12 +60,24 @@ public class NewDashboardActivity extends BaseMusicActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
 
+        ImageView infoButton;
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 
         dash_items = (TabLayout) findViewById(R.id.dash_items);
 
         RelativeLayout.LayoutParams relparams = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
         dash_items.setLayoutParams(relparams);
+
+
+        infoButton = (ImageView) findViewById(R.id.dash_imageView);
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
+                startActivity(intent);
+                // checkInternetConnection();
+            }
+        });
 
         dash_items.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

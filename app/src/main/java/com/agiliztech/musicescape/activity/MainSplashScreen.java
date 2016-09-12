@@ -1,5 +1,4 @@
 package com.agiliztech.musicescape.activity;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;

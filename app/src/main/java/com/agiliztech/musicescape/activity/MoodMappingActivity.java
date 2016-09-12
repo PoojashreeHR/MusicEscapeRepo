@@ -50,6 +50,8 @@ import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Response;
 
+import static java.lang.Thread.currentThread;
+
 public class MoodMappingActivity extends BaseMusicActivity implements
         View.OnClickListener {
 
@@ -218,6 +220,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         super.setContentView(R.layout.activity_mood_mapping);
         totalSongs = new SongsManager(this).getSongList();
 
+
         settings = getSharedPreferences("MyPreference", 0);
         sp = getSharedPreferences("MyPrefs", MODE_PRIVATE);
         dbHandler = new DBHandler(MoodMappingActivity.this);
@@ -230,21 +233,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
-                ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
-
-                if (!isPlaying) {
-                    testButton.setEnabled(false);
+                String buttonText = testButton.getText().toString();
+                if (buttonText.equals("START")) {
                     //  mPlayer.start();
                     testButton.setText(getResources().getString(R.string.pause));
                     mood_scanning.setVisibility(View.VISIBLE);
-                    isPlaying = true;
+                    ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
+                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
                     if (listFromDB.size() > 0) {
-                        testButton.setEnabled(true);
                         if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
                             Log.e("SAME ", " SAME");
                             testButton.setText(getResources().getString(R.string.start));
-                            isPlaying = false;
                             // displayAlertDialog();
                             String analysedCount = String.valueOf(dbHandler.getAnalysedCount());
                             String otherCount = String.valueOf(dbHandler.getExceptAnalysedCount());
@@ -255,14 +254,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             //displayAlertDialog();
                         }
                     } else {
-                        testButton.setEnabled(true);
                         new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
                         //displayAlertDialog();
                     }
-                } else {
-                    // mPlayer.stop();
+
+                }else if(buttonText.equals("PAUSE" )){
                     testButton.setText(getResources().getString(R.string.start));
-                    isPlaying = false;
+                    Global.HALT_API = true;
+                } // Resume
+                else {
+                    // mPlayer.stop();
+                    testButton.setText(getResources().getString(R.string.resume));
+                    Global.HALT_API = false;
                 }
             }
         });
@@ -577,7 +580,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             @Override
             public void onClick(View v) {
                 scanCompleteDialog.dismiss();
+                testButton.setText(getResources().getString(R.string.start));
                 mood_scanning.setVisibility(View.GONE);
+                Global.HALT_API = true;
             }
         });
         Button btnNow = (Button) scanCompleteDialog.findViewById(R.id.btn_now);
@@ -585,13 +590,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         btnNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
+                if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this) || Global.HALT_API) {
                     scanCompleteDialog.dismiss();
                     testButton.setText(getResources().getString(R.string.pause));
                     mood_scanning.setText(" Processing ");
                     mood_scanning.setVisibility(View.VISIBLE);
                     new CallScanApiInAsync().execute(dbHandler);
-                } else {
+                    Global.HALT_API = false;
+                }
+
+                else {
                     scanCompleteDialog.dismiss();
                     displayNetworkDialog();
                     //Toast.makeText(MoodMappingActivity.this, "Please Check Internet Connection", Toast.LENGTH_SHORT).show();
@@ -612,12 +620,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 .setPositiveButton("Now", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
-                        if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this)) {
+                        if (UtilityClass.checkInternetConnectivity(MoodMappingActivity.this) && Global.HALT_API) {
                             testButton.setText(getResources().getString(R.string.pause));
                             mood_scanning.setText(" Processing ");
                             mood_scanning.setVisibility(View.VISIBLE);
                             new CallScanApiInAsync().execute(dbHandler);
+                            Global.HALT_API = false;
                         } else {
                             displayNetworkDialog();
                             // networkAlertDialog();
@@ -632,6 +640,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     public void onClick(DialogInterface dialog, int which) {
                         testButton.setText(getResources().getString(R.string.start));
                         mood_scanning.setVisibility(View.GONE);
+                        Global.HALT_API = true;
                     }
                 }).show();
 
