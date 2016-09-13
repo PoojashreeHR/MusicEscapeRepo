@@ -105,8 +105,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                                     model.getSongs().get(i).getEnergy(), model.getSongs().get(i).getValence(),
                                     model.getSongs().get(i).getEchonestAnalysisStatus(),
                                     model.getSongs().get(i).getId(),
-                                    model.getSongs().get(i).getSpotifyId());
+                                    model.getSongs().get(i).getSpotifyId(),
+                                    model.getSongs().get(i).getMood());
+
                         }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setTextCount();
+                            }
+                        });
+
                         ArrayList<String> songNames = handler.getSongsWithPendingStatus("pending");
                         Log.e(TAG, " SONG NAMES SENT TO SpotifyApiService.java : " + songNames.toString());
                         //ArrayList<SpotifyInfo> songsIdSentFromServer = handler.getSongsIdSentFromServer();
@@ -121,6 +130,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         }
     };
+
+    public void setTextCount() {
+        tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
+        tv_excited.setText(dbHandler.getMoodCount("excited") + "");
+        tv_happy.setText(dbHandler.getMoodCount("happy") + "");
+        tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
+        tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
+        tv_bored.setText(dbHandler.getMoodCount("bored") + "");
+        tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
+        tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
+        //testButton.setText("START");
+    }
 
     private BroadcastReceiver mSpotifyServiceBroadCast = new BroadcastReceiver() {
         @Override
@@ -139,14 +160,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     new ScanAndAnalyseAsync().execute(spotifyModelMain);
                     Log.e("ScanAndAnalyse", " : " + new Gson().toJson(spotifyModelMain));
                 } else {
-                    tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
-                    tv_excited.setText(dbHandler.getMoodCount("excited") + "");
-                    tv_happy.setText(dbHandler.getMoodCount("happy") + "");
-                    tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
-                    tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
-                    tv_bored.setText(dbHandler.getMoodCount("bored") + "");
-                    tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
-                    tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
+                    setTextCount();
                     testButton.setText("START");
                     mood_scanning.setVisibility(View.GONE);
                 }
@@ -177,14 +191,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     updateScannedOnce();
                 }
                 dbHandler.updateSongsWithEnergyAndValence(info);
-                tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
-                tv_excited.setText(dbHandler.getMoodCount("excited") + "");
-                tv_happy.setText(dbHandler.getMoodCount("happy") + "");
-                tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
-                tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
-                tv_bored.setText(dbHandler.getMoodCount("bored") + "");
-                tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
-                tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
+                setTextCount();
                 testButton.setText(getResources().getString(R.string.start));
                 mood_scanning.setText("Scanning");
                 mood_scanning.setVisibility(View.GONE);
@@ -298,14 +305,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         tv_depressed = (TextView) findViewById(R.id.tv_depressed);
         tv_stressed = (TextView) findViewById(R.id.tv_stressed);
         mood_scanning = (TextView) findViewById(R.id.mood_scanning);
-        tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
-        tv_excited.setText(dbHandler.getMoodCount("excited") + "");
-        tv_happy.setText(dbHandler.getMoodCount("happy") + "");
-        tv_chilled.setText(dbHandler.getMoodCount("chilled") + "");
-        tv_peaceful.setText(dbHandler.getMoodCount("peaceful") + "");
-        tv_bored.setText(dbHandler.getMoodCount("bored") + "");
-        tv_depressed.setText(dbHandler.getMoodCount("depressed") + "");
-        tv_stressed.setText(dbHandler.getMoodCount("stressed") + "");
+        setTextCount();
 
 //        slidingUpPanelLayout = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
 //        mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);

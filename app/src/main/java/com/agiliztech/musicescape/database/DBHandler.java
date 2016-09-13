@@ -112,7 +112,7 @@ public class DBHandler extends SQLiteOpenHelper {
     //if(no energy and valence) execute if condition, else execute else (which has energy and valence and update in db)
     public void updateSongDetails(String batch, String clientId, double energy,
                                   double valence, String echonestAnalysisStatus, int serverSongId,
-                                  String spotifyId) {
+                                  String spotifyId,String mood) {
         SQLiteDatabase db = this.getWritableDatabase();
         int id = Integer.parseInt(clientId);
         int batchId = Integer.parseInt(batch);
@@ -123,6 +123,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_BATCH_ID, batch);
         values.put(KEY_STATUS, echo);
         values.put(KEY_SERVER_SONG_ID, serverSongId);
+        values.put(KEY_SONG_MOOD,mood);
         if (spotifyId != null) {
             values.put(KEY_SPOTIFY_ID, spotifyId);
         }
@@ -221,6 +222,7 @@ public class DBHandler extends SQLiteOpenHelper {
             do {
                 String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
                 Song model = new Gson().fromJson(jsonStr, Song.class);
+                Log.e("GET ALL SONGS ", " FROM DB " + model.getSongName());
                 // Adding contact to list
                 getSongList.add(model);
             } while (cursor.moveToNext());
@@ -359,6 +361,7 @@ public class DBHandler extends SQLiteOpenHelper {
     public int getMoodCount(String mood) {
         SQLiteDatabase db = this.getWritableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_SONG_MOOD + "=\'" + mood + "\'", null);
+        Log.e(" Count : ", mood + " count : " + (int)count);
         return (int) count;
     }
 
