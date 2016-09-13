@@ -23,7 +23,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.apiservices.AnalyseApiService;
@@ -238,7 +237,6 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 if (buttonText.equals("START")) {
                         //  mPlayer.start();
                         testButton.setText(getResources().getString(R.string.pause));
-                        Global.HALT_API = true;
                         mood_scanning.setVisibility(View.VISIBLE);
                         ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
                         ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
@@ -262,38 +260,17 @@ public class MoodMappingActivity extends BaseMusicActivity implements
 
             }else if(buttonText.equals("PAUSE" )){
                     testButton.setText(getResources().getString(R.string.resume));
-                    try {
-                        synchronized(this){
-                            this.wait();
-                            Toast.makeText(MoodMappingActivity.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
-                            Global.HALT_API = false;
-                        }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
                     Global.HALT_API = true;
+                    Global.CONTINUE_API = false;
                 } // Resume
-                else if(buttonText.equals("RESUME")) {
+                else if(buttonText.equals("RESUME")){
                     // mPlayer.stop();
-                    synchronized(this)
-                    {
-                        this.start();
-                    }
                     testButton.setText(getResources().getString(R.string.start));
                     Global.HALT_API = false;
                     Global.CONTINUE_API = true;
 
                 }
-                else{
-                    testButton.setText(getResources().getString(R.string.start));
-                    Global.HALT_API = true;
             }
-            }
-
-            private void start() {
-            }
-
-
         });
 
         tv_aggressive = (TextView) findViewById(R.id.tv_aggressive);
@@ -609,6 +586,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 testButton.setText(getResources().getString(R.string.start));
                 mood_scanning.setVisibility(View.GONE);
                 Global.HALT_API = true;
+                Global.CONTINUE_API = false;
             }
         });
         Button btnNow = (Button) scanCompleteDialog.findViewById(R.id.btn_now);
@@ -623,6 +601,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     mood_scanning.setVisibility(View.VISIBLE);
                     new CallScanApiInAsync().execute(dbHandler);
                     Global.HALT_API = false;
+                    Global.CONTINUE_API = true;
                 }
 
                 else {

@@ -118,21 +118,25 @@ public class SpotifyApiService extends Service {
                                 e.printStackTrace();
                             }
                        }
-                      /*  else if(Global.HALT_API){
+                        else if(Global.HALT_API && !Global.CONTINUE_API){
                             try {
                                 synchronized(this){
-                                    this.wait();
-                                    Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
                                     Global.HALT_API = false;
+                                    Global.CONTINUE_API = true;
+                                    this.wait();
+
                                 }
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }*/
+                            }
                            /* Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
                             Global.HALT_API = false;*/
-                        else if(Global.CONTINUE_API) {
+                        }else if(!Global.HALT_API && Global.CONTINUE_API){
                             synchronized(this){
-                                this.start();}
+                                this.start();
+                                this.notifyAll();
+                            }
                         }
                         else {
                             Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
