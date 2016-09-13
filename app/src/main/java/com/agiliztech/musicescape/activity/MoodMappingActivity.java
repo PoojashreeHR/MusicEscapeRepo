@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.apiservices.AnalyseApiService;
@@ -230,6 +231,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                 if (buttonText.equals("START")) {
                         //  mPlayer.start();
                         testButton.setText(getResources().getString(R.string.pause));
+                        Global.HALT_API = true;
                         mood_scanning.setVisibility(View.VISIBLE);
                         ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
                         ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
@@ -252,15 +254,39 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     }
 
             }else if(buttonText.equals("PAUSE" )){
-                    testButton.setText(getResources().getString(R.string.start));
+                    testButton.setText(getResources().getString(R.string.resume));
+                    try {
+                        synchronized(this){
+                            this.wait();
+                            Toast.makeText(MoodMappingActivity.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
+                            Global.HALT_API = false;
+                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     Global.HALT_API = true;
                 } // Resume
-                else {
+                else if(buttonText.equals("RESUME")) {
                     // mPlayer.stop();
-                    testButton.setText(getResources().getString(R.string.resume));
+                    synchronized(this)
+                    {
+                        this.start();
+                    }
+                    testButton.setText(getResources().getString(R.string.start));
                     Global.HALT_API = false;
+                    Global.CONTINUE_API = true;
+
+                }
+                else{
+                    testButton.setText(getResources().getString(R.string.start));
+                    Global.HALT_API = true;
             }
             }
+
+            private void start() {
+            }
+
+
         });
 
         tv_aggressive = (TextView) findViewById(R.id.tv_aggressive);

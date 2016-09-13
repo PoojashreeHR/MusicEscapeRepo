@@ -32,8 +32,10 @@ public class AppInfoActivity extends AppCompatActivity {
     RelativeLayout relative;
     private AppInfoAdapter mAdapter;
     Typeface tf;
+    String isClicked = null;
     private int mSelectedPosition;
     private View mSelectedView;
+    String appInformation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,12 +48,18 @@ public class AppInfoActivity extends AppCompatActivity {
         TextView appInfo = (TextView) findViewById(R.id.appInfo);
         appInfo.setTypeface(tf);
         relative = (RelativeLayout) findViewById(R.id.relativeLayout2);
+        appInformation = getIntent().getStringExtra("dashboard");
         backButton = (ImageView) findViewById(R.id.backbutton);
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
+                if(appInformation !=isClicked){
+                Intent intent = new Intent(getApplicationContext(), NewDashboardActivity.class);
                 startActivity(intent);
+                }else{
+                    Intent intent = new Intent(getApplicationContext(), MoodMappingActivity.class);
+                    startActivity(intent);
+                }
             }
         });
         mAdapter = new AppInfoAdapter(itemList);

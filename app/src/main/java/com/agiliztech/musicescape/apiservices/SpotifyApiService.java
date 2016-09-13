@@ -118,7 +118,7 @@ public class SpotifyApiService extends Service {
                                 e.printStackTrace();
                             }
                        }
-                        else if(Global.HALT_API){
+                      /*  else if(Global.HALT_API){
                             try {
                                 synchronized(this){
                                     this.wait();
@@ -127,13 +127,12 @@ public class SpotifyApiService extends Service {
                                 }
                             } catch (InterruptedException e) {
                                 e.printStackTrace();
-                            }
+                            }*/
                            /* Toast.makeText(SpotifyApiService.this, "You Paused the Action", Toast.LENGTH_SHORT).show();
-                            Global.HALT_API = false;
-                        }else {
+                            Global.HALT_API = false;*/
+                        else if(Global.CONTINUE_API) {
                             synchronized(this){
                                 this.start();}
-                        }*/
                         }
                         else {
                             Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();

@@ -15,6 +15,7 @@ public class Global {
     public static final String JOURNEY_SESSION_TBL_NAME = "TblJourneySession";
     public static final String PREF_NAME = "MyPrefs";
     public static ArrayList<Song> currentSongList;
+    public static boolean CONTINUE_API = false;
     public static boolean isJourney;
     public static String INTROSCREENSSHOWN = "introScreensShown";
     public static boolean isLibPlaylist;
