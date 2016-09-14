@@ -110,8 +110,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="4.5"
-            android:gravity="center"
-            android:layout_gravity="center"
+            android:layout_gravity="left"
             android:paddingRight="10dp">
 
 
@@ -123,6 +122,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/history_rv"
                     android:visibility="visible"
+                    android:layout_alignParentLeft="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
@@ -131,6 +131,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/user_rv"
                     android:visibility="gone"
+                    android:layout_alignParentLeft="true"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 

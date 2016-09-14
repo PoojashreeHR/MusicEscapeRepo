@@ -176,9 +176,13 @@ public class NewDashboardActivity extends BaseMusicActivity {
          recyclerView = (RecyclerView) findViewById(R.id.history_rv);
         recyclerView_user = (RecyclerView) findViewById(R.id.user_rv);
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView_user.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new GridLayoutManager(this,2));
+        recyclerView_user.setLayoutManager(new GridLayoutManager(this,2));
 
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dpToPx(243), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        recyclerView.setLayoutParams(params);
+        recyclerView_user.setLayoutParams(params);
 
     }
 
@@ -240,7 +244,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
             holder.ll_saveHistory.setLayoutParams(getLayoutParams());
             holder.overlay.setLayoutParams(getLayoutParams());
-            holder.overlay.setPadding(dpToPx(18),0, dpToPx(18),0);
+            holder.overlay.setPadding(dpToPx(9),0, dpToPx(9),0);
             holder.journeyView.setLayoutParams(getFrameLayoutParams());
 
             holder.journeyView.setGaps(getGapsSize());
@@ -309,13 +313,13 @@ public class NewDashboardActivity extends BaseMusicActivity {
     }
 
     private FrameLayout.LayoutParams getFrameLayoutParams() {
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(126),dpToPx(180));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(95),dpToPx(135));
         layoutParams.setMargins(0, dpToPx(30),0,dpToPx(30));
         return layoutParams;
     }
 
     private LinearLayout.LayoutParams getLayoutParams() {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(162),dpToPx(255));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(121),dpToPx(190));
         return layoutParams;
     }
 
