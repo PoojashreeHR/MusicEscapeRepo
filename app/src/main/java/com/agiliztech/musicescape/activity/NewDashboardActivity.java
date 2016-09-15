@@ -18,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneyView;
 import com.agiliztech.musicescape.journey.Size;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
@@ -45,7 +47,7 @@ import java.util.TimerTask;
 
 public class NewDashboardActivity extends BaseMusicActivity {
 
-
+    final Context context = this;
     SharedPreferences dashboardPreference;
     ImageView menu_activeSettings,menu_activelibrary,menu_library, menu_settings,menu_activedraw,menu_history,menu_activehistory;
     private ImageView menu_draw;
@@ -234,7 +236,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
         }
 
         @Override
-        public void onBindViewHolder(HistoryViewHolder holder, int position) {
+        public void onBindViewHolder(HistoryViewHolder holder, final int position) {
             final int pos = position;
             final DashboardItem item = sessions.get(pos);
 
@@ -260,6 +262,39 @@ public class NewDashboardActivity extends BaseMusicActivity {
             else{
                 holder.journeyView.setJourneyPoints(item.getSession().getJourney().getJourneyDotsArray());
                 holder.tv_title.setText(handleNull(item.getSession().getName()));
+                holder.overlay.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        //show dialod
+                        //yes -> deleteItem(position)
+                        final Dialog dialogs = new Dialog(context);
+                        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                        View layout = inflater.inflate(R.layout.dialog_playlist, null);
+                        dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                        dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        Button btn_yes = (Button) layout.findViewById(R.id.btn_yes);
+                        btn_yes.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                deleteItem(item.getSession());
+                                //notifyItemRemoved(position);
+                                dialogs.dismiss();
+                            }
+                        });
+                        Button btn_no = (Button) layout.findViewById(R.id.btn_no);
+                        btn_no.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                dialogs.dismiss();
+                            }
+                        });
+
+                        dialogs.setContentView(layout);
+                        dialogs.show();
+
+                        return false;
+                    }
+                });
                 holder.overlay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -306,6 +341,13 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 ll_saveHistory = (LinearLayout) itemView.findViewById(R.id.ll_saveHistory);
             }
         }
+    }
+
+    private void deleteItem(JourneySession session) {
+        JourneySessionDBHelper journeySessionDBHelper = new JourneySessionDBHelper(this);
+        journeySessionDBHelper.deleteSessionFromFavs(session);
+        journeySessionDBHelper.close();
+        recyclerView_user.setAdapter(new DashboardAdapter(getUserJourneyData()));
     }
 
     private FrameLayout.LayoutParams getFrameLayoutParams() {

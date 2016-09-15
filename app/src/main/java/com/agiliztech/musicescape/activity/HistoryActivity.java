@@ -143,6 +143,7 @@ public class HistoryActivity extends BaseMusicActivity {
                 public void onClick(View v) {
 
                     if (isJourneyAlreadySaved(session)) {
+
                     } else {
                         final Dialog dialogs = new Dialog(context);
                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);

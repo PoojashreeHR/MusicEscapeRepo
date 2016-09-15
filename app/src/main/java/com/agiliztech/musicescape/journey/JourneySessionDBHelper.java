@@ -87,6 +87,30 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
     }
 
 
+
+
+    public void deleteSessionFromFavs(JourneySession session){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            ContentValues contentValues = new ContentValues();
+            session.setFavourite(0);
+            contentValues.put(COL_FAVOURITE, session.getFavourite());
+            contentValues.put(COL_JOURNEY_SESSION_OBJ, UtilityClass.getJsonConvertor().toJson(session));
+            db.update(Global.JOURNEY_SESSION_TBL_NAME,contentValues,COL_JOURNEY_ID+" = '"+session.getJourneyID()+"'",null);
+        }
+        catch (Exception e){
+            UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
+            if(e.getMessage().contains("no such table")){
+                onCreate(db);
+            }
+        }
+    }
+
+
+
+
+
+
     public List<JourneySession> getFavouriteJourneySessions(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<JourneySession> journeys = null;
