@@ -306,7 +306,10 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     upX = (int) event.getX();
                     Log.i("event.getX()", " upX " + downX);
-                    if (upX - downX > 100) {
+                    if(upX == downX){
+                        // do Nothing here.
+                    }
+                    else if (upX - downX > 100) {
                         // swipe right
                         // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
                         musicSrv.playPrev();
