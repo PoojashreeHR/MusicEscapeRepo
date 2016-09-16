@@ -519,6 +519,9 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     protected void onDestroy() {
         // stopService(playIntent);
         //musicSrv = null;
+        if(dbHandler != null){
+            dbHandler.close();
+        }
         super.onDestroy();
       /*  if (sp != null) {
             SharedPreferences.Editor editor = sp.edit();

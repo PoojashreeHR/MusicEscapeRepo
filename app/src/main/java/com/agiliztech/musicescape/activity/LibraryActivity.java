@@ -289,6 +289,15 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        if(dbHandler != null){
+            dbHandler.close();
+        }
+        super.onDestroy();
+    }
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -41,6 +41,12 @@ public class SpotifyApiService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        handler.close();
+        super.onDestroy();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, final int flags, int startId) {
         if (intent == null) {
             return 0;
