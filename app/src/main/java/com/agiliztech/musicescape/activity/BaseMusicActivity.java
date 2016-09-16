@@ -165,8 +165,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
         btn_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                nMgr.cancelAll();
+//                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//                nMgr.cancel();
                 //musicSrv.stopForeground(true);
                 isSongPlaying = false;
                 playbackPaused = true;

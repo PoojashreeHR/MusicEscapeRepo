@@ -1,8 +1,10 @@
 package com.agiliztech.musicescape.musicservices;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +15,13 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySong;
@@ -280,17 +284,20 @@ public class MusicService extends Service implements
     public void onPrepared(MediaPlayer mp) {
         //start playback
         mp.start();
-
         //notification
         Intent notIntent = new Intent(this, MoodMappingActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MoodMappingActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(notIntent);
         Notification.Builder builder = new Notification.Builder(this);
-
         builder.setContentIntent(pendInt)
-                //.setSmallIcon(R.drawable.play)
+                .setSmallIcon(R.drawable.notification)
                 .setTicker(songTitle)
                 .setOngoing(true)
                 .setContentTitle("Playing")
