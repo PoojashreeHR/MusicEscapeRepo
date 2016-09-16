@@ -182,7 +182,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView_user.setLayoutManager(new GridLayoutManager(this,2));
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dpToPx(243), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         recyclerView.setLayoutParams(params);
         recyclerView_user.setLayoutParams(params);
@@ -356,13 +356,13 @@ public class NewDashboardActivity extends BaseMusicActivity {
     }
 
     private FrameLayout.LayoutParams getFrameLayoutParams() {
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(95),dpToPx(135));
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dpToPx(63),dpToPx(90));
         layoutParams.setMargins(0, dpToPx(30),0,dpToPx(30));
         return layoutParams;
     }
 
     private LinearLayout.LayoutParams getLayoutParams() {
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(121),dpToPx(190));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(81),dpToPx(127));
         return layoutParams;
     }
 
