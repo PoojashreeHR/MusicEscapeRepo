@@ -146,7 +146,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
             return Global.libPlaylistSongs;
         } else {
             DBHandler dbHandler = new DBHandler(this);
-            return dbHandler.getAllSongsFromDB();
+            ArrayList<Song> songs =  dbHandler.getAllSongsFromDB();
+            dbHandler.close();
+            return songs;
         }
     }
 
@@ -306,7 +308,10 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     upX = (int) event.getX();
                     Log.i("event.getX()", " upX " + downX);
-                    if (upX - downX > 100) {
+                    if(upX == downX){
+                        // do Nothing here.
+                    }
+                    else if (upX - downX > 100) {
                         // swipe right
                         // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
                         musicSrv.playPrev();
@@ -458,6 +463,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     dbHandler.updateSongStatusWithModifiedMood(mood, serverSongId);
+                    dbHandler.close();
                     mAdapter.updateSongMoodSelectedByUser(position, song);
                     mAdapter.notifyDataSetChanged();
                     mAdapter.notifyItemChanged(position);
@@ -466,6 +472,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                dbHandler.close();
                 Toast.makeText(BaseMusicActivity.this, "Some Issue Occured, Plz try after some time", Toast.LENGTH_SHORT).show();
             }
         });
@@ -521,7 +528,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.img_retag_new);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+
+                        //left, top, right, bottom
+                        RectF icon_dest = new RectF(
+                                (float) itemView.getRight() - (width * 6),
+                                (float) itemView.getTop(),
+                                (float) itemView.getRight() - (width * 2),
+                                (float) itemView.getBottom());
                         c.drawBitmap(icon, null, icon_dest, p);
                         Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
                         Log.e("DX ", " DX = " + dX);
@@ -533,7 +546,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_swap2);
-                        RectF icon_dest = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom());
+                        //left, top, right, bottom
+                        RectF icon_dest = new RectF(
+                                (float) itemView.getLeft() + (width * 2),
+                                (float) itemView.getTop(),
+                                (float) itemView.getLeft() +(width * 6),
+                                (float) itemView.getBottom());
                         c.drawBitmap(icon, null, icon_dest, p);
                         Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
                         Log.e("DX ", " DX = " + dX);
