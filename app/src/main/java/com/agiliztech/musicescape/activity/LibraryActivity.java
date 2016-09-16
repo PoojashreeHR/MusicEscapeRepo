@@ -292,7 +292,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
     @Override
     protected void onDestroy() {
-        if(dbHandler != null){
+        if (dbHandler != null) {
             dbHandler.close();
         }
         super.onDestroy();
@@ -441,7 +441,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                if(viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                if (viewHolder.getItemViewType()==0){
                     int position = viewHolder.getAdapterPosition();
                     //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
                     Song song = libAdapter.getSongObject(position);
@@ -456,12 +456,20 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             }
 
             @Override
+            public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                if (viewHolder.getItemViewType()==0)
+                    return super.getSwipeDirs(recyclerView, viewHolder);
+                else
+                    return 0;
+            }
+
+            @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                if(viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                if (viewHolder.getItemViewType()==0){
                     int swipeFlags = ItemTouchHelper.LEFT;
                     return makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE, swipeFlags);
-                }else{
-                    return makeMovementFlags(0,0);
+                } else {
+                    return makeMovementFlags(0, 0);
                 }
             }
 
@@ -470,7 +478,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
                 Bitmap icon;
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    if (viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                    if (viewHolder.getItemViewType()==0){
                         View itemView = viewHolder.itemView;
                         float height = (float) itemView.getBottom() - (float) itemView.getTop();
                         float width = height / 3;
