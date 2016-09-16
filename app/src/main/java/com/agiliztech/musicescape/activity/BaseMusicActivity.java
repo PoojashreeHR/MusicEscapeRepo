@@ -528,7 +528,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.img_retag_new);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+
+                        //left, top, right, bottom
+                        RectF icon_dest = new RectF(
+                                (float) itemView.getRight() - (width * 6),
+                                (float) itemView.getTop(),
+                                (float) itemView.getRight() - (width * 2),
+                                (float) itemView.getBottom());
                         c.drawBitmap(icon, null, icon_dest, p);
                         Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
                         Log.e("DX ", " DX = " + dX);
@@ -540,7 +546,12 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX, (float) itemView.getBottom());
                         c.drawRect(background, p);
                         icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_swap2);
-                        RectF icon_dest = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), (float) itemView.getLeft() + 2 * width, (float) itemView.getBottom());
+                        //left, top, right, bottom
+                        RectF icon_dest = new RectF(
+                                (float) itemView.getLeft() + (width * 2),
+                                (float) itemView.getTop(),
+                                (float) itemView.getLeft() +(width * 6),
+                                (float) itemView.getBottom());
                         c.drawBitmap(icon, null, icon_dest, p);
                         Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
                         Log.e("DX ", " DX = " + dX);

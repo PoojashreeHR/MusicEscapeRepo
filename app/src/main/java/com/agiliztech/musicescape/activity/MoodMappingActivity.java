@@ -88,7 +88,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             String songJson = intent.getStringExtra("songresponse");
             if (songJson.equals("")) {
                 mood_scanning.setVisibility(View.GONE);
-                testButton.setText("START");
+                //testButton.setText("START");
             } else {
                 final ResponseSongPollModel model = new Gson().fromJson(songJson, ResponseSongPollModel.class);
                 //Log.e(TAG, " PRINTING " + songJson);
@@ -106,6 +106,11 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                                     model.getSongs().get(i).getMood());
 
                         }
+                        ArrayList<SongInfo> info = new ArrayList<>();
+                        for (int i = 0; i < model.getSongs().size(); i++) {
+                            info.add(model.getSongs().get(i));
+                        }
+                        dbHandler.updateSongsWithEnergyAndValence(info);
                         updateScannedOnce();
                         runOnUiThread(new Runnable() {
                             @Override

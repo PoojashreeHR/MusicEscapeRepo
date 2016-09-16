@@ -127,6 +127,11 @@ public class DBHandler extends SQLiteOpenHelper {
         if (spotifyId != null) {
             values.put(KEY_SPOTIFY_ID, spotifyId);
         }
+        Song oldSong = getSongObject(id);
+        if(oldSong != null){
+            oldSong.setMood(SongsManager.getMoodForText(mood));
+            values.put(KEY_META_DATA,new Gson().toJson(oldSong));
+        }
         int x = db.update(TABLE_SONGS, values, KEY_CLIENT_ID + "=" + id, null);
         Log.e("UPDATED ", "UPDATED ROW " + x);
         //db.close();
@@ -220,6 +225,7 @@ public class DBHandler extends SQLiteOpenHelper {
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+
                 String jsonStr = cursor.getString(cursor.getColumnIndex(KEY_META_DATA));
                 Song model = new Gson().fromJson(jsonStr, Song.class);
                 Log.e("GET ALL SONGS ", " FROM DB " + model.getSongName());
