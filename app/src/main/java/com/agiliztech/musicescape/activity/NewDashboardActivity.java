@@ -67,7 +67,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
         dash_items = (TabLayout) findViewById(R.id.dash_items);
 
-        RelativeLayout.LayoutParams relparams = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams relparams = new RelativeLayout.LayoutParams(dpToPx(163), RelativeLayout.LayoutParams.WRAP_CONTENT);
         dash_items.setLayoutParams(relparams);
 
 
@@ -182,7 +182,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this,2));
         recyclerView_user.setLayoutManager(new GridLayoutManager(this,2));
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dpToPx(162), RelativeLayout.LayoutParams.WRAP_CONTENT);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(dpToPx(163), RelativeLayout.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
         recyclerView.setLayoutParams(params);
         recyclerView_user.setLayoutParams(params);
@@ -220,7 +220,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
     private Size getGapsSize() {
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        return new Size(0.92500000000000004f*displayMetrics.widthPixels/560f, 0.96999999999999997f*displayMetrics.heightPixels/560f);
+        return new Size(0.92500000000000004f*displayMetrics.widthPixels/(2*560f), 0.96999999999999997f*displayMetrics.heightPixels/(2*560f));
 
     }
 
@@ -245,7 +245,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
             final int pos = position;
             final DashboardItem item = sessions.get(pos);
 
-            holder.ll_saveHistory.setLayoutParams(getLayoutParams());
+            holder.ll_saveHistory.setLayoutParams(getHistoryLayoutParams());
             holder.overlay.setLayoutParams(getLayoutParams());
             holder.overlay.setPadding(dpToPx(9),0, dpToPx(9),0);
             holder.journeyView.setLayoutParams(getFrameLayoutParams());
@@ -363,6 +363,11 @@ public class NewDashboardActivity extends BaseMusicActivity {
 
     private LinearLayout.LayoutParams getLayoutParams() {
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(81),dpToPx(127));
+        return layoutParams;
+    }
+
+    private LinearLayout.LayoutParams getHistoryLayoutParams() {
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dpToPx(82),dpToPx(170));
         return layoutParams;
     }
 
