@@ -106,7 +106,7 @@ public class DBHandler extends SQLiteOpenHelper {
             db.insert(TABLE_SONGS, null, values);
             Log.e("Inserted Songs ", " " + i);
         }
-        db.close();
+        //db.close();
     }
 
     //if(no energy and valence) execute if condition, else execute else (which has energy and valence and update in db)
@@ -129,7 +129,7 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         int x = db.update(TABLE_SONGS, values, KEY_CLIENT_ID + "=" + id, null);
         Log.e("UPDATED ", "UPDATED ROW " + x);
-        db.close();
+        //db.close();
         /*} else {
           *//*  db.rawQuery("UPDATE " + TABLE_SONGS + " SET " + KEY_BATCH_ID + "=\'" + batch +
 
@@ -146,18 +146,18 @@ public class DBHandler extends SQLiteOpenHelper {
         }
         int x = db.update(TABLE_SONGS, values, KEY_CLIENT_ID + "=" + id, null);
         Log.e("UPDATED ", "UPDATED ROW " + x);
-        db.close();
+        //db.close();
         /*} else {
           *//*  db.rawQuery("UPDATE " + TABLE_SONGS + " SET " + KEY_BATCH_ID + "=\'" + batch +
                     "\'," + KEY_VALENCE + "=\'" + valence + "\'," + KEY_ENERGY + "=\'" + energy + "\' where " + KEY_CLIENT_ID + "=" + id + ";", null);
-            db.close();*//*
+            //db.close();*//*
         }*/
     }
 
 
     // getting the songs list based on status="pending"
     public ArrayList<String> getSongsWithPendingStatus(String pending) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<String> songName = new ArrayList<>();
         String query = "select * from " + TABLE_SONGS + " where " +
                 KEY_STATUS + " = \'" + pending + "\' OR " + KEY_STATUS + "=\'identify_error\' OR " +
@@ -204,7 +204,7 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         int rwo = db.delete(TABLE_SONGS, KEY_CLIENT_ID + " = " + id, null);
         Log.e("DELETED ", " " + rwo);
-        db.close();
+        //db.close();
     }
 
 
@@ -240,7 +240,7 @@ public class DBHandler extends SQLiteOpenHelper {
             cv.put(KEY_STATUS, "identified");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
             Log.e("UPDATED ", "SPOTIFY ID " + x);
-            db.close();
+            //db.close();
         } else if (songName.contains("\"")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
@@ -248,7 +248,7 @@ public class DBHandler extends SQLiteOpenHelper {
             cv.put(KEY_STATUS, "identified");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY ID " + x);
-            db.close();
+            //db.close();
         } else {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
@@ -256,7 +256,7 @@ public class DBHandler extends SQLiteOpenHelper {
             cv.put(KEY_STATUS, "identified");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY ID " + x);
-            db.close();
+            //db.close();
         }
 
     }
@@ -270,21 +270,21 @@ public class DBHandler extends SQLiteOpenHelper {
             cv.put(KEY_STATUS, "identify_error");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\"" + songName + "\"", null);
             Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
-            db.close();
+          //  //db.close();
         } else if (songName.contains("\"")) {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_STATUS, "identify_error");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
-            db.close();
+           // //db.close();
         } else {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues cv = new ContentValues();
             cv.put(KEY_STATUS, "identify_error");
             int x = db.update(TABLE_SONGS, cv, KEY_SONG_TITLE + "=\'" + songName + "\'", null);
             Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + songName);
-            db.close();
+           // //db.close();
         }
 
     }
@@ -303,7 +303,7 @@ public class DBHandler extends SQLiteOpenHelper {
             cv.put(KEY_API_STATUS, "again_analysing");
             db.update(TABLE_SONGS, cv, KEY_SERVER_SONG_ID + " =\'" + spotifyInfos.get(i).getId() + "\'", null);
         }
-        db.close();
+        //db.close();
 
     }
 
@@ -348,7 +348,7 @@ public class DBHandler extends SQLiteOpenHelper {
             //Log.e("UPDATED ", "SPOTIFY STATUS ERROR " + x + " : " + KEY_SERVER_SONG_ID);
 
         }
-        db.close();
+        //db.close();
     }
 
     public int getRowCount() {
@@ -445,7 +445,7 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_META_DATA, new Gson().toJson(song));
         int x = db.update(TABLE_SONGS, contentValues, KEY_SERVER_SONG_ID + "=\'" + song.getpID() + "\'", null);
-        db.close();
+        //db.close();
 
     }
 
@@ -469,14 +469,14 @@ public class DBHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'analysed\'", null);
         Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
-        db.close();
+        //db.close();
         return (int) count;
     }
     public int getExceptAnalysedCount() {
         SQLiteDatabase db = this.getWritableDatabase();
         long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
         Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
-        db.close();
+        //db.close();
         return (int) count;
     }
 
@@ -506,7 +506,7 @@ public class DBHandler extends SQLiteOpenHelper {
         cv.put(KEY_STATUS,"analysed");
         int x = db.update(TABLE_SONGS,cv,KEY_SERVER_SONG_ID + "="+ id,null);
         Log.e("SongMood", "SONG MOOD UPDATED " + x);
-        db.close();
+        //db.close();
     }
 
 

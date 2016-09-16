@@ -146,7 +146,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
             return Global.libPlaylistSongs;
         } else {
             DBHandler dbHandler = new DBHandler(this);
-            return dbHandler.getAllSongsFromDB();
+            ArrayList<Song> songs =  dbHandler.getAllSongsFromDB();
+            dbHandler.close();
+            return songs;
         }
     }
 
@@ -458,6 +460,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onResponse(Call<Void> call, Response<Void> response) {
                 if (response.isSuccessful()) {
                     dbHandler.updateSongStatusWithModifiedMood(mood, serverSongId);
+                    dbHandler.close();
                     mAdapter.updateSongMoodSelectedByUser(position, song);
                     mAdapter.notifyDataSetChanged();
                     mAdapter.notifyItemChanged(position);
@@ -466,6 +469,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
+                dbHandler.close();
                 Toast.makeText(BaseMusicActivity.this, "Some Issue Occured, Plz try after some time", Toast.LENGTH_SHORT).show();
             }
         });
