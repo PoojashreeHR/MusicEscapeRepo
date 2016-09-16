@@ -196,6 +196,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_chilled_library_inactive));
                 } else if (mood.contains("peaceful")) {
                     holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scPeaceful));
+                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_peaceful_library_inactive));
                 } else if (mood.contains("bored")) {
                     holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scBored));
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bored_library_inactive));
@@ -232,6 +233,8 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                         holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_stressed_library_inactive));
                     } else if (mood == SongMoodCategory.scAggressive) {
                         holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_aggressive_library_inactive));
+                    } else if (mood == SongMoodCategory.scMoodNotFound) {
+                        holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notfound_library_inactive));
                     }
                     holder.title.setTextColor(SongsManager.colorForMood(mood));
                 }
@@ -428,22 +431,29 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                int position = viewHolder.getAdapterPosition();
-                //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
-                Song song = libAdapter.getSongObject(position);
-                if (direction == ItemTouchHelper.LEFT) {
-                    songRetagInLibrary(position, song);
-                    libAdapter.notifyItemChanged(position);
-                    //viewHolder.getItemId();
-                } else {
-                    libAdapter.notifyItemChanged(position);
+
+                if(viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                    int position = viewHolder.getAdapterPosition();
+                    //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
+                    Song song = libAdapter.getSongObject(position);
+                    if (direction == ItemTouchHelper.LEFT) {
+                        songRetagInLibrary(position, song);
+                        libAdapter.notifyItemChanged(position);
+                        //viewHolder.getItemId();
+                    } else {
+                        libAdapter.notifyItemChanged(position);
+                    }
                 }
             }
 
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                int swipeFlags = ItemTouchHelper.LEFT;
-                return makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE, swipeFlags);
+                if(viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                    int swipeFlags = ItemTouchHelper.LEFT;
+                    return makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE, swipeFlags);
+                }else{
+                    return makeMovementFlags(0,0);
+                }
             }
 
             @Override
@@ -451,23 +461,27 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
                 Bitmap icon;
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-                    View itemView = viewHolder.itemView;
-                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
-                    float width = height / 3;
-
-
-                    if (dX < 0) {
-                        p.setColor(Color.parseColor("#000000"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background, p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.img_retag_new);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 2 * width, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawBitmap(icon, null, icon_dest, p);
-                        Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
-                        Log.e("DX ", " DX = " + dX);
+                    if (viewHolder instanceof LibraryRecyclerView.MyViewHolder) {
+                        View itemView = viewHolder.itemView;
+                        float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                        float width = height / 3;
 
 
+                        if (dX < 0) {
+                            p.setColor(Color.parseColor("#000000"));
+                            RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                            c.drawRect(background, p);
+                            icon = BitmapFactory.decodeResource(getResources(), R.drawable.img_retag_new);
+                            RectF icon_dest = new RectF(
+                                    (float) itemView.getRight() - (width * 4),
+                                    (float) itemView.getTop(),
+                                    (float) itemView.getRight() - (width / 2),
+                                    (float) itemView.getBottom());
+                            c.drawBitmap(icon, null, icon_dest, p);
+                            Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
+                            Log.e("DX ", " DX = " + dX);
+
+                        }
                     }
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);

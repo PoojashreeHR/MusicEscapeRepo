@@ -330,6 +330,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_top_journey_active;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_top_journey_active;
                     }
                 case 123456789:
@@ -351,6 +352,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_bottom_journey_active;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_bottom_journey_active;
                     }
                 case 1:
@@ -372,6 +374,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_middle_journey_active;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_middle_journey_active;
                     }
 
@@ -400,6 +403,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_top_journey_inactive;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_top_journey_inactive;
                     }
                 case 123456789:
@@ -421,6 +425,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_bottom_journey_inactive;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_bottom_journey_inactive;
                     }
                 case 1:
@@ -442,6 +447,7 @@ public class SongsManager {
                         case scAggressive:
                             return R.drawable.ic_aggressive_middle_journey_inactive;
                         case scAllSongs:
+                        case scMoodNotFound:
                             return R.drawable.ic_notfound_middle_journey_inactive;
                     }
 
