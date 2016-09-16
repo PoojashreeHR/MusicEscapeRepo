@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.activity;
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -18,8 +19,11 @@ import android.text.style.ForegroundColorSpan;
 import android.widget.TextView;
 
 import com.agiliztech.musicescape.R;
+import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.utils.Global;
 
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -104,11 +108,27 @@ public class MainSplashScreen extends Activity {
         },1000);
     }
 
+   /* public static ArrayList<Song> staticSong;
+
+    public static void getAllSongsFromDB(Context con){
+        staticSong = new ArrayList<>();
+        DBHandler handler = new DBHandler(con);
+        staticSong = handler.getAllSongsFromDB();
+    }
+
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_splash_screen);
 
+      /*  new Thread(){
+            @Override
+            public void run() {
+                getAllSongsFromDB(MainSplashScreen.this);
+            }
+        }.start();*/
+        //getAllSongsFromDB(MainSplashScreen.this);
         String[] allPermissions = new String[2];
         int i = 0;
 

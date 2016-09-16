@@ -76,6 +76,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), AppInfoActivity.class);
+                intent.putExtra("dashboard","DashBoard");
                 startActivity(intent);
                 // checkInternetConnection();
             }

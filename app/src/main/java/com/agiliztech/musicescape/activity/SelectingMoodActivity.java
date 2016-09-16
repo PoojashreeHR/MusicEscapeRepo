@@ -34,6 +34,7 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
     private JourneySession journeysession = new JourneySession();
 
     TextView selectingMood;
+    ImageButton mood_dashboard;
     String result;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,13 @@ public class SelectingMoodActivity extends AppCompatActivity implements View.OnC
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.selection_layout);
         overrideFonts(getApplicationContext(),linearLayout);
 
+        mood_dashboard = (ImageButton) findViewById(R.id.mood_Dashboard);
+        mood_dashboard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SelectingMoodActivity.this,NewDashboardActivity.class));
+            }
+        });
         selectingMood = (TextView) findViewById(R.id.moodSelection);
         ImageButton nextMood = (ImageButton) findViewById(R.id.nextMood);
         nextMood.setOnClickListener(new View.OnClickListener() {
