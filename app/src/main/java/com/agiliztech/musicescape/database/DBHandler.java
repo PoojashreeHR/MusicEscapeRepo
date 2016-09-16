@@ -474,7 +474,9 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     public int getExceptAnalysedCount() {
         SQLiteDatabase db = this.getWritableDatabase();
-        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "!=\'analysed\'", null);
+        long count = DatabaseUtils.queryNumEntries(db, TABLE_SONGS, KEY_STATUS + "=\'pending\' OR "
+                + KEY_STATUS + " =\'identify_error\' OR "
+                + KEY_STATUS + " =\'identify_failed\'", null);
         Log.e("COUNT PRINTING ", " COUNT(*) : " + count);
         db.close();
         return (int) count;
