@@ -172,7 +172,9 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/exited"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text"
+                />
 
             <TextView
                 android:id="@+id/happy"
@@ -185,7 +187,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/happy"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
             <TextView
                 android:id="@+id/chilled"
                 android:layout_width="match_parent"
@@ -197,7 +200,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/chilled"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/peacefull"
@@ -210,7 +214,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/peacefull"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/bored"
@@ -223,7 +228,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/Bored"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/depressed"
@@ -236,7 +242,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/depressed"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/stressed"
@@ -249,7 +256,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/stressed"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/aggressive"
@@ -262,7 +270,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/Aggressive"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/noMood"
@@ -275,7 +284,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/Gray"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
 
             <TextView
                 android:id="@+id/allMood"
@@ -288,7 +298,8 @@ android:layout_marginTop="5dp"
                 android:paddingTop="5dp"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:gravity="center_horizontal" />
+                android:gravity="center_horizontal"
+                android:background="@drawable/bgcolor_for_text" />
                 </LinearLayout>
             </ScrollView>
         </LinearLayout>
