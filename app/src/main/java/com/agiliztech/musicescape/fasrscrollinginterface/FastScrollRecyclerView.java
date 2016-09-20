@@ -5,10 +5,11 @@ import android.graphics.Canvas;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
-
+import com.agiliztech.musicescape.models.SongUiObj;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,7 +27,6 @@ import static java.lang.String.valueOf;
 
 public class FastScrollRecyclerView extends RecyclerView {
         private Context ctx;
-
         private boolean setupThings = false;
         public static int indWidth = 25;
         public static int indHeight= 12;
@@ -39,7 +39,8 @@ public class FastScrollRecyclerView extends RecyclerView {
         public boolean showLetter = false;
         private Handler listHandler;
 
-        public FastScrollRecyclerView(Context context) {
+
+     public FastScrollRecyclerView(Context context) {
             super(context);
             ctx = context;
         }
@@ -56,7 +57,7 @@ public class FastScrollRecyclerView extends RecyclerView {
 
         @Override
         public void onDraw(Canvas d) {
-            if(!setupThings)
+           // if(!setupThings)
                setupThings();
             super.onDraw(d);
         }
@@ -70,7 +71,7 @@ public class FastScrollRecyclerView extends RecyclerView {
             int i=0;
             for(String s:listSection)
             {
-                if(s.matches("[a-zA-Z]")) {
+             if(s.matches("[a-zA-Z]")) {
                     sections[i++] = s;
                 }
                 else
