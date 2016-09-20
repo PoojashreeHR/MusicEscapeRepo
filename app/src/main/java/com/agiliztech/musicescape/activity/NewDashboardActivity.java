@@ -61,7 +61,6 @@ public class NewDashboardActivity extends BaseMusicActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_dashboard);
-
         ImageView infoButton;
         dashboardPreference = getSharedPreferences("DashboardPreference", 0);
 

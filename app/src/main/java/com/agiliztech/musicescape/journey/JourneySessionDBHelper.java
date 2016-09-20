@@ -210,7 +210,7 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean isFavJourneySession(JourneySession session){
+   /* public boolean isFavJourneySession(JourneySession session){
         SQLiteDatabase db = this.getReadableDatabase();
         JourneySession journey = null;
         try{
@@ -237,7 +237,7 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
         return (journey.getFavourite() == 1);
     }
-
+*/
     public void updateName(JourneySession session, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
