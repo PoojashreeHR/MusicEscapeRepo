@@ -236,8 +236,8 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
             return false;
         }
         return (journey.getFavourite() == 1);
-    }*/
-
+    }
+*/
     public void updateName(JourneySession session, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{

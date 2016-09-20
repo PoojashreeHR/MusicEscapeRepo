@@ -1,8 +1,10 @@
 package com.agiliztech.musicescape.musicservices;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -363,7 +365,6 @@ public class MusicService extends Service implements
 
     public void go() {
         player.start();
-        //player.prepareAsync();
     }
 
     //skip to previous track
@@ -444,5 +445,6 @@ public class MusicService extends Service implements
         noRepeatSong = false;
         repeatPlayList = false;
     }
+
 
 }

@@ -1,7 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,14 +17,14 @@ public class SlidingImage extends AppCompatActivity {
     private static int currentPage = 0;
     private static int NUM_PAGES = 8;
     private static final Integer[] IMAGES = {
-            R.drawable.tutorial_img_1,
-            R.drawable.tutorial_img,
-            R.drawable.tutorial_img_3,
-            R.drawable.tutorial_img_4,
-            R.drawable.tutorial_img_5,
-            R.drawable.tutorial_img_6,
-            R.drawable.tutorial_img_7,
-            R.drawable.tutorial_img_8};
+            R.drawable.coach_screen_img_01,
+            R.drawable.coach_screen_img_02,
+            R.drawable.coach_screen_img_03,
+            R.drawable.coach_screen_img_04,
+            R.drawable.coach_screen_img_05,
+            R.drawable.coach_screen_img_06,
+            R.drawable.coach_screen_img_07,
+            R.drawable.coach_screen_img_08};
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
     String appInfo, splashScreen, dashboard, library, history, draw, playlist;
     String isClicked = null;
@@ -129,7 +128,7 @@ public class SlidingImage extends AppCompatActivity {
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
         } else if (splashScreen!= null) {
-            ImagesArray.add(R.drawable.tutorial_img_1);
+            ImagesArray.add(R.drawable.coach_screen_img_01);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -138,8 +137,8 @@ public class SlidingImage extends AppCompatActivity {
                     }
             }, 3000);
         } else if (library!= null) {
-            ImagesArray.add(R.drawable.tutorial_img);
-            ImagesArray.add(R.drawable.tutorial_img_3);
+            ImagesArray.add(R.drawable.coach_screen_img_02);
+            //ImagesArray.add(R.drawable.coa);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -148,7 +147,7 @@ public class SlidingImage extends AppCompatActivity {
                 }
             }, 3000);
         } else if (dashboard!= null) {
-            ImagesArray.add(R.drawable.tutorial_img_4);
+            ImagesArray.add(R.drawable.coach_screen_img_05);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -157,7 +156,7 @@ public class SlidingImage extends AppCompatActivity {
                 }
             }, 3000);
         } else if (history!= null) {
-            ImagesArray.add(R.drawable.tutorial_img_5);
+            ImagesArray.add(R.drawable.coach_screen_img_06);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -168,8 +167,8 @@ public class SlidingImage extends AppCompatActivity {
         } else if(draw!= null){
 //            startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
 //            finish();
-            ImagesArray.add(R.drawable.tutorial_img_6);
-            ImagesArray.add(R.drawable.tutorial_img_7);
+            ImagesArray.add(R.drawable.coach_screen_img_07);
+            ImagesArray.add(R.drawable.coach_screen_img_08);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {

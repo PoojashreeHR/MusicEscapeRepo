@@ -954,7 +954,7 @@ public class JourneyService {
 
     }
 
-    private boolean needsToGeneratePresets() {
+    public boolean needsToGeneratePresets() {
         JourneyDBHelper journeyDBHelper = new JourneyDBHelper(mContext);
         int count = journeyDBHelper.getJourneyCount();
         journeyDBHelper.close();
