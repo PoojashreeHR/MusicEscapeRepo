@@ -65,6 +65,8 @@ public class MusicService extends Service implements
     AudioManager am;
     TelephonyManager mgr;
     PhoneStateListener phoneStateListener;
+    public static boolean isNextButtonClicked = false;
+    int duration;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -264,12 +266,14 @@ public class MusicService extends Service implements
     public void onCompletion(MediaPlayer mp) {
         //check if playback has reached the end of a track
 
-        if (player.getCurrentPosition() > 0) {
-            mp.reset();
-            playNext();
-            Intent intent = new Intent(SERVICE_EVENT);
-            intent.putExtra("currentSong", new Gson().toJson(playSong));
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        if (isNextButtonClicked) {
+            if (player.getCurrentPosition() > 0) {
+                mp.reset();
+                playNext();
+                Intent intent = new Intent(SERVICE_EVENT);
+                intent.putExtra("currentSong", new Gson().toJson(playSong));
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+            }
         }
     }
 
@@ -280,9 +284,11 @@ public class MusicService extends Service implements
         return false;
     }
 
+
     @Override
     public void onPrepared(MediaPlayer mp) {
         //start playback
+        duration = player.getDuration();
         mp.start();
         //notification
         Intent notIntent = new Intent(this, MoodMappingActivity.class);
@@ -333,7 +339,7 @@ public class MusicService extends Service implements
     public int getDur() {
         if (player == null)
             return 0;
-        return player.getDuration();
+        return duration;
     }
 
     public boolean isPng() {
@@ -343,6 +349,11 @@ public class MusicService extends Service implements
     public void pausePlayer() {
         if (player != null)
             player.pause();
+    }
+
+    public void stopPlayer() {
+        if (player != null)
+            player.stop();
     }
 
     public void seek(int posn) {
@@ -363,31 +374,35 @@ public class MusicService extends Service implements
 
     //skip to next
     public void playNext() {
-        if (shuffle) {
-            int newSong = songPosn;
-            while (newSong == songPosn) {
-                newSong = rand.nextInt(songs.size());
-            }
-            songPosn = newSong;
-            playSong();
-        } else if (noRepeatSong) {
-            songPosn++;
-            if (songPosn >= songs.size()) {
-                //songPosn = 0;
-                player.stop();
-            } else {
+
+
+        if (isNextButtonClicked) {
+            if (shuffle) {
+                int newSong = songPosn;
+                while (newSong == songPosn) {
+                    newSong = rand.nextInt(songs.size());
+                }
+                songPosn = newSong;
                 playSong();
-            }
-        } else if (repeatSingleSong) {
-            //songPosn = songPosn;
-            playSong();
-        } else if (repeatPlayList) {
-            songPosn++;
-            if (songPosn >= songs.size()) songPosn = 0;
-            playSong();
-        } else {
+            } else if (noRepeatSong) {
+                songPosn++;
+                if (songPosn >= songs.size()) {
+                    //songPosn = 0;
+                    player.stop();
+                } else {
+                    playSong();
+                }
+            } else if (repeatSingleSong) {
+                //songPosn = songPosn;
+                playSong();
+            } else if (repeatPlayList) {
+                songPosn++;
+                if (songPosn >= songs.size()) songPosn = 0;
+                playSong();
+            } else {
            /* songPosn++;
             if (songPosn >= songs.size()) songPosn = 0;*/
+            }
         }
     }
 

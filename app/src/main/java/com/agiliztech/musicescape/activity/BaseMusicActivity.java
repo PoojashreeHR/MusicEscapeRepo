@@ -152,7 +152,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             return Global.libPlaylistSongs;
         } else {
             DBHandler dbHandler = new DBHandler(this);
-            ArrayList<Song> songs =  dbHandler.getAllSongsFromDB();
+            ArrayList<Song> songs = dbHandler.getAllSongsFromDB();
             dbHandler.close();
             return songs;
         }
@@ -321,10 +321,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     upX = (int) event.getX();
                     Log.i("event.getX()", " upX " + downX);
-                    if(upX == downX){
+                    if (upX == downX) {
                         // do Nothing here.
-                    }
-                    else if (upX - downX > 100) {
+                    } else if (upX - downX > 100) {
                         // swipe right
                         // Toast.makeText(getApplicationContext(),"Swiping Right",Toast.LENGTH_LONG).show();
                         musicSrv.playPrev();
@@ -332,6 +331,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         tv_song_detail.setText(musicSrv.getSongDetail());
                     } else if (downX - upX > -100) {
                         //  Toast.makeText(getApplicationContext(),"Swiping Left",Toast.LENGTH_LONG).show();
+                        MusicService.isNextButtonClicked = true;
                         musicSrv.playNext();
                         tv_songname.setText(musicSrv.getSongName());
                         tv_song_detail.setText(musicSrv.getSongDetail());
@@ -563,7 +563,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         RectF icon_dest = new RectF(
                                 (float) itemView.getLeft() + (width * 2),
                                 (float) itemView.getTop(),
-                                (float) itemView.getLeft() +(width * 6),
+                                (float) itemView.getLeft() + (width * 6),
                                 (float) itemView.getBottom());
                         c.drawBitmap(icon, null, icon_dest, p);
                         Log.e("WIDTH ", " WIDTH = " + itemView.getWidth());
@@ -604,7 +604,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
+
+        musicSrv.stopSelf();
         musicSrv.killService();
+        if (musicSrv != null) {
+            stopService(new Intent(this, MusicService.class));
+            if (musicSrv != null)
+                musicSrv.pausePlayer();
+        }
         super.onDestroy();
     }
 
@@ -699,10 +706,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
         super.onResume();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         boolean scannedOnce = sharedPreferences.getBoolean(Global.isScannedOnce, false);
-        if(!scannedOnce){
+        if (!scannedOnce) {
             hideMusicPlayer();
-        }
-        else{
+        } else {
             showMusicPlayer();
         }
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,
@@ -716,6 +722,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_songname.setText(musicSrv.getSongName());
             tv_song_detail.setText(musicSrv.getSongDetail());
         }*/
+        updateProgressBar();
     }
 
     @Override
@@ -949,12 +956,18 @@ public class BaseMusicActivity extends AppCompatActivity implements
         public void run() {
 
             if (musicSrv != null) {
-                long totalDuration = musicSrv.getDur();
-                long currDuration = musicSrv.getPosn();
+                if (musicBound) {
+                    long totalDuration = musicSrv.getDur();
+                    long currDuration = musicSrv.getPosn();
 
-                int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
-                play_music_seek_bar.setProgress(progress);
-                handler.postDelayed(this, 100);
+                    int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
+                    play_music_seek_bar.setProgress(progress);
+                    Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
+                    if (progress == 100)
+                        MusicService.isNextButtonClicked = true;
+                    handler.postDelayed(this, 100);
+
+                }
             }
 
            /* if (!mExecutorService.isShutdown()) {
@@ -969,7 +982,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
             }*/
         }
     };
-
 
     @Override
     protected void onStop() {

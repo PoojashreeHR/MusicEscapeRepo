@@ -33,4 +33,8 @@
     <color name="enable_thumb_yellow">#FDBE46</color>
     <color name="colorWhiteForThumbSeekbar">#f2f0f0</color>
     <color name="colorWhiteForThumbSeekbarr">#838282</color>
+
+
+    <drawable name="pressed_color">#FFFFFF</drawable>
+    <drawable name="normal_color">#000000</drawable>
 </resources>

@@ -110,7 +110,7 @@ public class UtilityClass {
             px *=0.95;
         }
         else{
-            px *=2;
+            px *=1;
         }
 
 //        if (devSize == Configuration.SCREENLAYOUT_SIZE_LARGE) {
