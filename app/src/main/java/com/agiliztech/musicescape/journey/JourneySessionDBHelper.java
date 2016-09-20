@@ -210,7 +210,8 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
     }
 
-     public void updateName(JourneySession session, String name) {
+
+    public void updateName(JourneySession session, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             ContentValues contentValues = new ContentValues();

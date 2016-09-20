@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="162dp"
     android:id="@+id/ll_saveHistory"
-    android:layout_height="255dp"
+    android:layout_height="283dp"
 
     android:background="@drawable/layout_border"
     android:orientation="vertical">
@@ -21,85 +21,65 @@
         <!--android:layout_gravity="top|center"-->
         <!--/>-->
 
+
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Exited"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:layout_centerHorizontal="true"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+
+
     <FrameLayout
         android:id="@+id/overlay"
         android:layout_width="162dp"
         android:layout_height="255dp"
-        android:scaleType="centerCrop"
-
-android:layout_gravity="center"
+        android:layout_gravity="center"
         android:gravity="center"
+        android:scaleType="centerCrop"
 
         >
 
 
-<!--Header-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="35dp"
-            android:id="@+id/tracktitle"
-            android:gravity="top"
-            android:layout_marginTop="17dp"
-            android:layout_gravity="center">
+        <!--Header-->
 
-            <TextView
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Exited"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:ellipsize="end"
-                android:layout_centerHorizontal="true"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="#ffffff"
-                android:textSize="14sp" />
-
-        </RelativeLayout>
         <com.agiliztech.musicescape.journey.JourneyView
             android:id="@+id/journey"
             android:layout_width="126dp"
             android:layout_height="180dp"
-            android:layout_marginTop="30dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
              />
         <!--Tracks-->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="17dp"
-            android:id="@+id/tracklist"
-            android:gravity="bottom"
-            android:layout_marginTop="35dp"
-            android:layout_gravity="center">
-
-                    <TextView
-                        android:id="@+id/tv_tracks"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:text="2 Tracks"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:ellipsize="end"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:textColor="@color/exited"
-                        android:textSize="14sp" />
-
-
-
-
-
-            </RelativeLayout>
-
-
-
 
 
     </FrameLayout>
+
+
+
+        <TextView
+            android:id="@+id/tv_tracks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="2 Tracks"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/exited"
+            android:textSize="14sp" />
+
+
+
+
 
 </LinearLayout>
