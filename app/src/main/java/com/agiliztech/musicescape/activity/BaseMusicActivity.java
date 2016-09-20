@@ -19,13 +19,10 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.media.MediaPlayer;
-import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
@@ -75,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -99,16 +95,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
     LinearLayout linearLayout;
-    private MediaPlayer mp;
     protected boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
     protected LinearLayout dragView;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    PlaybackState mLastPlaybackState;
     private SharedPreferences sp;
-    int progress = 0;
+
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
@@ -176,9 +170,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
         btn_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                nMgr.cancel();
-                //musicSrv.stopForeground(true);
+                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                nMgr.cancelAll();
+                musicSrv.stopForeground(true);
                 isSongPlaying = false;
                 playbackPaused = true;
                 // stopService(playIntent);
@@ -195,6 +189,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (!musicSrv.isPng()) {
                     if (playbackPaused) {
+                        musicSrv.showNotification();
                         musicSrv.go();
                         isSongPlaying = true;
                         play_music_seek_bar.setProgress(0);
@@ -216,11 +211,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     isSongPlaying = false;
                 }
             }
-
-
         });
-
-
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
 
         play_music_seek_bar = (SeekBar) findViewById(R.id.play_music_seek_bar);
@@ -232,13 +223,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
             play_music_seek_bar.getThumb().mutate().setAlpha(0);
         }
         play_music_seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            Intent returnIntent=new Intent();
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               progress = seekBar.getProgress();
-               returnIntent.putExtra("Progress",progress);
 
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 handler.removeCallbacks(mUpdateTimeTask);
@@ -253,7 +242,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 Log.e("onStopTrackingTouch ", " CURRENT POSITION : " + currPosition);
                 musicSrv.seek(currPosition);
                 updateProgressBar();
-                getSupportMediaController().getTransportControls().seekTo(seekBar.getProgress());
             }
         });
         tv_songname = (TextView) findViewById(R.id.tv_songname);
@@ -615,13 +603,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
 
-        musicSrv.stopSelf();
-        musicSrv.killService();
-        if (musicSrv != null) {
-            stopService(new Intent(this, MusicService.class));
-            if (musicSrv != null)
-                musicSrv.pausePlayer();
-        }
+
         super.onDestroy();
     }
 
@@ -729,7 +711,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_songname.setText(musicSrv.getSongName());
             tv_song_detail.setText(musicSrv.getSongDetail());
         }*/
-        updateProgressBar();
+        if(musicSrv != null) {
+            if(musicSrv.isPng()) {
+                updateProgressBar();
+            }
+        }
     }
 
     @Override
@@ -969,24 +955,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
                     int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
                     play_music_seek_bar.setProgress(progress);
-                    Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
+                   // Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
                     if (progress == 100)
                         MusicService.isNextButtonClicked = true;
                     handler.postDelayed(this, 100);
 
                 }
             }
-
-           /* if (!mExecutorService.isShutdown()) {
-                mScheduleFuture = mExecutorService.scheduleAtFixedRate(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mHandler.post(mUpdateProgressTask);
-                            }
-                        }, PROGRESS_UPDATE_INITIAL_INTERVAL,
-                        PROGRESS_UPDATE_INTERNAL, TimeUnit.MILLISECONDS);
-            }*/
         }
     };
 
@@ -1185,7 +1160,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
             });*/
 
         }
-
 
         private String handleUnknownArtist(Artist artist) {
             if (artist == null)
