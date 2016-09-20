@@ -1,24 +1,23 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -36,14 +35,10 @@ import com.agiliztech.musicescape.models.DashboardItem;
 import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.utils.Global;
-import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 public class NewDashboardActivity extends BaseMusicActivity {
 
@@ -191,7 +186,13 @@ public class NewDashboardActivity extends BaseMusicActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        recyclerView.setAdapter(new DashboardAdapter(getJourneyData()));
+        if(JourneyService.getInstance(this).needsToGeneratePresets()){
+            //create journey and load asynchronously
+            new GeneratePresetTask().execute();
+        }
+        else {
+            recyclerView.setAdapter(new DashboardAdapter(getJourneyData()));
+        }
         recyclerView_user.setAdapter(new DashboardAdapter(getUserJourneyData()));
         resetSelected();
     }
@@ -407,5 +408,26 @@ public class NewDashboardActivity extends BaseMusicActivity {
         }
         startActivity(new Intent(this, PlaylistJourneyActivity.class));
         //finish();
+    }
+
+    private class GeneratePresetTask extends AsyncTask<Void, Void, List<DashboardItem>> {
+        private ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(NewDashboardActivity.this, "", "Generating Presets...");
+        }
+
+        @Override
+        protected void onPostExecute(List<DashboardItem> aVoid) {
+            if(progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            recyclerView.setAdapter(new DashboardAdapter(aVoid));
+        }
+
+        @Override
+        protected List<DashboardItem> doInBackground(Void... params) {
+            return getJourneyData();
+        }
     }
 }
