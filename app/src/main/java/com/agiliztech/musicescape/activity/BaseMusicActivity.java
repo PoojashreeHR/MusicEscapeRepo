@@ -169,7 +169,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 nMgr.cancelAll();
-                //musicSrv.stopForeground(true);
+                musicSrv.stopForeground(true);
                 isSongPlaying = false;
                 playbackPaused = true;
                 // stopService(playIntent);
@@ -186,6 +186,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (!musicSrv.isPng()) {
                     if (playbackPaused) {
+                        musicSrv.showNotification();
                         musicSrv.go();
                         isSongPlaying = true;
                         play_music_seek_bar.setProgress(0);
@@ -592,13 +593,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
 
-        musicSrv.stopSelf();
-        musicSrv.killService();
-        if (musicSrv != null) {
-            stopService(new Intent(this, MusicService.class));
-            if (musicSrv != null)
-                musicSrv.pausePlayer();
-        }
+
         super.onDestroy();
     }
 
@@ -709,7 +704,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_songname.setText(musicSrv.getSongName());
             tv_song_detail.setText(musicSrv.getSongDetail());
         }*/
-        updateProgressBar();
+        if(musicSrv != null) {
+            if(musicSrv.isPng()) {
+                updateProgressBar();
+            }
+        }
     }
 
     @Override
@@ -949,7 +948,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
                     int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
                     play_music_seek_bar.setProgress(progress);
-                    Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
+                   // Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
                     if (progress == 100)
                         MusicService.isNextButtonClicked = true;
                     handler.postDelayed(this, 100);

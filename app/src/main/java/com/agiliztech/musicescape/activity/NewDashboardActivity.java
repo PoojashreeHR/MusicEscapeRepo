@@ -35,6 +35,7 @@ import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.DashboardItem;
 import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
+import com.agiliztech.musicescape.musicservices.MusicService;
 import com.agiliztech.musicescape.utils.Global;
 import com.agiliztech.musicescape.utils.SongsManager;
 import com.agiliztech.musicescape.utils.UtilityClass;
@@ -408,5 +409,34 @@ public class NewDashboardActivity extends BaseMusicActivity {
         }
         startActivity(new Intent(this, PlaylistJourneyActivity.class));
         //finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(musicSrv!=null){
+            if(!musicSrv.isPng()){
+                musicSrv.stopSelf();
+                musicSrv.killService();
+                if (musicSrv != null) {
+                    stopService(new Intent(this, MusicService.class));
+                    if (musicSrv != null)
+                        musicSrv.pausePlayer();
+                }
+            }
+        }
+        super.onBackPressed();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+       /* musicSrv.stopSelf();
+        musicSrv.killService();
+        if (musicSrv != null) {
+            stopService(new Intent(this, MusicService.class));
+            if (musicSrv != null)
+                musicSrv.pausePlayer();
+        }*/
+        super.onDestroy();
     }
 }
