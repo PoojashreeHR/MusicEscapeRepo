@@ -51,10 +51,13 @@ import android.widget.Toast;
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneySong;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Artist;
+import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
+import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.models.apimodels.SongRetagInfo;
 import com.agiliztech.musicescape.models.apimodels.SongRetagMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
@@ -366,6 +369,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
         slider.setScrollableView(mRecyclerView);
     }
 
+    protected void setUpPlaylistWithPos(int pos){
+        setUpPlaylist();
+        Song song =  songList.get(pos);
+        tv_songname.setText(song.getSongName());
+        tv_song_detail.setText(song.getArtist().getArtistName());
+    }
+
     public void songRetag(int position, Song model) {
         // Logic for Retag from Library
         if (UtilityClass.checkInternetConnectivity(this)) {
@@ -642,27 +652,24 @@ public class BaseMusicActivity extends AppCompatActivity implements
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false).commit();
         if (sp != null) {
-            tv_songname.setText(sp.getString("song_name", null));
-            tv_song_detail.setText(sp.getString("song_detail", null));
-            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
 
-            if (sp.getString("song_id_sp", null) != null) {
-                Log.e("SONG ID SP", "" + sp.getString("song_id_sp", null));
+            if(sp.getString(Global.LAST_PL_TYPE, "").equals("")){
+
             }
-            if (sp.getString("song_position", null) != null) {
-                Log.e(" SONG POSITION SP ", "" + sp.getString("song_position", null));
-                //updateProgressBar();
+            else{
+                String lastJourneySessionID = sp.getString(Global.LAST_JOURNEY_ID, "");
+                if(!lastJourneySessionID.equals("")){
+                    JourneySessionDBHelper dbHelper = new JourneySessionDBHelper(this);
+                    JourneySession session = dbHelper.getSession(lastJourneySessionID);
+                    if(session != null) {
+                        JourneyService.getInstance(this).setCurrentSession(session);
+                        int pos = sp.getInt(Global.LAST_SONG_POS,0);
+                        setUpPlaylistWithPos(pos);
+                    }
+                }
             }
-            if (sp.getString("song_name_sp", null) != null) {
-                Log.e(" SONG NAME SP ", "" + sp.getString("song_name_sp", null));
-            }
-            //updateProgressBar();
-            /*SharedPreferences.Editor editor = sp.edit();
-            editor.putString("playbackpaused", "" + playbackPaused);
-            editor.putString("song_id_sp",musicSrv.getSongId());
-            editor.putString("song_position",""+musicSrv.getPosn());
-            editor.putString("song_name",musicSrv.getSongName());
-            editor.commit();*/
+
+            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
         }
 
         if (isSongPlaying) {
@@ -991,9 +998,20 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 if (musicSrv != null) {
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("playbackpaused", "" + playbackPaused);
-                    editor.putString("song_id_sp", musicSrv.getSongId());
-                    editor.putString("song_position", "" + musicSrv.getPosn());
-                    editor.putString("song_name_sp", musicSrv.getSongName());
+                    JourneySession curSession = JourneyService.getInstance(this).getCurrentSession();
+                    if( curSession == null){
+                        editor.putString(Global.LAST_PL_TYPE, "");
+                        editor.putString(Global.LAST_JOURNEY_ID, "");
+                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                    }
+                    else{
+                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                        editor.putString(Global.LAST_JOURNEY_ID, curSession.getJourneyID());
+                        editor.putString(Global.LAST_PL_TYPE, curSession.getJourney().getGeneratedBy());
+                    }
+//                    editor.putString("song_id_sp", musicSrv.getSongId());
+//                    editor.putString("song_position", "" + musicSrv.getPosn());
+//                    editor.putString("song_name_sp", musicSrv.getSongName());
                     editor.apply();
                 }
             }

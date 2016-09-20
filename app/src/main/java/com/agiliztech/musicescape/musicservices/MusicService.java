@@ -444,5 +444,9 @@ public class MusicService extends Service implements
         repeatPlayList = false;
     }
 
+    public int getSongPosn(){
+        return songPosn;
+    }
+
 
 }
