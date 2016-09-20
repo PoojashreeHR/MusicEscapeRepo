@@ -1,7 +1,6 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Dialog;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -19,20 +18,19 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.media.MediaPlayer;
-import android.media.session.PlaybackState;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
+import android.provider.SyncStateContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -89,21 +87,20 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected ArrayList<Song> songList;
     protected Intent playIntent;
     public boolean paused = false, playbackPaused = false;
-
+   /* DisplayMetrics metrics = getResources().getDisplayMetrics();
+    int densityDpi = (int)(metrics.density * 160f);*/
     protected ImageButton btn_pause;
     protected ImageButton loop_not_selected, loop_selected_for_playlist, loop_selected_for_single_song;
     protected TextView tv_songname;
     protected TextView tv_song_detail;
     protected SeekBar play_music_seek_bar;
     LinearLayout linearLayout;
-    private MediaPlayer mp;
     protected boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
     protected LinearLayout dragView;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
-    PlaybackState mLastPlaybackState;
     private SharedPreferences sp;
     int progress = 0;
 
@@ -229,11 +226,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
             play_music_seek_bar.getThumb().mutate().setAlpha(0);
         }
         play_music_seek_bar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            Intent returnIntent=new Intent();
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-               progress = seekBar.getProgress();
-               returnIntent.putExtra("Progress",progress);
 
             }
             @Override
@@ -250,7 +244,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 Log.e("onStopTrackingTouch ", " CURRENT POSITION : " + currPosition);
                 musicSrv.seek(currPosition);
                 updateProgressBar();
-                getSupportMediaController().getTransportControls().seekTo(seekBar.getProgress());
             }
         });
         tv_songname = (TextView) findViewById(R.id.tv_songname);
@@ -319,7 +312,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     Log.i("event.getX()", " downX " + downX);
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    upX = (int) event.getX();
+                    upX = (int) event.getY();
                     Log.i("event.getX()", " upX " + downX);
                     if (upX == downX) {
                         // do Nothing here.
