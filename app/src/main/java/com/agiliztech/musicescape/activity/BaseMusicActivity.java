@@ -1,6 +1,7 @@
 package com.agiliztech.musicescape.activity;
 
 import android.app.Dialog;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -23,14 +24,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
-import android.provider.SyncStateContract;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -49,10 +48,13 @@ import android.widget.Toast;
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.journey.JourneyService;
+import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneySong;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Artist;
+import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
+import com.agiliztech.musicescape.models.SongsModel;
 import com.agiliztech.musicescape.models.apimodels.SongRetagInfo;
 import com.agiliztech.musicescape.models.apimodels.SongRetagMain;
 import com.agiliztech.musicescape.musicservices.MusicService;
@@ -70,7 +72,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -87,8 +88,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected ArrayList<Song> songList;
     protected Intent playIntent;
     public boolean paused = false, playbackPaused = false;
-   /* DisplayMetrics metrics = getResources().getDisplayMetrics();
-    int densityDpi = (int)(metrics.density * 160f);*/
+
     protected ImageButton btn_pause;
     protected ImageButton loop_not_selected, loop_selected_for_playlist, loop_selected_for_single_song;
     protected TextView tv_songname;
@@ -102,7 +102,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     private RecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SharedPreferences sp;
-    int progress = 0;
+
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
 
@@ -170,9 +170,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
         btn_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//                nMgr.cancel();
-                //musicSrv.stopForeground(true);
+                NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                nMgr.cancelAll();
+                musicSrv.stopForeground(true);
                 isSongPlaying = false;
                 playbackPaused = true;
                 // stopService(playIntent);
@@ -189,6 +189,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onClick(View v) {
                 if (!musicSrv.isPng()) {
                     if (playbackPaused) {
+                        musicSrv.showNotification();
                         musicSrv.go();
                         isSongPlaying = true;
                         play_music_seek_bar.setProgress(0);
@@ -210,11 +211,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     isSongPlaying = false;
                 }
             }
-
-
         });
-
-
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
 
         play_music_seek_bar = (SeekBar) findViewById(R.id.play_music_seek_bar);
@@ -230,6 +227,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
                 handler.removeCallbacks(mUpdateTimeTask);
@@ -312,7 +310,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                     Log.i("event.getX()", " downX " + downX);
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                    upX = (int) event.getY();
+                    upX = (int) event.getX();
                     Log.i("event.getX()", " upX " + downX);
                     if (upX == downX) {
                         // do Nothing here.
@@ -357,6 +355,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
         }
 
         slider.setScrollableView(mRecyclerView);
+    }
+
+    protected void setUpPlaylistWithPos(int pos){
+        setUpPlaylist();
+        Song song =  songList.get(pos);
+        tv_songname.setText(song.getSongName());
+        tv_song_detail.setText(song.getArtist().getArtistName());
     }
 
     public void songRetag(int position, Song model) {
@@ -598,13 +603,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
 
-        musicSrv.stopSelf();
-        musicSrv.killService();
-        if (musicSrv != null) {
-            stopService(new Intent(this, MusicService.class));
-            if (musicSrv != null)
-                musicSrv.pausePlayer();
-        }
+
         super.onDestroy();
     }
 
@@ -635,27 +634,24 @@ public class BaseMusicActivity extends AppCompatActivity implements
         getSharedPreferences("PREFERENCE", MODE_PRIVATE).edit()
                 .putBoolean("isFirstRun", false).commit();
         if (sp != null) {
-            tv_songname.setText(sp.getString("song_name", null));
-            tv_song_detail.setText(sp.getString("song_detail", null));
-            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
 
-            if (sp.getString("song_id_sp", null) != null) {
-                Log.e("SONG ID SP", "" + sp.getString("song_id_sp", null));
+            if(sp.getString(Global.LAST_PL_TYPE, "").equals("")){
+
             }
-            if (sp.getString("song_position", null) != null) {
-                Log.e(" SONG POSITION SP ", "" + sp.getString("song_position", null));
-                //updateProgressBar();
+            else{
+                String lastJourneySessionID = sp.getString(Global.LAST_JOURNEY_ID, "");
+                if(!lastJourneySessionID.equals("")){
+                    JourneySessionDBHelper dbHelper = new JourneySessionDBHelper(this);
+                    JourneySession session = dbHelper.getSession(lastJourneySessionID);
+                    if(session != null) {
+                        JourneyService.getInstance(this).setCurrentSession(session);
+                        int pos = sp.getInt(Global.LAST_SONG_POS,0);
+                        setUpPlaylistWithPos(pos);
+                    }
+                }
             }
-            if (sp.getString("song_name_sp", null) != null) {
-                Log.e(" SONG NAME SP ", "" + sp.getString("song_name_sp", null));
-            }
-            //updateProgressBar();
-            /*SharedPreferences.Editor editor = sp.edit();
-            editor.putString("playbackpaused", "" + playbackPaused);
-            editor.putString("song_id_sp",musicSrv.getSongId());
-            editor.putString("song_position",""+musicSrv.getPosn());
-            editor.putString("song_name",musicSrv.getSongName());
-            editor.commit();*/
+
+            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
         }
 
         if (isSongPlaying) {
@@ -715,7 +711,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_songname.setText(musicSrv.getSongName());
             tv_song_detail.setText(musicSrv.getSongDetail());
         }*/
-        updateProgressBar();
+        if(musicSrv != null) {
+            if(musicSrv.isPng()) {
+                updateProgressBar();
+            }
+        }
     }
 
     @Override
@@ -955,24 +955,13 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
                     int progress = (int) UtilityClass.getProgressPercentage(currDuration, totalDuration);
                     play_music_seek_bar.setProgress(progress);
-                    Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
+                   // Log.e("PROGRESS ", "PRINTING PROGRESS : " + progress);
                     if (progress == 100)
                         MusicService.isNextButtonClicked = true;
                     handler.postDelayed(this, 100);
 
                 }
             }
-
-           /* if (!mExecutorService.isShutdown()) {
-                mScheduleFuture = mExecutorService.scheduleAtFixedRate(
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                mHandler.post(mUpdateProgressTask);
-                            }
-                        }, PROGRESS_UPDATE_INITIAL_INTERVAL,
-                        PROGRESS_UPDATE_INTERNAL, TimeUnit.MILLISECONDS);
-            }*/
         }
     };
 
@@ -984,9 +973,20 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 if (musicSrv != null) {
                     SharedPreferences.Editor editor = sp.edit();
                     editor.putString("playbackpaused", "" + playbackPaused);
-                    editor.putString("song_id_sp", musicSrv.getSongId());
-                    editor.putString("song_position", "" + musicSrv.getPosn());
-                    editor.putString("song_name_sp", musicSrv.getSongName());
+                    JourneySession curSession = JourneyService.getInstance(this).getCurrentSession();
+                    if( curSession == null){
+                        editor.putString(Global.LAST_PL_TYPE, "");
+                        editor.putString(Global.LAST_JOURNEY_ID, "");
+                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                    }
+                    else{
+                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                        editor.putString(Global.LAST_JOURNEY_ID, curSession.getJourneyID());
+                        editor.putString(Global.LAST_PL_TYPE, curSession.getJourney().getGeneratedBy());
+                    }
+//                    editor.putString("song_id_sp", musicSrv.getSongId());
+//                    editor.putString("song_position", "" + musicSrv.getPosn());
+//                    editor.putString("song_name_sp", musicSrv.getSongName());
                     editor.apply();
                 }
             }
@@ -1160,7 +1160,6 @@ public class BaseMusicActivity extends AppCompatActivity implements
             });*/
 
         }
-
 
         private String handleUnknownArtist(Artist artist) {
             if (artist == null)

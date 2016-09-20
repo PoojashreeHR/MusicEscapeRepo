@@ -15,6 +15,7 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
@@ -23,6 +24,7 @@ import android.util.Log;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.activity.MoodMappingActivity;
+import com.agiliztech.musicescape.activity.NewDashboardActivity;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySong;
 import com.agiliztech.musicescape.models.Artist;
@@ -288,30 +290,30 @@ public class MusicService extends Service implements
     public void onPrepared(MediaPlayer mp) {
         //start playback
         mp.start();
+        showNotification();
         //notification
-        Intent notIntent = new Intent(this, MoodMappingActivity.class);
+
+    }
+
+    public void showNotification(){
+        Intent notIntent = new Intent(this, NewDashboardActivity.class);
         notIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendInt = PendingIntent.getActivity(this, 0,
                 notIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MoodMappingActivity.class);
+        stackBuilder.addParentStack(NewDashboardActivity.class);
         // Adds the Intent that starts the Activity to the top of the stack
         stackBuilder.addNextIntent(notIntent);
-        Notification.Builder builder = new Notification.Builder(this);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
         builder.setContentIntent(pendInt)
-                .setSmallIcon(R.drawable.notification)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setTicker(songTitle)
                 .setOngoing(true)
                 .setContentTitle("Playing")
                 .setContentText(songTitle);
         Notification not = builder.build();
-       /* if (Build.VERSION.SDK_INT < 16) {
-            not = builder.getNotification();
-        } else {
-            not = builder.build();
-        }*/
         startForeground(NOTIFY_ID, not);
     }
 
@@ -440,6 +442,10 @@ public class MusicService extends Service implements
         repeatSingleSong = setRepeat;
         noRepeatSong = false;
         repeatPlayList = false;
+    }
+
+    public int getSongPosn(){
+        return songPosn;
     }
 
 
