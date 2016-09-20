@@ -210,35 +210,7 @@ public class JourneySessionDBHelper extends SQLiteOpenHelper {
         }
     }
 
-    public boolean isFavJourneySession(JourneySession session){
-        SQLiteDatabase db = this.getReadableDatabase();
-        JourneySession journey = null;
-        try{
-            String query = "SELECT * FROM "+Global.JOURNEY_SESSION_TBL_NAME
-                    +" WHERE "+COL_JOURNEY_ID+" = '"+session.getJourneyID()+"'";
-            // +" ORDER BY datetime("+COL_JOURNEY_STARTED+") desc limit 8";
-            Cursor cursor = db.rawQuery(query, null);
-
-            if (cursor.moveToFirst()) {
-                while (!cursor.isAfterLast()) {
-                    String journeyStr = cursor.getString(cursor
-                            .getColumnIndex(COL_JOURNEY_SESSION_OBJ));
-                    journey = UtilityClass.getJsonConvertor().fromJson(journeyStr, JourneySession.class);
-                    cursor.moveToNext();
-                }
-            }
-            cursor.close();
-        }
-        catch (Exception e){
-            UtilityClass.log(JourneySessionDBHelper.class.getSimpleName(), e.getMessage());
-        }
-        if(journey == null){
-            return false;
-        }
-        return (journey.getFavourite() == 1);
-    }
-
-    public void updateName(JourneySession session, String name) {
+     public void updateName(JourneySession session, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         try{
             ContentValues contentValues = new ContentValues();
