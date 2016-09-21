@@ -212,6 +212,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                     holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_excited_library_inactive));
                 } else if (mood.contains("nomood")) {
                     holder.title.setTextColor(SongsManager.colorForMood(SongMoodCategory.scMoodNotFound));
+                    holder.mood_image.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_notfound_library_inactive));
                 } else if (mood.contains("allmood") || TextUtils.isEmpty(mood)) {
                     SongMoodCategory mood = model.getMood();
                     Log.e("MOOD RECYCLER VIEW", " MOOD : " + mood);
