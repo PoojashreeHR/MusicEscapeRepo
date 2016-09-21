@@ -290,11 +290,9 @@ public class MusicService extends Service implements
         return false;
     }
 
-
     @Override
     public void onPrepared(MediaPlayer mp) {
         //start playback
-        duration = player.getDuration();
         mp.start();
         showNotification();
         //notification
