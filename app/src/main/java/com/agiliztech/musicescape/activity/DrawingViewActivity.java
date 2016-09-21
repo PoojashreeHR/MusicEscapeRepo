@@ -2,6 +2,7 @@ package com.agiliztech.musicescape.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PointF;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -186,6 +187,19 @@ public class DrawingViewActivity extends BaseMusicActivity {
             Global.libPlaylistSongs = null;
             playSelectedSong(0);
             setUpPlaylist();
+
+            SharedPreferences sp = getSharedPreferences(Global.PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+            String gen = JourneyService.getInstance(this).getCurrentSession().getJourney().getGeneratedBy();
+            if(gen.equalsIgnoreCase("Preset")) {
+                editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(this).getCurrentSession().getJourney().getName());
+            }
+            else{
+                editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(this).getCurrentSession().getJourneyID());
+            }
+            editor.putString(Global.LAST_PL_TYPE, gen);
+            editor.apply();
            // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
         }
         Intent nextIntent = new Intent(this, PlaylistJourneyActivity.class);
