@@ -168,7 +168,7 @@ public class SpotifyApiService extends Service {
                             this.notifyAll();
                         }
                     } else {
-                        Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SpotifyApiService.this, "Check Internet Connection", Toast.LENGTH_SHORT).show();
                         Intent sendingIntent = new Intent(SERVICE_EVENT);
                         LocalBroadcastManager.getInstance(SpotifyApiService.this).sendBroadcast(sendingIntent);
                         break;

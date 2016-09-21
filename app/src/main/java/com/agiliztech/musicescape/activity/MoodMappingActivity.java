@@ -138,6 +138,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             }
         }
     };
+    private ArrayList<Song> cachedSongs;
 
     public void setTextCount() {
         tv_aggressive.setText(dbHandler.getMoodCount("aggressive") + "");
@@ -246,15 +247,16 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             public void onClick(View v) {
                 String buttonText = testButton.getText().toString();
                 if (buttonText.equals("START")) {
-                    Global.HALT_API = false;
-                    Global.CONTINUE_API = true;
+                   // Global.HALT_API = false;
+                  //  Global.CONTINUE_API = true;
                     //  mPlayer.start();
                     testButton.setText(getResources().getString(R.string.pause));
                     mood_scanning.setVisibility(View.VISIBLE);
                     ArrayList<com.agiliztech.musicescape.models.Song> originalList = totalSongs;
-                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = dbHandler.getAllSongsFromDB();
+                    ArrayList<com.agiliztech.musicescape.models.Song> listFromDB = getAllSongsFromCache();
                     if (listFromDB.size() > 0) {
-                        if (originalList.containsAll(listFromDB) && listFromDB.containsAll(originalList)) {
+                        boolean compared = originalList.equals(listFromDB);
+                        if (compared) {
                             Log.e("SAME ", " SAME");
                             testButton.setText(getResources().getString(R.string.start));
                             // displayAlertDialog();
@@ -279,10 +281,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                             }
                         } else {
                             Log.e("NOT SAME", " NOT SAME");
+                           // mood_scanning.setVisibility(View.VISIBLE);
                             new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
                             //displayAlertDialog();
                         }
                     } else {
+                       // mood_scanning.setVisibility(View.VISIBLE);
                         new SyncSongsWithDB(MoodMappingActivity.this).execute(dbHandler);
                         //displayAlertDialog();
                     }
@@ -292,6 +296,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     Global.HALT_API = true;
                     Global.CONTINUE_API = false;
                     mood_scanning.setText("");
+                    mood_scanning.setVisibility(View.GONE);
                 } // Resume
 //                else if (buttonText.equals("RESUME")) {
 //                    // mPlayer.stop();
@@ -387,6 +392,50 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         //setup controller
         setController();
 
+    }
+
+    private boolean compareLists(ArrayList<Song> originalList, ArrayList<Song> listFromDB) {
+        if(originalList == null || originalList.size() == 0){
+            return false;
+        }
+        if(listFromDB == null || listFromDB.size() == 0){
+            return false;
+        }
+
+        if(originalList.size() != listFromDB.size()){
+            return false;
+        }
+
+        for(Song song:listFromDB){
+            boolean songPresent = originalList.contains(song);
+            if(!songPresent){
+                Log.d("np","np");
+                return false;
+            }
+            else{
+                Log.d("np","npe");
+            }
+        }
+
+        for(Song song:originalList){
+            boolean songPresent = listFromDB.contains(song);
+            if(!songPresent){
+                Log.d("np","np");
+                return false;
+            }
+            else{
+                Log.d("np","npe");
+            }
+        }
+
+        return false;
+    }
+
+    private ArrayList<Song> getAllSongsFromCache() {
+        if(cachedSongs == null || cachedSongs.size() == 0) {
+            cachedSongs = dbHandler.getAllSongsFromDB();
+        }
+        return cachedSongs;
     }
 
     private void showNotScannedAlert() {
@@ -908,7 +957,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             //songs = songList;
             ArrayList<com.agiliztech.musicescape.models.Song> dbList = songList;
 
-            if (songs.equals(dbList)) {
+            if (compareLists(songs,dbList)) {
                 Log.e("EQUAL ", " BOTH LISTS ARE EQUAL IN CONTENT");
             } else {
                 Log.e("NOT EQUAL ", " BOTH LISTS ARE NOT EQUAL IN CONTENT");
