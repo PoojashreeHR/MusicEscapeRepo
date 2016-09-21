@@ -191,16 +191,30 @@ public class BaseMusicActivity extends AppCompatActivity implements
             @Override
             public void onClick(View v) {
                 if (!musicSrv.isPng()) {
-                    if (playbackPaused) {
+
+
+                    if(!Global.launchFisrtplay){
+                        musicSrv.showNotification();
+                        musicSrv.playSong();
+                        Global.launchFisrtplay = true;
+                        updateProgressBar();
+                        updateMusicPlayerByMood();
+                        isSongPlaying = true;
+                        play_music_seek_bar.setProgress(0);
+                        play_music_seek_bar.setMax(100);
+                        //updateProgressBar();
+                        btn_pause.setVisibility(View.VISIBLE);
+                        ibPlayPause.setVisibility(View.GONE);
+                    }
+
+
+                    else if (playbackPaused) {
                         musicSrv.showNotification();
 
-                        if(!Global.launchFisrtplay){
-                            musicSrv.playSong();
-                            Global.launchFisrtplay = true;
-                        }
-                        else{
+
+
                             musicSrv.go();
-                        }
+
 
                         //musicSrv.playSong();
                         updateProgressBar();
@@ -223,7 +237,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         }
                     }
                 } else {
+                    updateProgressBar();
+                    updateMusicPlayerByMood();
                     isSongPlaying = false;
+                    btn_pause.setVisibility(View.VISIBLE);
+                    ibPlayPause.setVisibility(View.GONE);
                 }
             }
         });
@@ -685,7 +703,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 }
             }
 
-            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", null));
+            playbackPaused = Boolean.parseBoolean(sp.getString("playbackpaused", "false"));
         }
 
         if (isSongPlaying) {

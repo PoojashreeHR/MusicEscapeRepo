@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.SharedPreferences;
 
 import com.agiliztech.musicescape.utils.FontUtils;
+import com.agiliztech.musicescape.utils.Global;
 
 /**
  * Created by praburaam on 11/08/16.
@@ -13,6 +14,7 @@ public class MainApplication extends Application {
     public void onCreate() {
         super.onCreate();
         setupFonts();
+        Global.launchFisrtplay = false;
     }
 
     private void setupFonts() {
