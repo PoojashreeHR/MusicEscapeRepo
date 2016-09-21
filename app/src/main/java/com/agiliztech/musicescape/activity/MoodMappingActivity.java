@@ -502,12 +502,12 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         if (sp != null) {
             if (playbackPaused) {
                 if (musicSrv != null) {
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("playbackpaused", "" + playbackPaused);
-                    editor.putString("song_id_sp", musicSrv.getSongId());
-                    editor.putString("song_position", "" + musicSrv.getPosn());
-                    editor.putString("song_name_sp", musicSrv.getSongName());
-                    editor.apply();
+//                    SharedPreferences.Editor editor = sp.edit();
+//                    editor.putString("playbackpaused", "" + playbackPaused);
+//                    editor.putString("song_id_sp", musicSrv.getSongId());
+//                    editor.putString("song_position", "" + musicSrv.getPosn());
+//                    editor.putString("song_name_sp", musicSrv.getSongName());
+//                    editor.apply();
                 }
             }
         }

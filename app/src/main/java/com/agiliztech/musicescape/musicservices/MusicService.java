@@ -151,6 +151,10 @@ public class MusicService extends Service implements
         setList(songList);
     }
 
+    public void setSongPosn(int songPosn) {
+        this.songPosn = songPosn;
+    }
+
     //binder
     public class MusicBinder extends Binder {
         public MusicService getService() {

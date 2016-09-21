@@ -460,4 +460,37 @@ public class NewDashboardActivity extends BaseMusicActivity {
             return getJourneyData();
         }
     }
+
+    @Override
+    protected void onPause() {
+        SharedPreferences sp = getSharedPreferences(Global.PREF_NAME, MODE_PRIVATE);
+        if (playbackPaused) {
+            if (musicSrv != null) {
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putString("playbackpaused", "" + playbackPaused);
+                //JourneySession curSession = JourneyService.getInstance(this).getCurrentSession();
+                if(!Global.isJourney){
+                    editor.putString(Global.LAST_PL_TYPE, "");
+                    editor.putString(Global.LAST_JOURNEY_ID, "");
+                    editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                }
+                else{
+                    editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                    String gen = JourneyService.getInstance(this).getCurrentSession().getJourney().getGeneratedBy();
+                    if(gen.equalsIgnoreCase("Preset")) {
+                        editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(this).getCurrentSession().getJourney().getName());
+                    }
+                    else{
+                        editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(this).getCurrentSession().getJourneyID());
+                    }
+                    editor.putString(Global.LAST_PL_TYPE, gen);
+                }
+//                    editor.putString("song_id_sp", musicSrv.getSongId());
+//                    editor.putString("song_position", "" + musicSrv.getPosn());
+//                    editor.putString("song_name_sp", musicSrv.getSongName());
+                editor.apply();
+            }
+        }
+        super.onPause();
+    }
 }

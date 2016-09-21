@@ -47,11 +47,13 @@ import android.widget.Toast;
 
 import com.agiliztech.musicescape.R;
 import com.agiliztech.musicescape.database.DBHandler;
+import com.agiliztech.musicescape.journey.JourneyDBHelper;
 import com.agiliztech.musicescape.journey.JourneyService;
 import com.agiliztech.musicescape.journey.JourneySessionDBHelper;
 import com.agiliztech.musicescape.journey.JourneySong;
 import com.agiliztech.musicescape.journey.SongMoodCategory;
 import com.agiliztech.musicescape.models.Artist;
+import com.agiliztech.musicescape.models.Journey;
 import com.agiliztech.musicescape.models.JourneySession;
 import com.agiliztech.musicescape.models.Song;
 import com.agiliztech.musicescape.models.SongsModel;
@@ -133,6 +135,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
             editor.apply();
         }
     };
+    private int lastPos;
 
     public ArrayList<Song> getSongsFromCurPlaylist() {
         if (Global.isJourney) {
@@ -198,6 +201,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
                         btn_pause.setVisibility(View.VISIBLE);
                         ibPlayPause.setVisibility(View.GONE);
                     } else {
+                        //musicSrv.setSong(lastPos);
                         // songPicked();
                         //musicSrv.go();
                         //updateProgressBar();
@@ -297,7 +301,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         //sort alphabetically by title
         sortSongsAlphabetically();
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
-        setUpPlaylist();
+
 
         linearLayout.setOnTouchListener(new View.OnTouchListener() {
             int downX, upX;
@@ -362,6 +366,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
         Song song =  songList.get(pos);
         tv_songname.setText(song.getSongName());
         tv_song_detail.setText(song.getArtist().getArtistName());
+//        updateMusicPlayerByMood();
+       // lastPos = pos;
     }
 
     public void songRetag(int position, Song model) {
@@ -627,7 +633,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
     private void initMPElements() {
         initViews();
-        resumeOnce();
+       // resumeOnce();
     }
 
     private void resumeOnce() {
@@ -636,18 +642,24 @@ public class BaseMusicActivity extends AppCompatActivity implements
         if (sp != null) {
 
             if(sp.getString(Global.LAST_PL_TYPE, "").equals("")){
-
+                setUpPlaylist();
             }
             else{
                 String lastJourneySessionID = sp.getString(Global.LAST_JOURNEY_ID, "");
                 if(!lastJourneySessionID.equals("")){
                     JourneySessionDBHelper dbHelper = new JourneySessionDBHelper(this);
                     JourneySession session = dbHelper.getSession(lastJourneySessionID);
-                    if(session != null) {
-                        JourneyService.getInstance(this).setCurrentSession(session);
-                        int pos = sp.getInt(Global.LAST_SONG_POS,0);
-                        setUpPlaylistWithPos(pos);
+                    if(session == null) {
+                        JourneyDBHelper journeyDBHelper = new JourneyDBHelper(this);
+                        List<Journey> journeys = journeyDBHelper.getJourneysBy(JourneyDBHelper.COL_NAME, lastJourneySessionID);
+                        Journey journey = journeys.get(0);
+                        session  = JourneyService.getInstance(this).createJourneySessionFromJourney(journey,null,
+                                SongMoodCategory.scAllSongs, SongMoodCategory.scAllSongs, false);
                     }
+                    JourneyService.getInstance(this).setCurrentSession(session);
+                    Global.isJourney = true;
+                    setUpPlaylist();
+                    //setUpPlaylistWithPos(pos);
                 }
             }
 
@@ -969,27 +981,10 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected void onStop() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver);
         if (sp != null) {
-            if (playbackPaused) {
-                if (musicSrv != null) {
-                    SharedPreferences.Editor editor = sp.edit();
-                    editor.putString("playbackpaused", "" + playbackPaused);
-                    JourneySession curSession = JourneyService.getInstance(this).getCurrentSession();
-                    if( curSession == null){
-                        editor.putString(Global.LAST_PL_TYPE, "");
-                        editor.putString(Global.LAST_JOURNEY_ID, "");
-                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
-                    }
-                    else{
-                        editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
-                        editor.putString(Global.LAST_JOURNEY_ID, curSession.getJourneyID());
-                        editor.putString(Global.LAST_PL_TYPE, curSession.getJourney().getGeneratedBy());
-                    }
-//                    editor.putString("song_id_sp", musicSrv.getSongId());
-//                    editor.putString("song_position", "" + musicSrv.getPosn());
-//                    editor.putString("song_name_sp", musicSrv.getSongName());
-                    editor.apply();
-                }
-            }
+
+        }
+        else{
+            Log.wtf("fff","fff");
         }
         super.onStop();
     }
