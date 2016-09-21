@@ -246,6 +246,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             public void onClick(View v) {
                 String buttonText = testButton.getText().toString();
                 if (buttonText.equals("START")) {
+                    Global.HALT_API = false;
+                    Global.CONTINUE_API = true;
                     //  mPlayer.start();
                     testButton.setText(getResources().getString(R.string.pause));
                     mood_scanning.setVisibility(View.VISIBLE);
@@ -286,17 +288,18 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                     }
 
                 } else if (buttonText.equals("PAUSE")) {
-                    testButton.setText(getResources().getString(R.string.resume));
+                    testButton.setText(getResources().getString(R.string.start));
                     Global.HALT_API = true;
                     Global.CONTINUE_API = false;
+                    mood_scanning.setText("");
                 } // Resume
-                else if (buttonText.equals("RESUME")) {
-                    // mPlayer.stop();
-                    testButton.setText(getResources().getString(R.string.start));
-                    Global.HALT_API = false;
-                    Global.CONTINUE_API = true;
-
-                }
+//                else if (buttonText.equals("RESUME")) {
+//                    // mPlayer.stop();
+//                    testButton.setText(getResources().getString(R.string.start));
+//                    Global.HALT_API = false;
+//                    Global.CONTINUE_API = true;
+//
+//                }
             }
         });
 

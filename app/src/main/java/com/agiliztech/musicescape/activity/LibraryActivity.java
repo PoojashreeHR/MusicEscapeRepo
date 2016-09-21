@@ -709,7 +709,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 moodList.setTypeface(tf);
                 mButton.animate().rotation(360).start();
                 mViewGroup.setVisibility(View.GONE);
-                ArrayList<Song> modelNoMood = dbHandler.getSongsListBasedOnMoods("");
+                ArrayList<Song> modelNoMood = dbHandler.getSongsListBasedOnMoods("not found");
                 SongAdapter(modelNoMood, "nomood");
                 //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
                 break;
