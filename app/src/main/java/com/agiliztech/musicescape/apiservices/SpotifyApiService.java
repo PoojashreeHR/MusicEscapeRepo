@@ -2,6 +2,7 @@ package com.agiliztech.musicescape.apiservices;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -34,7 +35,7 @@ public class SpotifyApiService extends Service {
     private int errorCount = 0;
     private boolean sentToAnalyseOnce;
     private AtomicBoolean paused = new AtomicBoolean();
-
+    SharedPreferences sharedPreferences;
     @Override
     public IBinder onBind(Intent intent) {
         return null;
@@ -54,7 +55,11 @@ public class SpotifyApiService extends Service {
         final ArrayList<String> songNamesList = intent.getStringArrayListExtra("spotifyList");
         final SpotifyApiInterface apiInterface = SpotifyApiClient.createService(SpotifyApiInterface.class);
         handler = new DBHandler(getBaseContext());
-
+        sharedPreferences = getSharedPreferences("db_prefs",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("size_passed",""+songNamesList.size());
+        editor.putString("size_from_db",""+handler.getExceptAnalysedCount());
+        editor.apply();
         new Thread() {
             @Override
             public void run() {

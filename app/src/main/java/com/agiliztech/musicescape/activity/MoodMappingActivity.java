@@ -88,12 +88,14 @@ public class MoodMappingActivity extends BaseMusicActivity implements
             String songJson = intent.getStringExtra("songresponse");
             if (songJson.equals("")) {
                 mood_scanning.setVisibility(View.GONE);
-                //testButton.setText("START");
+                testButton.setText("START");
             } else {
                 final ResponseSongPollModel model = new Gson().fromJson(songJson, ResponseSongPollModel.class);
                 //Log.e(TAG, " PRINTING " + songJson);
                 final DBHandler handler = new DBHandler(MoodMappingActivity.this);
                 //stopService(new Intent(ApiService.SERVICE_EVENT));
+                mood_scanning.setVisibility(View.VISIBLE);
+                testButton.setText("PAUSE");
                 new Thread() {
                     @Override
                     public void run() {
@@ -177,8 +179,10 @@ public class MoodMappingActivity extends BaseMusicActivity implements
     private BroadcastReceiver mSetProcessingTextFromSpotifyApi = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            SharedPreferences preferences = getSharedPreferences("db_prefs",MODE_PRIVATE);
+            String totalCount = preferences.getString("size_from_db","");
             String count = intent.getStringExtra("processing_count");
-            mood_scanning.setText("Processing " + count + " of " + dbHandler.getExceptAnalysedCount());
+            mood_scanning.setText("Processing " + count + " of " + totalCount);
         }
     };
 
@@ -965,8 +969,8 @@ public class MoodMappingActivity extends BaseMusicActivity implements
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            testButton.setText(getResources().getString(R.string.start));
-            mood_scanning.setVisibility(View.GONE);
+           // testButton.setText(getResources().getString(R.string.start));
+           // mood_scanning.setVisibility(View.GONE);
             isPlaying = false;
             //displayAlertDialog();
 
