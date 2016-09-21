@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -237,8 +238,16 @@ public class MusicService extends Service implements
             } catch (Exception e) {
 
             }
+            saveLastSong();
         }
 
+    }
+
+    private void saveLastSong() {
+        SharedPreferences sharedPreferences = getSharedPreferences(Global.PREF_NAME, 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putInt(Global.LAST_SONG_POS, songPosn);
+        edit.apply();
     }
 
     private String handleNullArtist(Artist artist) {
@@ -367,7 +376,12 @@ public class MusicService extends Service implements
     }
 
     public void go() {
-        player.start();
+        try {
+            player.start();
+        }
+        catch (Exception e){
+            playSong();
+        }
     }
 
     //skip to previous track
@@ -422,6 +436,7 @@ public class MusicService extends Service implements
 
     @Override
     public void onDestroy() {
+        saveLastSong();
         stopForeground(true);
     }
 

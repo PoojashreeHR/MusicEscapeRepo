@@ -193,7 +193,18 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 if (!musicSrv.isPng()) {
                     if (playbackPaused) {
                         musicSrv.showNotification();
-                        musicSrv.go();
+
+                        if(!Global.launchFisrtplay){
+                            musicSrv.playSong();
+                            Global.launchFisrtplay = true;
+                        }
+                        else{
+                            musicSrv.go();
+                        }
+
+                        //musicSrv.playSong();
+                        updateProgressBar();
+                        updateMusicPlayerByMood();
                         isSongPlaying = true;
                         play_music_seek_bar.setProgress(0);
                         play_music_seek_bar.setMax(100);
@@ -350,8 +361,19 @@ public class BaseMusicActivity extends AppCompatActivity implements
             mRecyclerView.setLayoutManager(mLayoutManager);
             mRecyclerView.setItemAnimator(new DefaultItemAnimator());
             mRecyclerView.setAdapter(mAdapter);
+
+            SharedPreferences sharedPreferences = getSharedPreferences(Global.PREF_NAME, 0);
+            int pos = sharedPreferences.getInt(Global.LAST_SONG_POS, 0);
+            Global.currentSongList = songList;
+            Song song =  songList.get(pos);
+            if(song != null) {
+                tv_songname.setText(song.getSongName());
+                tv_song_detail.setText(song.getArtist().getArtistName());
+            }
+
             if (musicSrv != null) {
                 musicSrv.setList(songList);
+                musicSrv.setSongPosn(pos);
             }
 
             initSwipeRecyclerView();
@@ -361,14 +383,14 @@ public class BaseMusicActivity extends AppCompatActivity implements
         slider.setScrollableView(mRecyclerView);
     }
 
-    protected void setUpPlaylistWithPos(int pos){
-        setUpPlaylist();
-        Song song =  songList.get(pos);
-        tv_songname.setText(song.getSongName());
-        tv_song_detail.setText(song.getArtist().getArtistName());
-//        updateMusicPlayerByMood();
-       // lastPos = pos;
-    }
+//    protected void setUpPlaylistWithPos(int pos){
+//        setUpPlaylist();
+//        Song song =  songList.get(pos);
+//        tv_songname.setText(song.getSongName());
+//        tv_song_detail.setText(song.getArtist().getArtistName());
+////        updateMusicPlayerByMood();
+//       // lastPos = pos;
+//    }
 
     public void songRetag(int position, Song model) {
         // Logic for Retag from Library
@@ -687,7 +709,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
 
     private void updateMusicPlayerByMood() {
         Song currSong = musicSrv.getCurrentPlayed();
-        if (currSong.getMood() != null) {
+        if (currSong != null && currSong.getMood() != null) {
             btn_pause.setImageResource(SongsManager.getImageResource(currSong.getMood(), false));
             ibPlayPause.setImageResource(SongsManager.getImageResource(currSong.getMood(), true));
             changeSeekbarColor(play_music_seek_bar, SongsManager.colorForMood(currSong.getMood()));
@@ -742,8 +764,8 @@ public class BaseMusicActivity extends AppCompatActivity implements
                 musicSrv = binder.getService();
                 //musicSrv = MainApplication.getInstance();
                 //pass list
-                musicSrv.setList(songList);
-                Global.currentSongList = songList;
+                setUpPlaylist();
+
                 musicBound = true;
                 onMusicServiceConnected();
 

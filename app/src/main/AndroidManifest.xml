@@ -106,6 +106,7 @@
             android:name=".activity.SelectingMoodActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".activity.NewDashboardActivity"
+            android:launchMode="singleInstance"
             android:screenOrientation="portrait"/>
     </application>
 
