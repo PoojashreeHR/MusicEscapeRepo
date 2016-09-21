@@ -388,10 +388,7 @@ public class NewDashboardActivity extends BaseMusicActivity {
     }
 
     private void startPlaylistviewWithJourney(Journey journey) {
-        JourneyService journeyService = JourneyService.getInstance(this);
-        JourneySession session  = journeyService.createJourneySessionFromJourney(journey,null,
-                SongMoodCategory.scAllSongs, SongMoodCategory.scAllSongs, false);
-        startPlaylistviewWithJourneySession(session);
+       new LoadingPresetTask(this, journey).execute();
     }
 
     private void startPlaylistviewWithJourneySession(JourneySession session) {
@@ -460,6 +457,53 @@ public class NewDashboardActivity extends BaseMusicActivity {
             return getJourneyData();
         }
     }
+
+    private class LoadingPresetTask extends AsyncTask<Void, Journey, JourneySession> {
+        private Context thisContext;
+        private Journey thisJourney;
+        private ProgressDialog progressDialog;
+
+        public LoadingPresetTask(Context context, Journey journey) {
+            thisContext = context;
+            thisJourney = journey;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = ProgressDialog.show(NewDashboardActivity.this, "", "Loading Preset...");
+        }
+
+        @Override
+        protected void onPostExecute(JourneySession session) {
+            JourneyService journeyService = JourneyService.getInstance(thisContext);
+            journeyService.setCurrentSession(session);
+            if(musicSrv != null) {
+                if (musicSrv.isPng()) {
+                    musicSrv.pausePlayer();
+                }
+                musicSrv.playCurrentSession();
+                Global.isJourney = true;
+                playSelectedSong(0);
+                setUpPlaylist();
+                // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
+            }
+
+            if(progressDialog != null) {
+                progressDialog.dismiss();
+            }
+            startActivity(new Intent(thisContext, PlaylistJourneyActivity.class));
+            //startPlaylistviewWithJourneySession(session);
+
+        }
+
+        @Override
+        protected JourneySession doInBackground(Void... params) {
+            JourneyService journeyService = JourneyService.getInstance(thisContext);
+            return journeyService.createJourneySessionFromJourney(thisJourney,null,
+                    SongMoodCategory.scAllSongs, SongMoodCategory.scAllSongs, false);
+        }
+    }
+
 
     @Override
     protected void onPause() {
