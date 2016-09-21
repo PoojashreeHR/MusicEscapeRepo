@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -285,6 +286,22 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             playSelectedSong(pos);
             Global.isLibPlaylist = true;
             Global.libPlaylistSongs = dbSongList;
+
+            SharedPreferences sp = getSharedPreferences(Global.PREF_NAME, MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+
+            editor.putString(Global.LAST_PL_TYPE, "");
+            editor.putString(Global.LAST_JOURNEY_ID, "");
+            if(musicSrv != null) {
+                editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+            }
+            else{
+                editor.putInt(Global.LAST_SONG_POS, 0);
+            }
+
+            editor.commit();
+
+
             setUpPlaylist();
         }
     }
