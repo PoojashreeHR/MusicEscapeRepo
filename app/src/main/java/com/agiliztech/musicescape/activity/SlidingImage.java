@@ -17,14 +17,14 @@ public class SlidingImage extends AppCompatActivity {
     private static int currentPage = 0;
     private static int NUM_PAGES = 8;
     private static final Integer[] IMAGES = {
-            R.drawable.coach_img_01,
-            R.drawable.coach_img_02,
-            R.drawable.coach_img_03,
-            R.drawable.coach_img_04,
-            R.drawable.coach_img_05,
-            R.drawable.coach_img_06,
-            R.drawable.coach_img_07,
-            R.drawable.coach_img_08};
+            R.drawable.coach_screen_img_01,
+            R.drawable.coach_screen_img_02,
+            R.drawable.coach_screen_img_03,
+            R.drawable.coach_screen_img_04,
+            R.drawable.coach_screen_img_05,
+            R.drawable.coach_screen_img_06,
+            R.drawable.coach_screen_img_07,
+            R.drawable.coach_screen_img_08};
     private ArrayList<Integer> ImagesArray = new ArrayList<Integer>();
     String appInfo, splashScreen, dashboard, library, history, draw, playlist;
     String isClicked = null;
@@ -128,7 +128,7 @@ public class SlidingImage extends AppCompatActivity {
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             NUM_PAGES = IMAGES.length;
         } else if (splashScreen!= null) {
-            ImagesArray.add(R.drawable.coach_img_01);
+            ImagesArray.add(R.drawable.coach_screen_img_01);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -137,7 +137,7 @@ public class SlidingImage extends AppCompatActivity {
                     }
             }, 3000);
         } else if (library!= null) {
-            ImagesArray.add(R.drawable.coach_img_02);
+            ImagesArray.add(R.drawable.coach_screen_img_02);
             //ImagesArray.add(R.drawable.coa);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
@@ -147,7 +147,7 @@ public class SlidingImage extends AppCompatActivity {
                 }
             }, 3000);
         } else if (dashboard!= null) {
-            ImagesArray.add(R.drawable.coach_img_05);
+            ImagesArray.add(R.drawable.coach_screen_img_05);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -156,7 +156,7 @@ public class SlidingImage extends AppCompatActivity {
                 }
             }, 3000);
         } else if (history!= null) {
-            ImagesArray.add(R.drawable.coach_img_06);
+            ImagesArray.add(R.drawable.coach_screen_img_06);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
@@ -167,8 +167,8 @@ public class SlidingImage extends AppCompatActivity {
         } else if(draw!= null){
 //            startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
 //            finish();
-            ImagesArray.add(R.drawable.coach_img_07);
-            ImagesArray.add(R.drawable.coach_img_08);
+            ImagesArray.add(R.drawable.coach_screen_img_07);
+            ImagesArray.add(R.drawable.coach_screen_img_08);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
             new Timer().schedule(new TimerTask() {
                 public void run() {
