@@ -153,9 +153,11 @@ public class BaseMusicActivity extends AppCompatActivity implements
             return Global.libPlaylistSongs;
         } else {
             DBHandler dbHandler = new DBHandler(this);
-            ArrayList<Song> songs = dbHandler.getAllSongsFromDB();
+            if(Global.globalSongList == null) {
+                Global.globalSongList = dbHandler.getAllSongsFromDB();
+            }
             dbHandler.close();
-            return songs;
+            return Global.globalSongList;
         }
     }
 

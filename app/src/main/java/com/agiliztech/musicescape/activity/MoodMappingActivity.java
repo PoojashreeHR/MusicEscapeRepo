@@ -114,6 +114,7 @@ public class MoodMappingActivity extends BaseMusicActivity implements
                         }
                         dbHandler.updateSongsWithEnergyAndValence(info);
                         updateScannedOnce();
+                        Global.globalSongList = dbHandler.getAllSongsFromDB();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

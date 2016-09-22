@@ -293,10 +293,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
             editor.putString(Global.LAST_PL_TYPE, "");
             editor.putString(Global.LAST_JOURNEY_ID, "");
-            if(musicSrv != null) {
+            if (musicSrv != null) {
                 editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
-            }
-            else{
+            } else {
                 editor.putInt(Global.LAST_SONG_POS, 0);
             }
 
@@ -332,9 +331,12 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         library.setTypeface(tf);
         moodList.setTypeface(tf);
         songs.setTypeface(tf);
-
         dbHandler = new DBHandler(this);
-        dbSongList = dbHandler.getAllSongsFromDB();
+        if (Global.globalSongList == null)
+            Global.globalSongList = dbHandler.getAllSongsFromDB();
+
+        dbSongList = Global.globalSongList;
+
 //        if(dbSongList.size() <= 0){
 //            hideMusicPlayer();
 //        }
@@ -459,7 +461,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
 
-                if (viewHolder.getItemViewType()==0){
+                if (viewHolder.getItemViewType() == 0) {
                     int position = viewHolder.getAdapterPosition();
                     //libAdapter = (LibraryRecyclerView) recyclerView.getAdapter();
                     Song song = libAdapter.getSongObject(position);
@@ -475,7 +477,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                if (viewHolder.getItemViewType()==0)
+                if (viewHolder.getItemViewType() == 0)
                     return super.getSwipeDirs(recyclerView, viewHolder);
                 else
                     return 0;
@@ -483,7 +485,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
             @Override
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-                if (viewHolder.getItemViewType()==0){
+                if (viewHolder.getItemViewType() == 0) {
                     int swipeFlags = ItemTouchHelper.LEFT;
                     return makeMovementFlags(ItemTouchHelper.ACTION_STATE_SWIPE, swipeFlags);
                 } else {
@@ -496,7 +498,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
 
                 Bitmap icon;
                 if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-                    if (viewHolder.getItemViewType()==0){
+                    if (viewHolder.getItemViewType() == 0) {
                         View itemView = viewHolder.itemView;
                         float height = (float) itemView.getBottom() - (float) itemView.getTop();
                         float width = height / 3;
@@ -741,7 +743,7 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
                 mButton.animate().rotation(360).start();
                 mViewGroup.setVisibility(View.GONE);
                 //Toast.makeText(getApplicationContext(), "Chilled is clicked", Toast.LENGTH_LONG).show();
-                ArrayList<Song> modelAllMoods = dbHandler.getAllSongsFromDB();
+                ArrayList<Song> modelAllMoods = Global.globalSongList;
                 SongAdapter(modelAllMoods, "allmood");
                 break;
             case R.id.sortSong:
@@ -789,8 +791,9 @@ public class LibraryActivity extends BaseMusicActivity implements View.OnClickLi
         //   settings.edit().putBoolean("is_first_time", false).commit();
         getSharedPreferences("MyPreference", MODE_PRIVATE).edit()
                 .putBoolean("first_time_library", false).commit();
-    }
 
+
+    }
 
     public void songRetagInLibrary(int position, Song model) {
         // Logic for Retag from Library
