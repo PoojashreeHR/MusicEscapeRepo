@@ -92,7 +92,7 @@ public class MusicService extends Service implements
                     pausePlayer();
                 } else if (state == TelephonyManager.CALL_STATE_IDLE) {
                     //Not in call: Play music
-                    go();
+                   // go();
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
                     pausePlayer();

@@ -15,7 +15,6 @@
         android:orientation="vertical"/>
 
     <LinearLayout
-        android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/black"
@@ -27,7 +26,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/dragView">
 
             <include
                 layout="@layout/layout_for_playing_controls"

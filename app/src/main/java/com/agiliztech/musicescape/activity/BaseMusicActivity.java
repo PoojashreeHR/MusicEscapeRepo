@@ -41,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -100,7 +101,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
     protected boolean isPlaying = false;
     public static boolean isSongPlaying = false;
     protected ServiceConnection musicConnection;
-    protected LinearLayout dragView;
+    protected RelativeLayout dragView;
     private RecyclerViewAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private SharedPreferences sp;
@@ -326,7 +327,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         //songList = getSongsFromCurPlaylist();
         slider = (SlidingUpPanelLayout) findViewById(R.id.slider_sliding_layout);
         mRecyclerView = (RecyclerView) findViewById(R.id.rv_display_song_lists);
-        dragView = (LinearLayout) findViewById(R.id.dragView);
+        dragView = (RelativeLayout) findViewById(R.id.dragView);
         //sort alphabetically by title
         sortSongsAlphabetically();
         linearLayout = (LinearLayout) findViewById(R.id.toSwipe);
