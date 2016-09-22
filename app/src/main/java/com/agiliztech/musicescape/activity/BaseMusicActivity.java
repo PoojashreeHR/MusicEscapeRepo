@@ -386,6 +386,9 @@ public class BaseMusicActivity extends AppCompatActivity implements
             SharedPreferences sharedPreferences = getSharedPreferences(Global.PREF_NAME, 0);
             int pos = sharedPreferences.getInt(Global.LAST_SONG_POS, 0);
             Global.currentSongList = songList;
+            if(pos >= songList.size()){
+                pos = 0;
+            }
             Song song =  songList.get(pos);
             if(song != null) {
                 tv_songname.setText(song.getSongName());
