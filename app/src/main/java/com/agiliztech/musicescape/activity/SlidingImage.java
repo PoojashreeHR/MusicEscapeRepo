@@ -135,7 +135,7 @@ public class SlidingImage extends AppCompatActivity {
                         startActivity(new Intent(SlidingImage.this, MoodMappingActivity.class));
                         finish();
                     }
-            }, 3000);
+            }, 1000);
         } else if (library!= null) {
             ImagesArray.add(R.drawable.coach_screen_img_02);
             //ImagesArray.add(R.drawable.coa);
@@ -145,7 +145,7 @@ public class SlidingImage extends AppCompatActivity {
                     startActivity(new Intent(SlidingImage.this, LibraryActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1000);
         } else if (dashboard!= null) {
             ImagesArray.add(R.drawable.coach_screen_img_05);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
@@ -154,7 +154,7 @@ public class SlidingImage extends AppCompatActivity {
                     startActivity(new Intent(SlidingImage.this, NewDashboardActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1000);
         } else if (history!= null) {
             ImagesArray.add(R.drawable.coach_screen_img_06);
             mPager.setAdapter(new SlidingImage_Adapter(SlidingImage.this, ImagesArray));
@@ -163,7 +163,7 @@ public class SlidingImage extends AppCompatActivity {
                     startActivity(new Intent(SlidingImage.this, HistoryActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1000);
         } else if(draw!= null){
 //            startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
 //            finish();
@@ -175,7 +175,7 @@ public class SlidingImage extends AppCompatActivity {
                     startActivity(new Intent(SlidingImage.this, SelectingMoodActivity.class));
                     finish();
                 }
-            }, 3000);
+            }, 1000);
         }
 
     }
