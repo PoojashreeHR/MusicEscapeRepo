@@ -53,6 +53,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.DashboardActivity"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.AppInfoActivity"
@@ -86,6 +87,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.MoodMappingActivity"
+            android:theme="@style/AppTheme"
             android:screenOrientation="portrait" />
         <!-- <activity android:name=".activity.MainSplashScreen" -->
         <!-- android:theme="@style/AppFullScreenTheme" -->
