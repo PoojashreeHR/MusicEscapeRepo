@@ -70,7 +70,7 @@ public class MusicService extends Service implements
     PhoneStateListener phoneStateListener;
     public static boolean isNextButtonClicked = false;
     int duration;
-
+    private boolean songPauseByIncomingCall = false;
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
@@ -88,13 +88,18 @@ public class MusicService extends Service implements
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state == TelephonyManager.CALL_STATE_RINGING) {
                     //Incoming call: Pause music
-
+                    songPauseByIncomingCall = true;
                     pausePlayer();
                 } else if (state == TelephonyManager.CALL_STATE_IDLE) {
                     //Not in call: Play music
                    // go();
+                    if(songPauseByIncomingCall){
+                        songPauseByIncomingCall = false;
+                        go();
+                    }
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
+                    songPauseByIncomingCall = true;
                     pausePlayer();
                 }
                 super.onCallStateChanged(state, incomingNumber);

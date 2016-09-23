@@ -770,8 +770,19 @@ public class BaseMusicActivity extends AppCompatActivity implements
             tv_song_detail.setText(musicSrv.getSongDetail());
         }*/
         if(musicSrv != null) {
+            Log.e("BaseMusicActivity"," Music Service Not Null");
+            Song song = musicSrv.getCurrentPlayed();
+
+            if(song != null){
+                Log.e("BaseMusicActivity"," Song Object Not Null");
+                Log.e("BaseMusicActivity"," Song Name : " + song.getSongName());
+                Log.e("BaseMusicActivity"," Song Artist : " + song.getArtist().getArtistName());
+                tv_songname.setText(song.getSongName());
+                tv_song_detail.setText(song.getArtist().getArtistName());
+            }
             if(musicSrv.isPng()) {
                 updateProgressBar();
+                updateMusicPlayerByMood();
             }
         }
     }
