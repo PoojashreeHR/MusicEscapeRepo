@@ -109,7 +109,7 @@ public class SongsManager {
                 Artist artist = new Artist(artistId, thisArtist);
 
                 Song s = new Song(thisId, thisTitle, artist, album);
-                s.setPlaybackDuration(Integer.parseInt(duration));
+                s.setPlaybackDuration(Integer.parseInt(duration)/1000);
 
                 if(isMusic > 0 ) {
                     songList.add(s);

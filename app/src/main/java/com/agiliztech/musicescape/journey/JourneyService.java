@@ -3,6 +3,7 @@ package com.agiliztech.musicescape.journey;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.PointF;
+import android.util.Log;
 
 import com.agiliztech.musicescape.database.DBHandler;
 import com.agiliztech.musicescape.models.DashboardItem;
@@ -972,11 +973,32 @@ public class JourneyService {
             int songLimit = limit * 15 * 60; //secs
             int totalDuration = getTotalSongsDuration(playListArray);
             if (totalDuration >= songLimit) {
-                return checkSongDurationLimits(songLimit + 10, playListArray);
+                return  filterSongsForLimit(songLimit, playListArray);
+               // return checkSongDurationLimits(songLimit + 10, playListArray);
             }
         }
 
         return playListArray;
+    }
+
+    public List<Song> filterSongsForLimit(int songLimit,  List<Song> playListArray){
+        List<Song> filteredList = new ArrayList<>();
+        int filteredSongsDuration = 0;
+
+        for(int i=0; i<playListArray.size(); i++){
+            Song song = playListArray.get(i);
+            if(song != null) {
+                if (filteredSongsDuration + song.getPlaybackDuration() <= songLimit) {
+                    filteredList.add(song);
+                    filteredSongsDuration += song.getPlaybackDuration();
+                } else {
+                    Log.d("val_dur", String.valueOf(filteredSongsDuration + song.getPlaybackDuration()));
+                    break;
+                }
+            }
+        }
+
+        return filteredList;
     }
 
     private List<Song> checkSongDurationLimits(int W, List<Song> playListArray) {
