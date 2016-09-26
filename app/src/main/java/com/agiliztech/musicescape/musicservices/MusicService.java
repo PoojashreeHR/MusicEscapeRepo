@@ -95,7 +95,7 @@ public class MusicService extends Service implements
                    // go();
                     if(songPauseByIncomingCall){
                         songPauseByIncomingCall = false;
-                        go();
+                       // go();
                     }
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
