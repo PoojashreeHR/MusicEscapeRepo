@@ -483,6 +483,20 @@ public class NewDashboardActivity extends BaseMusicActivity {
                 }
                 musicSrv.playCurrentSession();
                 Global.isJourney = true;
+
+
+                SharedPreferences sp = getSharedPreferences(Global.PREF_NAME, MODE_PRIVATE);
+                SharedPreferences.Editor editor = sp.edit();
+                editor.putInt(Global.LAST_SONG_POS, musicSrv.getSongPosn());
+                String gen = JourneyService.getInstance(thisContext).getCurrentSession().getJourney().getGeneratedBy();
+                if (gen.equalsIgnoreCase("Preset")) {
+                    editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(thisContext).getCurrentSession().getJourney().getName());
+                } else {
+                    editor.putString(Global.LAST_JOURNEY_ID, JourneyService.getInstance(thisContext).getCurrentSession().getJourneyID());
+                }
+                editor.putString(Global.LAST_PL_TYPE, gen);
+                editor.apply();
+
                 playSelectedSong(0);
                 setUpPlaylist();
                 // journey.setMode(JourneyView.DrawingMode.DMJOURNEY);
