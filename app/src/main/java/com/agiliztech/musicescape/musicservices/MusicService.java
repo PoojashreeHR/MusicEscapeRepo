@@ -98,7 +98,9 @@ public class MusicService extends Service implements
                    // go();
                     if(songPauseByIncomingCall){
                         songPauseByIncomingCall = false;
-                       // go();
+                        if(Global.inPlayMode) {
+                            go();
+                        }
                     }
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
                     //A call is dialing, active or on hold
@@ -116,8 +118,10 @@ public class MusicService extends Service implements
                     player.pause();
                 } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                     // Resume playback
-                    if(Global.inPlayMode) {
-                        player.start();
+                    if(Global.inPlayMode && !songPauseByIncomingCall) {
+                        if(!player.isPlaying()) {
+                            player.start();
+                        }
                     }
                 } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
                     //am.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
