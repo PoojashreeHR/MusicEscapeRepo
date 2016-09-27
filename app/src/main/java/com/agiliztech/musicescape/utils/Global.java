@@ -31,6 +31,7 @@ public class Global {
 
 
     public static boolean launchFisrtplay = false;
+    public static boolean inPlayMode = false;
 
     public static ArrayList<Song> globalSongList = null;
 }

@@ -176,6 +176,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         btn_pause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.inPlayMode = false;
                 NotificationManager nMgr = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                 nMgr.cancelAll();
                 musicSrv.stopForeground(true);
@@ -193,6 +194,7 @@ public class BaseMusicActivity extends AppCompatActivity implements
         ibPlayPause.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.inPlayMode = true;
                 if (!musicSrv.isPng()) {
 
 

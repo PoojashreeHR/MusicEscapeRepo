@@ -71,6 +71,9 @@ public class MusicService extends Service implements
     public static boolean isNextButtonClicked = false;
     int duration;
     private boolean songPauseByIncomingCall = false;
+    private AudioManager.OnAudioFocusChangeListener afChangeListener
+            ;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
@@ -103,6 +106,25 @@ public class MusicService extends Service implements
                     pausePlayer();
                 }
                 super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+        afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+            @Override
+            public void onAudioFocusChange(int focusChange) {
+                if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+                    // Pause playback
+                    player.pause();
+                } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+                    // Resume playback
+                    if(Global.inPlayMode) {
+                        player.start();
+                    }
+                } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+                    //am.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
+                    am.abandonAudioFocus(afChangeListener);
+                    player.pause();
+                    // Stop playback
+                }
             }
         };
 
@@ -188,27 +210,28 @@ public class MusicService extends Service implements
         return playSong;
     }
 
-    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                // Pause playback
-                player.pause();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
-                // Resume playback
-                player.start();
-            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                //am.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
-                am.abandonAudioFocus(afChangeListener);
-                player.pause();
-                // Stop playback
-            }
-        }
-    };
+//    AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
+//        @Override
+//        public void onAudioFocusChange(int focusChange) {
+//            if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
+//                // Pause playback
+//                player.pause();
+//            } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
+//                // Resume playback
+//                player.start();
+//            } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
+//                //am.unregisterMediaButtonEventReceiver(RemoteControlReceiver);
+//                am.abandonAudioFocus(afChangeListener);
+//                player.pause();
+//                // Stop playback
+//            }
+//        }
+//    };
 
     //play a song
     public void playSong() {
         //play
+        Global.inPlayMode = true;
         int result = am.requestAudioFocus(afChangeListener,
                 // Use the music stream.
                 AudioManager.STREAM_MUSIC,
