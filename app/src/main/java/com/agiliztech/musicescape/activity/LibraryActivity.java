@@ -58,6 +58,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.support.design.R.styleable.RecyclerView;
+
 public class LibraryActivity extends BaseMusicActivity implements View.OnClickListener {
     Spinner sp;
     BaseMusicActivity baseMusicActivity;

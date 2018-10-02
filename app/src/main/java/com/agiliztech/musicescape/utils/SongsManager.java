@@ -84,12 +84,10 @@ public class SongsManager {
             int albumColumn = musicCursor.getColumnIndex
                     (MediaStore.Audio.Media.ALBUM);
             int albumIDColumn = musicCursor.getColumnIndex(
-                    MediaStore.Audio.Media.ALBUM_ID
-            );
+                    MediaStore.Audio.Media.ALBUM_ID);
 
             int durationColumn = musicCursor.getColumnIndex(
-                    MediaStore.Audio.Media.DURATION
-            );
+                    MediaStore.Audio.Media.DURATION);
 
             //add songs to list
             int i=0;

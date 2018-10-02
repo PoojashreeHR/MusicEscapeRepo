@@ -149,11 +149,11 @@ public class HistoryActivity extends BaseMusicActivity {
                         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                         View layout = inflater.inflate(R.layout.dialog_save_history, null);
                         dialogs.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                        dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        Button btn_save = (Button) layout.findViewById(R.id.btn_save);
-                        btn_save.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
+                                dialogs.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                Button btn_save = (Button) layout.findViewById(R.id.btn_save);
+                                btn_save.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
                                 saveSession(session);
                                 dialogs.dismiss();
                             }
